@@ -1,0 +1,178 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #101014;
+  --card: #ffffff;
+  --card-foreground: #101014;
+  --popover: #ffffff;
+  --popover-foreground: #101014;
+  --primary: #00adbb;
+  --primary-foreground: #ffffff;
+  --secondary: #f6f6f3;
+  --secondary-foreground: #101014;
+  --muted: #f6f6f3;
+  --muted-foreground: #6f6f76;
+  --accent: #e6f7f8;
+  --accent-foreground: #007e89;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(16, 16, 20, 0.08);
+  --input: rgba(16, 16, 20, 0.12);
+  --ring: #00adbb;
+  --radius: 0.625rem;
+
+  --sidebar: #fbfbf9;
+  --sidebar-foreground: #101014;
+  --sidebar-primary: #00adbb;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #eef3f2;
+  --sidebar-accent-foreground: #101014;
+  --sidebar-border: rgba(16, 16, 20, 0.06);
+  --sidebar-ring: #00adbb;
+
+  --font-editorial: var(--font-cormorant), Georgia, 'Times New Roman', serif;
+  --font-display: var(--font-jost), 'Century Gothic', -apple-system, sans-serif;
+
+  /* chart palette */
+  --chart-1: #00adbb;
+  --chart-2: #101014;
+  --chart-3: #6f6f76;
+  --chart-4: #8fd8dd;
+  --chart-5: #e9e9e4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Pegasus brand tokens */
+  --color-ink: #101014;
+  --color-paper: #ffffff;
+  --color-mist: #f6f6f3;
+  --color-graphite: #e9e9e4;
+  --color-silver: #6f6f76;
+  --color-brand: #00adbb;
+
+  --font-sans: var(--font-jost);
+  --font-serif: var(--font-cormorant);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+    outline-color: color-mix(in oklab, var(--ring) 50%, transparent);
+  }
+  html, body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+    scroll-behavior: smooth;
+  }
+  ::selection {
+    background: #00adbb;
+    color: #ffffff;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #d9d9d4;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00adbb;
+  }
+}
+
+/* Editorial serif — luxury headings (from Pegasus brand site) */
+.editorial-text {
+  font-family: var(--font-editorial);
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  font-weight: 500;
+}
+
+/* Wide-tracked uppercase labels */
+.mono-tag {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: 0.28em;
+  font-weight: 500;
+}
+
+/* Soft luxury card */
+.lux-card {
+  background: #ffffff;
+  border: 1px solid rgba(16, 16, 20, 0.08);
+  box-shadow: 0 1px 2px rgba(16, 16, 20, 0.03), 0 12px 40px -18px rgba(16, 16, 20, 0.12);
+}
+
+/* Fade in up utility */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Certificate print styles */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .certificate-print, .certificate-print * {
+    visibility: visible;
+  }
+  .certificate-print {
+    position: absolute;
+    inset: 0;
+    margin: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
