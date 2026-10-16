@@ -6,7 +6,8 @@ export interface Lesson {
   type: LessonType;
   duration: string; // "8 min" etc.
   summary: string;
-  videoSrc?: string;
+  /** File in /media (not public). Served only to owners via /api/media/[slug]/[lessonId]. */
+  videoFile?: string;
   guide?: { heading: string; body: string }[];
 }
 
@@ -20,7 +21,7 @@ export interface Product {
   lessons: Lesson[];
 }
 
-const DEMO_VIDEO = '/videos/pega.mp4';
+const DEMO_VIDEO = 'pega.mp4';
 
 export const products: Product[] = [
   {
@@ -38,7 +39,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '4 min',
         summary: 'An introduction to the hard rubber line, its history and what makes Flexinite unique.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'hr-02',
@@ -67,7 +68,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '12 min',
         summary: 'Clean partings and consistent sections for cutting and colour work.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'hr-04',
@@ -75,7 +76,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '15 min',
         summary: 'Using the Flexinite taper comb for seamless fades and blends.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'hr-05',
@@ -100,7 +101,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '7 min',
         summary: 'Daily hygiene routine and long-term storage for a comb that lasts decades.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
     ],
   },
@@ -119,7 +120,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '5 min',
         summary: 'From cotton flake to hand-polished comb: how cellulose acetate is made.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'ca-02',
@@ -144,7 +145,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '11 min',
         summary: 'Glossy, static-free finishing techniques for editorial-level polish.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'ca-04',
@@ -152,7 +153,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '9 min',
         summary: 'Wide-tooth acetate technique that protects the cuticle when hair is weakest.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'ca-05',
@@ -188,7 +189,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '6 min',
         summary: 'The sustainable sourcing story and the science of the StaticBlock treatment.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'ew-02',
@@ -196,7 +197,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '10 min',
         summary: 'Wooden-comb scalp massage sequences that boost circulation and relaxation.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'ew-03',
@@ -221,7 +222,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '13 min',
         summary: 'Wide-tooth wooden comb technique for curl definition without frizz.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
       {
         id: 'ew-05',
@@ -246,7 +247,7 @@ export const products: Product[] = [
         type: 'video',
         duration: '8 min',
         summary: 'Where the wood comes from and how each purchase replants.',
-        videoSrc: DEMO_VIDEO,
+        videoFile: DEMO_VIDEO,
       },
     ],
   },

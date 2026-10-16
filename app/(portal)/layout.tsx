@@ -5,6 +5,7 @@ import { logout } from '@/app/actions';
 import { AppSidebar } from '@/components/portal/app-sidebar';
 import { UserMenu } from '@/components/portal/user-menu';
 import { MobileNav } from '@/components/portal/mobile-nav';
+import { ContentGuard } from '@/components/portal/protected-content';
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const user = await requireCustomer();
@@ -22,7 +23,8 @@ export default async function PortalLayout({ children }: { children: React.React
   });
 
   return (
-    <div className="flex min-h-svh">
+    <div className="flex min-h-svh select-none [-webkit-touch-callout:none]">
+      <ContentGuard />
       <AppSidebar products={sidebarProducts} />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-8">

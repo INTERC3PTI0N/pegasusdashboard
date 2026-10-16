@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { MarkCompleteButton } from './mark-complete';
+import { ProtectedVideo, Watermark } from '@/components/portal/protected-content';
 
 export const dynamic = 'force-dynamic';
 
@@ -65,19 +66,18 @@ export default async function LessonPage({
           </div>
 
           {/* Content */}
-          {lesson.type === 'video' && lesson.videoSrc ? (
+          {lesson.type === 'video' && lesson.videoFile ? (
             <Card className="overflow-hidden py-0">
-              <video
+              <ProtectedVideo
                 key={lesson.id}
-                src={lesson.videoSrc}
-                controls
-                playsInline
-                className="aspect-video w-full bg-ink"
+                src={`/api/media/${product.slug}/${lesson.id}`}
                 poster={product.image}
+                watermark={user.email}
               />
             </Card>
           ) : (
-            <Card>
+            <Card className="relative overflow-hidden">
+              <Watermark text={user.email} className="text-foreground/10" />
               <CardContent className="space-y-8 py-2">
                 {lesson.guide?.map((section) => (
                   <section key={section.heading}>

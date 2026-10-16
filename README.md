@@ -45,6 +45,13 @@ product the customer already owns is refused (the last without spending the key)
   `requireProductAccess()` server-side ([lib/access.ts](lib/access.ts)); non-purchasers
   are redirected before any content renders. Locked products appear greyed-out in the
   sidebar. Mutations (progress, certificates) re-check entitlements too.
+- **Content protection** — course videos live in `/media` (not `/public`) and are only
+  served by [/api/media/[slug]/[lessonId]](app/api/media/[slug]/[lessonId]/route.ts) to
+  signed-in owners, in 1 MB ranges, for in-page playback only. The player has no download,
+  picture-in-picture or casting, and a drifting watermark with the viewer's email (kept in
+  fullscreen). The portal blocks right-click, copy, drag, Save/Print/View-source shortcuts,
+  and course pages print blank. This deters casual saving; it is not DRM — for encrypted
+  playback move videos to a DRM host (Mux, Bunny Stream, VdoCipher).
 - **Dashboard** — stat cards (products, lessons, overall %, certificates),
   "continue learning" resume card, product library with per-course progress.
 - **Courses** — video lessons (HTML5 player) and written guides, curriculum list,
