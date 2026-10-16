@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Award, BookOpen, LifeBuoy, Lock } from 'lucide-react';
+import { LayoutDashboard, Award, BookOpen, LifeBuoy, Lock, KeyRound } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 
@@ -20,6 +20,7 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
   const mainNav = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/certificates', label: 'Certificates', icon: Award },
+    { href: '/register-product', label: 'Register product', icon: KeyRound },
   ];
 
   return (
@@ -95,7 +96,7 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
                   ) : (
                     <span
                       className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-muted-foreground/40 cursor-not-allowed select-none"
-                      title="Available to purchasers of this product"
+                      title="Register this product with its key to unlock"
                     >
                       <Lock className="size-4 shrink-0" />
                       <span className="truncate">{p.name}</span>

@@ -9,9 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function CertificateRegistryPage() {
   await requireAdmin();
-  const certificates = [...getAllCertificates()].sort(
-    (a, b) => +new Date(b.issuedAt) - +new Date(a.issuedAt)
-  );
+  const certificates = await getAllCertificates(); // newest first
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">

@@ -5,6 +5,9 @@ import { findUserById, type User } from './users';
 
 const SESSION_COOKIE = 'pegasus_session';
 const SECRET = process.env.SESSION_SECRET ?? 'pegasus-dev-secret-change-in-production';
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_SECRET) {
+  throw new Error('SESSION_SECRET must be set in production.');
+}
 
 function sign(value: string): string {
   return createHmac('sha256', SECRET).update(value).digest('base64url');
@@ -32,7 +35,7 @@ export async function getCurrentUser(): Promise<User | null> {
   const token = jar.get(SESSION_COOKIE)?.value;
   const userId = verifySessionToken(token);
   if (!userId) return null;
-  return findUserById(userId) ?? null;
+  return findUserById(userId);
 }
 
 export async function setSession(userId: string) {
@@ -40,6 +43,7 @@ export async function setSession(userId: string) {
   jar.set(SESSION_COOKIE, createSessionToken(userId), {
     httpOnly: true,
     sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 60 * 60 * 24 * 30,
   });

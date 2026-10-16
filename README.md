@@ -6,23 +6,38 @@ written guides, track their progress lesson-by-lesson, and earn a QR-verifiable
 certificate on completion. Styling follows the Pegasus brand site (Jost + Cormorant
 Garamond, ink/paper palette, `#00adbb` accent).
 
-## Run
+## Setup
+
+1. **Database** — create a free [Supabase](https://supabase.com) project (any Postgres 14+
+   also works). In the project, open **Connect** and copy the **Transaction pooler**
+   connection string (port 6543), with your database password filled in.
+2. **Environment** — copy `.env.example` to `.env.local` and set `DATABASE_URL` and
+   `SESSION_SECRET`. On a host like Vercel, set the same two variables in the project settings.
+3. **Install, create the tables and the first admin** (safe to re-run; re-running resets
+   that admin's password):
 
 ```bash
 npm install
-npm run dev
 ```
 
-Open http://localhost:3000 — you'll be redirected to `/login`.
+```bash
+node --env-file=.env.local scripts/setup-db.mjs admin@yourcompany.com "a-strong-password" "Your Name"
+```
 
-## Demo accounts (password: `pegasus`)
+4. **Run** — `npm run dev`, open http://localhost:3000.
 
-| Account | Email | Role |
-|---|---|---|
-| Sofia Laurent | sofia@atelier-laurent.com | Customer — Hard Rubber + Cellulose |
-| Marco Rossi | marco@studio-rossi.it | Customer — Ecowood only |
-| Ava Chen | ava@chenhairlab.com | Customer — all three lines |
-| Elena Weiss | admin@pegasus.com | Admin — customer tracking + CRM console |
+## Test flow
+
+1. Admin signs in → **Product keys** → generates (or uploads) keys for a product.
+2. Customer opens `/signup`, creates an account → lands on **Register product**.
+3. Customer enters a key → that product's course unlocks; the key is spent.
+4. Customer completes every lesson → **Certificates** → claims the certificate.
+5. Anyone scans the QR / opens `/verify/<id>` to confirm it.
+6. Admin sees the customer, progress, certificate and which key they used.
+
+Product keys are `XXXX-XXXX-XXXX` (letters and digits). Customers can type them in any
+case, with or without dashes. A key works once: a used key, an unknown key, or a key for a
+product the customer already owns is refused (the last without spending the key).
 
 ## Features
 
@@ -34,10 +49,12 @@ Open http://localhost:3000 — you'll be redirected to `/login`.
   "continue learning" resume card, product library with per-course progress.
 - **Courses** — video lessons (HTML5 player) and written guides, curriculum list,
   per-lesson completion with optimistic UI, prev/next navigation, course outline sidebar.
-- **Certificates** — claimable at 100% completion; unique ID (`PGS-XXXX-XXXX`),
-  print/save-PDF layout, and a QR code linking to a **public verification page**
+- **Product keys** — admins bulk upload or generate one-time keys per product
+  (`/admin/keys`); customers redeem them at `/register-product` to unlock a course.
+- **Certificates** — claimable at 100% completion; unique ID (`PGS-XXXX-XXXX`), the
+  Certificato di Mastery design with the holder's name, print/save-PDF layout, and a QR code linking to a **public verification page**
   (`/verify/[id]`) that confirms who the certificate is assigned to.
-- **Auth** — HMAC-signed session cookie ([lib/auth.ts](lib/auth.ts)) + middleware redirects.
+- **Auth** — sign-up / sign-in with scrypt-hashed passwords, HMAC-signed session cookie ([lib/auth.ts](lib/auth.ts)) + middleware redirects.
   `/logout` clears the session. Role gates: admins are kept out of the customer portal
   and customers out of `/admin` (server-side, [lib/access.ts](lib/access.ts)).
 - **Admin console** (`/admin`) — academy overview (customers, enrolments, average
@@ -47,10 +64,13 @@ Open http://localhost:3000 — you'll be redirected to `/login`.
   ([lib/crm.ts](lib/crm.ts) seeds the demo records — frontend only by design); and a
   certificate registry linking every ID to its public verification page.
 
-## Demo data layer
+## Data
 
-This is a frontend-focused demo: users/entitlements live in [lib/users.ts](lib/users.ts),
-the course catalog in [lib/catalog.ts](lib/catalog.ts), and progress/certificates persist
-to `data/store.json` via [lib/store.ts](lib/store.ts). To hook up a real backend, replace
-those three modules (e.g. entitlements from your Shopify/WooCommerce orders, progress in a
-database) — pages and components read only through their exported functions.
+Postgres tables, defined in [db/schema.sql](db/schema.sql): `users` (scrypt-hashed passwords,
+role, entitlements), `product_keys` (one-time keys; redeeming locks the row and spends the
+key and unlocks the product in one transaction), `progress` and `certificates`. Row Level
+Security is on with no policies, so Supabase's public REST API can't read them; the app
+connects directly with the database password. The course catalog stays in code
+([lib/catalog.ts](lib/catalog.ts)). CRM fields in the admin console (status, tags, lifetime
+value) still come from demo data in [lib/crm.ts](lib/crm.ts), so they are blank for real
+accounts.

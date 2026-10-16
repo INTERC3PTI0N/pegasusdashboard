@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
  */
 export default async function VerifyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const cert = findCertificate(id);
+  const cert = await findCertificate(id);
   const product = cert ? getProduct(cert.productSlug) : undefined;
 
   return (

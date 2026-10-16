@@ -21,9 +21,9 @@ function initials(name: string) {
 export default async function AdminOverviewPage() {
   await requireAdmin();
 
-  const customers = getCustomers();
-  const progressMap = getEveryonesProgress();
-  const certificates = getAllCertificates();
+  const customers = await getCustomers();
+  const progressMap = await getEveryonesProgress();
+  const certificates = await getAllCertificates();
 
   const rows = customers.map((c) => {
     const owned = products.filter((p) => c.entitlements.includes(p.slug));

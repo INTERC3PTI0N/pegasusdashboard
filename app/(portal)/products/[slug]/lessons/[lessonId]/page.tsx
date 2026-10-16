@@ -26,7 +26,7 @@ export default async function LessonPage({
   if (!found) notFound();
   const { lesson, index } = found;
 
-  const done = new Set(getCompletedLessons(user.id, product.slug));
+  const done = new Set(await getCompletedLessons(user.id, product.slug));
   const isDone = done.has(lesson.id);
   const percent = Math.round((done.size / product.lessons.length) * 100);
 

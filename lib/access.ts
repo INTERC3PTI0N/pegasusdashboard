@@ -7,7 +7,9 @@ import type { User } from './users';
 /** Require a signed-in user or bounce to /login. */
 export async function requireUser(): Promise<User> {
   const user = await getCurrentUser();
-  if (!user) redirect('/login');
+  // A stale cookie (deleted account, rotated secret) would loop with the middleware's
+  // /login -> /dashboard redirect, so clear it via /logout instead.
+  if (!user) redirect('/logout');
   return user;
 }
 

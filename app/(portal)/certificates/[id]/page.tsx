@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { headers } from 'next/headers';
 import QRCode from 'qrcode';
-import { ArrowLeft, BadgeCheck } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { requireUser } from '@/lib/access';
 import { findCertificate } from '@/lib/store';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export default async function CertificatePage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireUser();
   const { id } = await params;
-  const cert = findCertificate(id);
+  const cert = await findCertificate(id);
   // Certificates are private to their owner inside the portal;
   // third parties verify via the public /verify/[id] QR link instead.
   if (!cert || cert.userId !== user.id) notFound();
@@ -29,7 +29,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
     color: { dark: '#101014', light: '#ffffff' },
   });
 
-  const issued = new Date(cert.issuedAt).toLocaleDateString('en-GB', {
+  const issued = new Date(cert.issuedAt).toLocaleDateString('it-IT', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
@@ -54,63 +54,27 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
         </div>
       </div>
 
-      {/* The certificate itself */}
-      <div className="certificate-print lux-card relative overflow-hidden rounded-xl border bg-white p-8 md:p-14">
-        {/* Decorative frame */}
-        <div className="pointer-events-none absolute inset-4 rounded-lg border border-ink/10" />
-        <div className="pointer-events-none absolute inset-5 rounded-md border border-primary/25" />
-
-        <div className="relative text-center space-y-6">
-          <div className="space-y-2">
-            <img
-              src="/images/pegasus-logo.png"
-              alt="Pegasus"
-              className="mx-auto h-9 w-auto"
-            />
-            <p className="mono-tag text-[9px] text-muted-foreground">
-              Pegasus Academy · Engineering Since 1961
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <p className="mono-tag text-[10px] text-primary">Certificate of Mastery</p>
-            <h1 className="editorial-text text-3xl md:text-4xl">{cert.productName}</h1>
-          </div>
-
-          <div className="space-y-1.5">
-            <p className="text-sm text-muted-foreground">This certifies that</p>
-            <p className="editorial-text text-4xl md:text-5xl italic">{cert.userName}</p>
-            <p className="text-sm text-muted-foreground">{cert.salon}</p>
-          </div>
-
-          <p className="mx-auto max-w-md text-sm leading-relaxed text-foreground/75">
-            has completed every tutorial and technical guide of the {cert.productName} programme
-            and demonstrates full command of its professional techniques and care standards.
-          </p>
-
-          <div className="flex flex-col items-center gap-6 pt-2 md:flex-row md:justify-center md:gap-14">
-            <div className="text-center md:text-right">
-              <p className="mono-tag text-[9px] text-muted-foreground mb-1">Issued</p>
-              <p className="text-sm font-medium">{issued}</p>
-              <p className="mono-tag text-[9px] text-muted-foreground mt-3 mb-1">Certificate ID</p>
-              <p className="font-mono text-sm tracking-wider">{cert.id}</p>
-            </div>
-
-            <div className="flex flex-col items-center gap-1.5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrDataUrl} alt={`QR code verifying certificate ${cert.id}`} className="size-28 rounded-md border p-1.5" />
-              <p className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                <BadgeCheck className="size-3 text-primary" /> Scan to verify holder
-              </p>
-            </div>
-
-            <div className="text-center md:text-left">
-              <p className="editorial-text text-2xl italic text-ink/80">Pegasus</p>
-              <div className="mt-1 h-px w-36 bg-ink/20" />
-              <p className="mono-tag mt-1 text-[9px] text-muted-foreground">Director of Education</p>
-            </div>
-          </div>
+      {/* The certificate itself: the PDF artwork with the placeholders stripped,
+          live fields overlaid at the same positions (percent of the page). */}
+      <div
+        className="certificate-print relative aspect-[859/612] overflow-hidden rounded-xl text-[#f9f9f6] shadow-lg"
+        style={{ containerType: 'inline-size', fontFamily: '"Helvetica Neue", Helvetica, Arial, sans-serif' }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/images/certificate-bg.jpg" alt="" className="absolute inset-0 size-full" />
+        <p className="absolute inset-x-0 top-[45.2%] text-center uppercase" style={{ fontSize: '3.33cqw' }}>
+          {cert.userName}
+        </p>
+        <div className="absolute left-[72.9%] top-[75.6%] -translate-x-1/2 space-y-[3cqw] whitespace-nowrap text-center" style={{ fontSize: '1.55cqw' }}>
+          <p>Certificato n. {cert.id}</p>
+          <p>Rilasciato il {issued}</p>
         </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={qrDataUrl}
+          alt={`QR code verifying certificate ${cert.id}`}
+          className="absolute left-[90%] top-[73.5%] w-[7%] rounded-[0.5cqw]"
+        />
       </div>
 
       <p className="text-center text-xs text-muted-foreground print:hidden">

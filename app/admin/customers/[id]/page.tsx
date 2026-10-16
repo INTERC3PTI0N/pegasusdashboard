@@ -16,20 +16,20 @@ import { NotesPanel } from './notes-panel';
 
 export const dynamic = 'force-dynamic';
 
-function fmtDate(iso: string) {
+function fmtDate(iso: string | Date) {
   return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
 export default async function CustomerDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin();
+  const admin = await requireAdmin();
   const { id } = await params;
 
-  const customer = findUserById(id);
+  const customer = await findUserById(id);
   if (!customer || customer.role !== 'customer') notFound();
 
   const crm = getCrmRecord(customer.id);
-  const progress = getAllProgress(customer.id);
-  const certificates = getCertificates(customer.id);
+  const progress = await getAllProgress(customer.id);
+  const certificates = await getCertificates(customer.id);
 
   const owned = products.filter((p) => customer.entitlements.includes(p.slug));
   const courseRows = owned.map((p) => {
@@ -199,7 +199,7 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
 
           <NotesPanel
             seedNotes={crm?.notes ?? []}
-            adminName="Elena Weiss"
+            adminName={admin.name}
           />
         </div>
       </div>

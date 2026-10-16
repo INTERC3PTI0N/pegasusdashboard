@@ -11,15 +11,22 @@ import { Button } from '@/components/ui/button';
 
 export const dynamic = 'force-dynamic';
 
-export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function ProductPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ welcome?: string }>;
+}) {
   const { slug } = await params;
+  const { welcome } = await searchParams;
   // Server-side entitlement gate: non-purchasers are redirected before any content renders.
   const { user, product } = await requireProductAccess(slug);
 
-  const done = new Set(getCompletedLessons(user.id, product.slug));
+  const done = new Set(await getCompletedLessons(user.id, product.slug));
   const percent = Math.round((done.size / product.lessons.length) * 100);
   const complete = percent === 100;
-  const certificate = findCertificateFor(user.id, product.slug);
+  const certificate = await findCertificateFor(user.id, product.slug);
 
   const videoCount = product.lessons.filter((l) => l.type === 'video').length;
   const guideCount = product.lessons.length - videoCount;
@@ -32,6 +39,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       >
         <ArrowLeft className="size-4" /> Back to dashboard
       </Link>
+
+      {welcome && (
+        <div className="flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm">
+          <CheckCircle2 className="size-4 shrink-0 text-primary" />
+          Product registered — {product.name} is now unlocked. Complete every lesson to earn your certificate.
+        </div>
+      )}
 
       {/* Hero */}
       <Card className="overflow-hidden py-0 gap-0">

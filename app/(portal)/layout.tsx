@@ -8,7 +8,7 @@ import { MobileNav } from '@/components/portal/mobile-nav';
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const user = await requireCustomer();
-  const progress = getAllProgress(user.id);
+  const progress = await getAllProgress(user.id);
 
   const sidebarProducts = products.map((p) => {
     const owned = user.entitlements.includes(p.slug);

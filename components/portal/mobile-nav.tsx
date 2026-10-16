@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Menu, X, LayoutDashboard, Award, BookOpen, Lock } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Award, BookOpen, Lock, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -50,6 +50,13 @@ export function MobileNav({ products }: { products: SidebarProduct[] }) {
               className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary"
             >
               <Award className="size-4" /> Certificates
+            </Link>
+            <Link
+              href="/register-product"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary"
+            >
+              <KeyRound className="size-4" /> Register product
             </Link>
           </nav>
           <div>

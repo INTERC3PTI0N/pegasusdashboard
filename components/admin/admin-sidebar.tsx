@@ -3,13 +3,14 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Award, LifeBuoy } from 'lucide-react';
+import { LayoutDashboard, Users, Award, LifeBuoy, KeyRound } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const nav = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
   { href: '/admin/customers', label: 'Customers', icon: Users, exact: false },
   { href: '/admin/certificates', label: 'Certificates', icon: Award, exact: false },
+  { href: '/admin/keys', label: 'Product keys', icon: KeyRound, exact: false },
 ];
 
 export function AdminSidebar() {

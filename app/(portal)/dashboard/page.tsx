@@ -18,8 +18,8 @@ export default async function DashboardPage({
 }) {
   const user = await requireUser();
   const { denied } = await searchParams;
-  const progress = getAllProgress(user.id);
-  const certificates = getCertificates(user.id);
+  const progress = await getAllProgress(user.id);
+  const certificates = await getCertificates(user.id);
 
   // Only products this customer purchased — everything else stays invisible.
   const owned: Product[] = products.filter((p) => user.entitlements.includes(p.slug));
@@ -184,8 +184,11 @@ export default async function DashboardPage({
             <CardContent className="space-y-2">
               <p className="editorial-text text-2xl">No registered products yet</p>
               <p className="text-sm text-muted-foreground">
-                Purchase a Pegasus tool and register it to unlock its academy content.
+                Enter the product key from your Pegasus tool to unlock its academy content.
               </p>
+              <Button asChild className="mt-3">
+                <Link href="/register-product">Register a product</Link>
+              </Button>
             </CardContent>
           </Card>
         )}

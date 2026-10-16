@@ -24,8 +24,8 @@ function fmtDate(iso: string) {
 export default async function CustomersPage() {
   await requireAdmin();
 
-  const customers = getCustomers();
-  const progressMap = getEveryonesProgress();
+  const customers = await getCustomers();
+  const progressMap = await getEveryonesProgress();
 
   const rows = customers.map((c) => {
     const crm = getCrmRecord(c.id);

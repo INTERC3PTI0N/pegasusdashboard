@@ -263,3 +263,4 @@ export function getLesson(productSlug: string, lessonId: string) {
   if (index === -1) return undefined;
   return { product, lesson: product.lessons[index], index };
 }
+

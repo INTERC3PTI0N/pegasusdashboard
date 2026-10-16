@@ -14,8 +14,8 @@ export const dynamic = 'force-dynamic';
 
 export default async function CertificatesPage() {
   const user = await requireUser();
-  const progress = getAllProgress(user.id);
-  const certificates = getCertificates(user.id);
+  const progress = await getAllProgress(user.id);
+  const certificates = await getCertificates(user.id);
 
   const owned = products.filter((p) => user.entitlements.includes(p.slug));
 
