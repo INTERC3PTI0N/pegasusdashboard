@@ -7,12 +7,14 @@ import { findUserForLogin, createCustomer } from '@/lib/users';
 import { verifyPassword } from '@/lib/password';
 import { setSession, clearSession, getCurrentUser } from '@/lib/auth';
 import { ownsProduct, requireAdmin, requireCustomer } from '@/lib/access';
-import { getProduct } from '@/lib/catalog';
+import { getProduct } from '@/lib/courses';
+import { audit } from '@/lib/site/store';
 import {
   setLessonComplete,
   getCompletedLessons,
   issueCertificate,
   findCertificateFor,
+  hasRevokedCertificate,
   addProductKeys,
   redeemProductKey,
 } from '@/lib/store';
@@ -26,7 +28,13 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
   if (!found || !verifyPassword(password, found.passwordHash)) {
     return { error: 'Invalid email or password.' };
   }
-  await setSession(found.user.id);
+  if (found.user.suspendedAt) {
+    return { error: 'This account has been suspended. Please contact Pegasus support.' };
+  }
+  await setSession(found.user);
+  // Straight to the password page after a temporary password (a second redirect hop from the
+  // destination page can leave the client on a blank screen).
+  if (found.user.mustChangePassword) redirect('/change-password');
   redirect(found.user.role === 'admin' ? '/admin' : '/dashboard');
 }
 
@@ -46,7 +54,7 @@ export async function signup(_prev: SignupState, formData: FormData): Promise<Si
 
   const user = await createCustomer({ name, salon, email, password });
   if (!user) return fail('An account with this email already exists. Sign in instead.');
-  await setSession(user.id);
+  await setSession(user);
   redirect('/register-product');
 }
 
@@ -58,7 +66,7 @@ export async function logout() {
 export async function toggleLessonComplete(productSlug: string, lessonId: string, complete: boolean) {
   const user = await getCurrentUser();
   if (!user || !ownsProduct(user, productSlug)) return; // entitlement gate on mutation too
-  const product = getProduct(productSlug);
+  const product = await getProduct(productSlug);
   if (!product || !product.lessons.some((l) => l.id === lessonId)) return;
   await setLessonComplete(user.id, productSlug, lessonId, complete);
   revalidatePath('/dashboard');
@@ -70,12 +78,14 @@ export async function toggleLessonComplete(productSlug: string, lessonId: string
 export async function generateCertificate(productSlug: string) {
   const user = await getCurrentUser();
   if (!user || !ownsProduct(user, productSlug)) return;
-  const product = getProduct(productSlug);
+  const product = await getProduct(productSlug);
   if (!product) return;
 
   // Only issue when every lesson is complete
   const done = new Set(await getCompletedLessons(user.id, productSlug));
   if (!product.lessons.every((l) => done.has(l.id))) return;
+  // A revoked certificate is only replaced by an admin reissue, never by self-claiming.
+  if (!(await findCertificateFor(user.id, productSlug)) && (await hasRevokedCertificate(user.id, productSlug))) return;
 
   const cert =
     (await findCertificateFor(user.id, productSlug)) ??
@@ -139,15 +149,17 @@ function generateKeys(count: number): string[] {
 }
 
 export async function uploadProductKeys(_prev: UploadResult | undefined, formData: FormData): Promise<UploadResult> {
-  await requireAdmin();
+  const admin = await requireAdmin('keys');
   const productSlug = String(formData.get('product') ?? '');
-  if (!getProduct(productSlug)) return { added: 0, duplicates: 0, invalid: [], error: 'Pick a product.' };
+  const batch = String(formData.get('batch') ?? '').trim().slice(0, 80);
+  if (!await getProduct(productSlug)) return { added: 0, duplicates: 0, invalid: [], error: 'Pick a product.' };
 
   if (formData.get('intent') === 'generate') {
     const count = Math.floor(Number(formData.get('count')));
     if (!(count >= 1 && count <= 1000)) return { added: 0, duplicates: 0, invalid: [], error: 'Generate between 1 and 1000 keys.' };
     const codes = generateKeys(count);
-    const added = await addProductKeys(codes, productSlug);
+    const added = await addProductKeys(codes, productSlug, batch);
+    await audit(admin, 'keys.generate', productSlug, { count: added, batch });
     revalidatePath('/admin/keys');
     return { added, duplicates: codes.length - added, invalid: [], generated: codes };
   }
@@ -159,7 +171,8 @@ export async function uploadProductKeys(_prev: UploadResult | undefined, formDat
   const invalid = tokens.filter((t) => !CODE_RE.test(t));
   if (valid.length === 0) return { added: 0, duplicates: 0, invalid, error: 'No valid codes found.' };
 
-  const added = await addProductKeys(valid, productSlug);
+  const added = await addProductKeys(valid, productSlug, batch);
+  await audit(admin, 'keys.upload', productSlug, { count: added, batch });
   revalidatePath('/admin/keys');
   return { added, duplicates: valid.length - added, invalid };
 }

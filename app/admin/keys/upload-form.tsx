@@ -21,6 +21,10 @@ export function UploadForm({ products }: { products: { slug: string; name: strin
         </select>
       </div>
       <div className="space-y-1.5">
+        <Label htmlFor="batch">Batch label <span className="text-muted-foreground">(optional)</span></Label>
+        <Input id="batch" name="batch" maxLength={80} placeholder="e.g. Oct 2026 print run, Salon Expo" />
+      </div>
+      <div className="space-y-1.5">
         <Label htmlFor="codes">Paste keys</Label>
         <textarea
           id="codes"

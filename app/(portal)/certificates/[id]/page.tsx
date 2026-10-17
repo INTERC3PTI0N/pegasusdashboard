@@ -16,7 +16,7 @@ export default async function CertificatePage({ params }: { params: Promise<{ id
   const cert = await findCertificate(id);
   // Certificates are private to their owner inside the portal;
   // third parties verify via the public /verify/[id] QR link instead.
-  if (!cert || cert.userId !== user.id) notFound();
+  if (!cert || cert.userId !== user.id || cert.revokedAt) notFound();
 
   const h = await headers();
   const host = h.get('x-forwarded-host') ?? h.get('host') ?? 'localhost:3000';

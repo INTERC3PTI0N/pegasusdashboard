@@ -1,15 +1,18 @@
 import 'server-only';
 import { redirect } from 'next/navigation';
 import { getCurrentUser } from './auth';
-import { getProduct, type Product } from './catalog';
+import { getProduct } from './courses';
+import type { Product } from './catalog';
 import type { User } from './users';
+import { can, type Permission } from './permissions';
 
-/** Require a signed-in user or bounce to /login. */
-export async function requireUser(): Promise<User> {
+/** Require a signed-in user or bounce to /login. Enforces a pending password change. */
+export async function requireUser({ allowPasswordChange = false } = {}): Promise<User> {
   const user = await getCurrentUser();
-  // A stale cookie (deleted account, rotated secret) would loop with the middleware's
+  // A stale cookie (deleted/suspended account, rotated secret) would loop with the middleware's
   // /login -> /dashboard redirect, so clear it via /logout instead.
   if (!user) redirect('/logout');
+  if (user.mustChangePassword && !allowPasswordChange) redirect('/change-password');
   return user;
 }
 
@@ -20,10 +23,14 @@ export async function requireCustomer(): Promise<User> {
   return user;
 }
 
-/** Require an admin; customers are bounced back to their dashboard. */
-export async function requireAdmin(): Promise<User> {
+/**
+ * Require an admin; customers are bounced back to their dashboard. With a permission,
+ * staff whose role lacks it are sent to the admin overview instead.
+ */
+export async function requireAdmin(permission?: Permission): Promise<User> {
   const user = await requireUser();
   if (user.role !== 'admin') redirect('/dashboard');
+  if (permission && !can(user.adminRole, permission)) redirect('/admin?forbidden=1');
   return user;
 }
 
@@ -38,7 +45,7 @@ export function ownsProduct(user: User, productSlug: string): boolean {
  */
 export async function requireProductAccess(productSlug: string): Promise<{ user: User; product: Product }> {
   const user = await requireCustomer();
-  const product = getProduct(productSlug);
+  const product = await getProduct(productSlug);
   if (!product || !ownsProduct(user, product.slug)) {
     redirect('/dashboard?denied=1');
   }

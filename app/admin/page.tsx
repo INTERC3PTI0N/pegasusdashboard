@@ -1,167 +1,182 @@
 import Link from 'next/link';
-import { Users, GraduationCap, Award, TrendingUp, ArrowRight } from 'lucide-react';
+import { Users, Activity, KeyRound, Award, Inbox, ShieldAlert, ArrowRight } from 'lucide-react';
 import { requireAdmin } from '@/lib/access';
-import { getCustomers } from '@/lib/users';
-import { products } from '@/lib/catalog';
-import { getEveryonesProgress, getAllCertificates } from '@/lib/store';
-import { getCrmRecord, statusMeta } from '@/lib/crm';
+import { getAnalytics } from '@/lib/analytics';
+import { getAuditLog } from '@/lib/site/store';
+import { can } from '@/lib/permissions';
+import { relativeTime } from '@/lib/customer-rows';
+import { ACTIONS } from '@/lib/audit-labels';
+import { DailyBars } from '@/components/admin/daily-bars';
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 export const dynamic = 'force-dynamic';
 
-function initials(name: string) {
-  return name.split(' ').map((n) => n[0]).slice(0, 2).join('').toUpperCase();
-}
+const PERIODS = [7, 30, 90];
 
-export default async function AdminOverviewPage() {
-  await requireAdmin();
+export default async function AdminOverviewPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ days?: string; forbidden?: string }>;
+}) {
+  const admin = await requireAdmin();
+  const { days: d, forbidden } = await searchParams;
+  const days = PERIODS.includes(Number(d)) ? Number(d) : 30;
+  const [a, activity] = await Promise.all([getAnalytics(days), can(admin.adminRole, 'audit') ? getAuditLog(8) : []]);
+  const k = a.kpis;
+  const trend = k.newCustomers - k.prevCustomers;
 
-  const customers = await getCustomers();
-  const progressMap = await getEveryonesProgress();
-  const certificates = await getAllCertificates();
-
-  const rows = customers.map((c) => {
-    const owned = products.filter((p) => c.entitlements.includes(p.slug));
-    const total = owned.reduce((s, p) => s + p.lessons.length, 0);
-    const done = owned.reduce((s, p) => s + (progressMap[c.id]?.[p.slug]?.length ?? 0), 0);
-    const percent = total ? Math.round((done / total) * 100) : 0;
-    const certs = certificates.filter((x) => x.userId === c.id).length;
-    const crm = getCrmRecord(c.id);
-    return { customer: c, owned, total, done, percent, certs, crm };
-  });
-
-  const enrollments = rows.reduce((s, r) => s + r.owned.length, 0);
-  const avgProgress = rows.length
-    ? Math.round(rows.reduce((s, r) => s + r.percent, 0) / rows.length)
-    : 0;
+  const tiles = [
+    {
+      label: 'Customers',
+      value: k.customers,
+      icon: Users,
+      note: `${k.newCustomers} new in ${days} days (${trend >= 0 ? '+' : ''}${trend} vs previous ${days})`,
+      href: can(admin.adminRole, 'customers') ? '/admin/customers?sort=joined' : null,
+    },
+    { label: `Active (${days} days)`, value: k.active, icon: Activity, note: `${k.suspended} suspended`, href: null },
+    {
+      label: 'Keys available',
+      value: k.keysAvailable,
+      icon: KeyRound,
+      note: `${k.keysUsed} redeemed · ${k.keysVoided} voided`,
+      href: can(admin.adminRole, 'keys') ? '/admin/keys?status=unused' : null,
+    },
+    {
+      label: 'Certificates',
+      value: k.certsActive,
+      icon: Award,
+      note: `${k.certsRevoked} revoked`,
+      href: can(admin.adminRole, 'certificates') ? '/admin/certificates' : null,
+    },
+    {
+      label: 'New enquiries',
+      value: k.newEnquiries,
+      icon: Inbox,
+      note: 'from the website',
+      href: can(admin.adminRole, 'enquiries') ? '/admin/enquiries?status=new' : null,
+    },
+  ];
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">
-      <div>
-        <p className="mono-tag text-[10px] text-primary mb-2">Admin Console</p>
-        <h1 className="editorial-text text-4xl md:text-5xl">Academy overview</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Customer learning progress and certification across all Pegasus product lines
+      {forbidden && (
+        <p className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+          <ShieldAlert className="size-4" /> Your role doesn’t include that section. Ask an owner if you need access.
         </p>
+      )}
+
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="mono-tag text-[10px] text-primary mb-2">Admin Console</p>
+          <h1 className="editorial-text text-4xl md:text-5xl">Overview</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Academy growth, engagement and certification</p>
+        </div>
+        <div className="flex gap-1 rounded-md border p-1 text-sm" role="group" aria-label="Period">
+          {PERIODS.map((p) => (
+            <Link
+              key={p}
+              href={p === 30 ? '/admin' : `/admin?days=${p}`}
+              className={`rounded px-3 py-1 ${p === days ? 'bg-secondary font-medium' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              {p} days
+            </Link>
+          ))}
+        </div>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="gap-2 py-5">
-          <CardHeader className="pb-0">
-            <CardDescription>Customers</CardDescription>
-            <CardAction><Users className="size-4 text-primary" /></CardAction>
-            <CardTitle className="text-3xl tabular-nums">{customers.length}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">registered portal accounts</CardContent>
-        </Card>
-        <Card className="gap-2 py-5">
-          <CardHeader className="pb-0">
-            <CardDescription>Course enrolments</CardDescription>
-            <CardAction><GraduationCap className="size-4 text-primary" /></CardAction>
-            <CardTitle className="text-3xl tabular-nums">{enrollments}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">product purchases with academy access</CardContent>
-        </Card>
-        <Card className="gap-2 py-5">
-          <CardHeader className="pb-0">
-            <CardDescription>Average progress</CardDescription>
-            <CardAction><TrendingUp className="size-4 text-primary" /></CardAction>
-            <CardTitle className="text-3xl tabular-nums">{avgProgress}%</CardTitle>
-          </CardHeader>
-          <CardContent><Progress value={avgProgress} className="h-1.5" /></CardContent>
-        </Card>
-        <Card className="gap-2 py-5">
-          <CardHeader className="pb-0">
-            <CardDescription>Certificates issued</CardDescription>
-            <CardAction><Award className="size-4 text-primary" /></CardAction>
-            <CardTitle className="text-3xl tabular-nums">{certificates.length}</CardTitle>
-          </CardHeader>
-          <CardContent className="text-xs text-muted-foreground">
-            <Link href="/admin/certificates" className="text-primary hover:underline">View registry →</Link>
-          </CardContent>
-        </Card>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {tiles.map((t) => {
+          const body = (
+            <Card className="h-full gap-1 py-5 transition-colors hover:border-primary/40">
+              <CardHeader className="pb-0">
+                <CardDescription>{t.label}</CardDescription>
+                <CardAction><t.icon className="size-4 text-primary" /></CardAction>
+                <CardTitle className="text-3xl tabular-nums">{t.value}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-xs text-muted-foreground">{t.note}</CardContent>
+            </Card>
+          );
+          return t.href ? <Link key={t.label} href={t.href}>{body}</Link> : <div key={t.label}>{body}</div>;
+        })}
       </div>
 
-      {/* Customer progress table */}
-      <Card className="py-0 gap-0">
+      <Card>
+        <CardContent className="grid gap-8 md:grid-cols-3">
+          <DailyBars title="New customers" data={a.signups} />
+          <DailyBars title="Keys redeemed" data={a.redemptions} />
+          <DailyBars title="Certificates issued" data={a.certificates} />
+        </CardContent>
+      </Card>
+
+      <Card className="gap-0 py-0">
         <CardHeader className="border-b !py-5">
-          <CardTitle>Customer progress</CardTitle>
-          <CardDescription>Live tutorial completion per customer</CardDescription>
-          <CardAction>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/admin/customers">Open CRM <ArrowRight /></Link>
-            </Button>
-          </CardAction>
+          <CardTitle>Course funnel</CardTitle>
+          <CardDescription>All time: customers who own each course, started it, finished every lesson, and hold a certificate.</CardDescription>
         </CardHeader>
         <CardContent className="px-3 pb-3 pt-1">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Customer</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Products</TableHead>
-                <TableHead className="w-52">Overall progress</TableHead>
-                <TableHead className="text-right">Lessons</TableHead>
-                <TableHead className="text-right">Certificates</TableHead>
+                <TableHead>Course</TableHead>
+                <TableHead className="text-right">Owners</TableHead>
+                <TableHead className="text-right">Started</TableHead>
+                <TableHead className="text-right">Finished</TableHead>
+                <TableHead className="text-right">Certified</TableHead>
+                <TableHead className="w-48">Average progress</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {rows.map(({ customer, owned, total, done, percent, certs, crm }) => (
-                <TableRow key={customer.id}>
-                  <TableCell>
-                    <Link
-                      href={`/admin/customers/${customer.id}`}
-                      className="flex items-center gap-3 hover:text-primary transition-colors"
-                    >
-                      <Avatar>
-                        <AvatarFallback>{initials(customer.name)}</AvatarFallback>
-                      </Avatar>
-                      <span className="flex flex-col">
-                        <span className="font-medium">{customer.name}</span>
-                        <span className="text-xs text-muted-foreground">{customer.salon}</span>
-                      </span>
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    {crm && (
-                      <Badge className={statusMeta[crm.status].className}>
-                        {statusMeta[crm.status].label}
-                      </Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {owned.map((p) => (
-                        <Badge key={p.slug} variant="secondary" className="text-[10px]">
-                          {p.line.replace(' Series', '')}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Progress value={percent} className="h-1.5" />
-                      <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">
-                        {percent}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-muted-foreground">
-                    {done}/{total}
-                  </TableCell>
-                  <TableCell className="text-right tabular-nums text-muted-foreground">{certs}</TableCell>
-                </TableRow>
-              ))}
+              {a.funnel.map((f) => {
+                const pct = (n: number) => (f.owners ? ` (${Math.round((n / f.owners) * 100)}%)` : '');
+                return (
+                  <TableRow key={f.slug}>
+                    <TableCell>
+                      <span className="font-medium">{f.name}</span>
+                      <span className="block text-xs text-muted-foreground">{f.lessons} lessons</span>
+                    </TableCell>
+                    <TableCell className="text-right tabular-nums">{f.owners}</TableCell>
+                    <TableCell className="text-right tabular-nums">{f.started}<span className="text-muted-foreground">{pct(f.started)}</span></TableCell>
+                    <TableCell className="text-right tabular-nums">{f.completed}<span className="text-muted-foreground">{pct(f.completed)}</span></TableCell>
+                    <TableCell className="text-right tabular-nums">{f.certified}<span className="text-muted-foreground">{pct(f.certified)}</span></TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Progress value={f.avgProgress} className="h-1.5" />
+                        <span className="w-9 text-right text-xs tabular-nums text-muted-foreground">{f.avgProgress}%</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      {activity.length > 0 && (
+        <Card className="gap-0 py-0">
+          <CardHeader className="border-b !py-5">
+            <CardTitle>Recent admin activity</CardTitle>
+            <CardAction>
+              <Link href="/admin/audit" className="inline-flex items-center gap-1 text-sm text-primary hover:underline">
+                Full audit log <ArrowRight className="size-3.5" />
+              </Link>
+            </CardAction>
+          </CardHeader>
+          <CardContent className="divide-y p-0">
+            {activity.map((e) => (
+              <div key={e.id} className="flex items-center justify-between gap-4 px-6 py-3 text-sm">
+                <span className="min-w-0 truncate">
+                  <span className="font-medium">{e.actorEmail}</span>{' '}
+                  <span className="text-muted-foreground">{(ACTIONS[e.action] ?? e.action).toLowerCase()}</span> {e.target}
+                </span>
+                <span className="shrink-0 text-xs text-muted-foreground">{relativeTime(e.at)}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

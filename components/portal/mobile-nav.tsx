@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Menu, X, LayoutDashboard, Award, BookOpen, Lock, KeyRound } from 'lucide-react';
@@ -34,7 +35,8 @@ export function MobileNav({ products }: { products: SidebarProduct[] }) {
         </Link>
       </div>
 
-      {open && (
+      {/* Portal: the header's backdrop-blur would otherwise clip this fixed drawer to the header. */}
+      {open && createPortal(
         <div className="fixed inset-x-0 top-16 bottom-0 z-40 bg-background border-t p-4 space-y-4 overflow-y-auto">
           <nav className="space-y-1">
             <Link
@@ -86,7 +88,8 @@ export function MobileNav({ products }: { products: SidebarProduct[] }) {
               )
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { PlayCircle, FileText, CheckCircle2, Circle, Award, ArrowLeft } from 'lucide-react';
 import { requireProductAccess } from '@/lib/access';
-import { getCompletedLessons, findCertificateFor } from '@/lib/store';
+import { getCompletedLessons, findCertificateFor, hasRevokedCertificate } from '@/lib/store';
 import { generateCertificate } from '@/app/actions';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +27,7 @@ export default async function ProductPage({
   const percent = Math.round((done.size / product.lessons.length) * 100);
   const complete = percent === 100;
   const certificate = await findCertificateFor(user.id, product.slug);
+  const revoked = !certificate && (await hasRevokedCertificate(user.id, product.slug));
 
   const videoCount = product.lessons.filter((l) => l.type === 'video').length;
   const guideCount = product.lessons.length - videoCount;
@@ -77,6 +78,8 @@ export default async function ProductPage({
                     <Award /> View certificate
                   </Link>
                 </Button>
+              ) : revoked ? (
+                <span className="text-sm text-destructive">Certificate revoked — contact support</span>
               ) : (
                 <form action={generateCertificate.bind(null, product.slug)}>
                   <Button type="submit" variant="ink" size="sm">

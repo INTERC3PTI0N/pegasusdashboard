@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, PlayCircle, FileText, CheckCircle2, Circle } from 'lucide-react';
 import { requireProductAccess } from '@/lib/access';
-import { getLesson } from '@/lib/catalog';
+import { getLesson } from '@/lib/courses';
 import { getCompletedLessons } from '@/lib/store';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -23,7 +23,7 @@ export default async function LessonPage({
   // Entitlement gate — lesson content only exists for this product's purchasers.
   const { user, product } = await requireProductAccess(slug);
 
-  const found = getLesson(slug, lessonId);
+  const found = await getLesson(slug, lessonId);
   if (!found) notFound();
   const { lesson, index } = found;
 

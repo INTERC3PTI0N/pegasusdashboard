@@ -1,5 +1,5 @@
 import { requireCustomer } from '@/lib/access';
-import { products } from '@/lib/catalog';
+import { getProducts } from '@/lib/courses';
 import { getAllProgress } from '@/lib/store';
 import { logout } from '@/app/actions';
 import { AppSidebar } from '@/components/portal/app-sidebar';
@@ -9,6 +9,7 @@ import { ContentGuard } from '@/components/portal/protected-content';
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const user = await requireCustomer();
+  const products = await getProducts();
   const progress = await getAllProgress(user.id);
 
   const sidebarProducts = products.map((p) => {

@@ -71,11 +71,67 @@ product the customer already owns is refused (the last without spending the key)
   ([lib/crm.ts](lib/crm.ts) seeds the demo records — frontend only by design); and a
   certificate registry linking every ID to its public verification page.
 
+## Admin console
+
+- **Staff roles** ([lib/permissions.ts](lib/permissions.ts)) — *Owner* (everything), *Editor*
+  (website, media, courses, enquiries), *Support* (customers, keys, certificates, enquiries).
+  Every admin page and action checks its permission; the sidebar shows only what the role allows.
+  Owners manage staff at `/admin/staff` (temporary password on invite, role changes, suspend,
+  remove; there is always at least one owner).
+- **Overview** — KPIs, daily new customers / key redemptions / certificates (7, 30 or 90 days),
+  a per-course funnel (owners → started → finished → certified) and recent admin activity.
+- **Customers** — search, filter, sort, CSV export. Each customer: edit profile, grant/remove
+  courses, tick/untick individual lessons, mark a course complete or reset it, issue / revoke /
+  reissue certificates, keys they used, internal notes, reset password (temporary, must be
+  changed at next sign-in), sign out of all devices, suspend, delete.
+- **Courses** — courses live in the `courses` table (seeded from [lib/catalog.ts](lib/catalog.ts)).
+  Create, reorder and edit courses, lessons, videos (media library uploads, streamed only to
+  owners) and written guides; delete courses nobody owns.
+- **Product keys** — batch labels, filters, void / restore unused keys, CSV export for printing.
+- **Certificates** — registry with filters and CSV; revoked certificates show as invalid, with the
+  reason, on the public verification page, and customers can't re-claim them themselves.
+- **Accounts** — customers edit their profile at `/account`; everyone can change their password at
+  `/change-password` (which signs out their other devices).
+- **Audit log** — every admin action, who and when.
+
+## Website CMS
+
+The admin edits the public Pegasus website (separate repo, `Projects/Pegasus`):
+
+- **Site content** (`/admin/site`) — 17 blocks: SEO, header/menu, footer, every home-page
+  section (hero video, heritage, collections, technology, philosophy, sustainability,
+  journal articles, who we serve, brochure, contact + office locations) and the three
+  collection pages. Forms are generated from [lib/site/schema.ts](lib/site/schema.ts);
+  saved data is sanitised against it (unknown fields dropped, unsafe links such as
+  `javascript:` removed). The original site copy is in [lib/site/defaults.json](lib/site/defaults.json).
+- **Drafts, preview, publish** — edits are drafts until published. *Preview draft* opens the
+  website in preview mode with a one-hour signed link. Publishing tells the website to
+  refresh immediately (`/api/revalidate`); it also refreshes on its own within 5 minutes.
+- **History** — every publish is versioned; any version, or the original copy, can be loaded
+  back into the draft.
+- **Media library** (`/admin/media`) — images and MP4/WebM up to 4 MB, stored in Postgres and
+  served at `/api/site/media/<id>`; the website shows them via its `/cms-media/<id>` rewrite.
+- **Enquiries** (`/admin/enquiries`) — the website's brochure and dealer/business forms
+  post here (server-to-server with `SITE_SECRET`). Status, internal notes, search, CSV export.
+- **Audit log** (`/admin/audit`) — every admin change with who and when.
+
+Connecting the two: set `SITE_URL` + `SITE_SECRET` here, and `CMS_URL` (this app's URL) +
+the same `SITE_SECRET` on the website. If this app is unreachable the website keeps working
+from its built-in copy.
+
 ## Data
 
 Postgres tables, defined in [db/schema.sql](db/schema.sql): `users` (scrypt-hashed passwords,
 role, entitlements), `product_keys` (one-time keys; redeeming locks the row and spends the
-key and unlocks the product in one transaction), `progress` and `certificates`. Row Level
+key and unlocks the product in one transaction), `progress`, `certificates`, and for the
+website `site_content`, `site_content_versions`, `media`, `leads` and `audit_log`.
+Re-run `node --env-file=.env.local scripts/setup-db.mjs` (no arguments) after pulling
+schema changes; it is idempotent. With an email and password it creates or resets an *Owner*.
+
+Connection notes ([lib/db.ts](lib/db.ts)): the app uses Supabase's transaction pooler, so
+prepared statements and query pipelining are off, idle connections are retired after 20 s, and
+connections are recycled every 5 minutes — this avoids requests hanging on a dropped connection.
+Host the app in the same region as the database (e.g. Vercel `syd1` for `ap-southeast-2`). Row Level
 Security is on with no policies, so Supabase's public REST API can't read them; the app
 connects directly with the database password. The course catalog stays in code
 ([lib/catalog.ts](lib/catalog.ts)). CRM fields in the admin console (status, tags, lifetime

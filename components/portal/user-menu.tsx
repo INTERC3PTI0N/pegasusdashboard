@@ -1,6 +1,6 @@
 'use client';
 
-import { LogOut, Award, LayoutDashboard } from 'lucide-react';
+import { LogOut, Award, LayoutDashboard, UserRound, KeyRound } from 'lucide-react';
 import Link from 'next/link';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -18,11 +18,13 @@ export function UserMenu({
   email,
   salon,
   onLogout,
+  admin = false,
 }: {
   name: string;
   email: string;
   salon: string;
   onLogout: () => Promise<void>;
+  admin?: boolean;
 }) {
   const initials = name
     .split(' ')
@@ -52,14 +54,34 @@ export function UserMenu({
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        {admin ? (
+          <DropdownMenuItem asChild>
+            <Link href="/admin" className="cursor-pointer">
+              <LayoutDashboard /> Overview
+            </Link>
+          </DropdownMenuItem>
+        ) : (
+          <>
+            <DropdownMenuItem asChild>
+              <Link href="/dashboard" className="cursor-pointer">
+                <LayoutDashboard /> Dashboard
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/certificates" className="cursor-pointer">
+                <Award /> Certificates
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/account" className="cursor-pointer">
+                <UserRound /> My account
+              </Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="cursor-pointer">
-            <LayoutDashboard /> Dashboard
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/certificates" className="cursor-pointer">
-            <Award /> Certificates
+          <Link href="/change-password" className="cursor-pointer">
+            <KeyRound /> Change password
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

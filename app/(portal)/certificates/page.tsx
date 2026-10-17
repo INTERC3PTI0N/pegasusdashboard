@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Award, ArrowRight, Lock } from 'lucide-react';
 import { requireUser } from '@/lib/access';
-import { products } from '@/lib/catalog';
+import { getProducts } from '@/lib/courses';
 import { getAllProgress, getCertificates } from '@/lib/store';
 import { generateCertificate } from '@/app/actions';
 import { Card, CardContent } from '@/components/ui/card';
@@ -14,6 +14,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function CertificatesPage() {
   const user = await requireUser();
+  const products = await getProducts();
   const progress = await getAllProgress(user.id);
   const certificates = await getCertificates(user.id);
 
@@ -22,8 +23,9 @@ export default async function CertificatesPage() {
   const rows = owned.map((p) => {
     const done = progress[p.slug]?.length ?? 0;
     const percent = Math.round((done / p.lessons.length) * 100);
-    const cert = certificates.find((c) => c.productSlug === p.slug);
-    return { product: p, percent, cert };
+    const cert = certificates.find((c) => c.productSlug === p.slug && !c.revokedAt);
+    const revoked = !cert && certificates.some((c) => c.productSlug === p.slug && c.revokedAt);
+    return { product: p, percent, cert, revoked };
   });
 
   return (
@@ -39,7 +41,7 @@ export default async function CertificatesPage() {
       </div>
 
       <div className="grid gap-5 md:grid-cols-2">
-        {rows.map(({ product, percent, cert }) => (
+        {rows.map(({ product, percent, cert, revoked }) => (
           <Card key={product.slug} className="overflow-hidden py-0 gap-0">
             <div className="relative h-32">
               <Image src={product.image} alt={product.name} fill className="object-cover" />
@@ -65,6 +67,10 @@ export default async function CertificatesPage() {
                     View certificate <ArrowRight />
                   </Link>
                 </Button>
+              ) : revoked ? (
+                <p className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
+                  This certificate was revoked. Please contact Pegasus Academy support.
+                </p>
               ) : percent === 100 ? (
                 <form action={generateCertificate.bind(null, product.slug)}>
                   <Button type="submit" variant="ink" className="w-full">

@@ -1,0 +1,464 @@
+{
+  "global.seo": {
+    "siteTitle": "PEGASUS Hair Tools — INFINITE STYLING",
+    "siteDescription": "The official premium digital platform for Pegasus Hair Tools, engineering professional styling tools since 1961. Experience the craftsmanship of Flexinite technology."
+  },
+  "global.header": {
+    "logo": "/images/pegasus-logo.png",
+    "navLinks": [
+      {
+        "label": "Products",
+        "href": "/#products"
+      },
+      {
+        "label": "Technology",
+        "href": "/#technology"
+      },
+      {
+        "label": "About",
+        "href": "/#about"
+      },
+      {
+        "label": "Journal",
+        "href": "/#journal"
+      },
+      {
+        "label": "Contact",
+        "href": "/#contact"
+      }
+    ],
+    "collectionLinks": [
+      {
+        "label": "Hard Rubber · Flexinite",
+        "href": "/collections/hard-rubber"
+      },
+      {
+        "label": "Cellulose Acetate",
+        "href": "/collections/cellulose"
+      },
+      {
+        "label": "Ecowood · StaticBlock",
+        "href": "/collections/ecowood"
+      }
+    ],
+    "shopLabel": "Online Shop",
+    "shopUrl": "https://www.pegasushairtools.com"
+  },
+  "global.footer": {
+    "tagline": "Professional hair styling tools, handcrafted by Presto Industries since 1961.",
+    "instagramUrl": "https://www.pegasushairtools.com",
+    "facebookUrl": "https://www.pegasushairtools.com",
+    "youtubeUrl": "https://www.pegasushairtools.com",
+    "columns": [
+      {
+        "heading": "Products",
+        "links": [
+          {
+            "label": "Hard Rubber · Flexinite",
+            "href": "/collections/hard-rubber"
+          },
+          {
+            "label": "Cellulose Acetate",
+            "href": "/collections/cellulose"
+          },
+          {
+            "label": "Ecowood · StaticBlock",
+            "href": "/collections/ecowood"
+          }
+        ]
+      },
+      {
+        "heading": "About",
+        "links": [
+          {
+            "label": "Heritage",
+            "href": "/#about"
+          },
+          {
+            "label": "Technology",
+            "href": "/#technology"
+          },
+          {
+            "label": "Sustainability",
+            "href": "/#sustainability"
+          },
+          {
+            "label": "Journal",
+            "href": "/#journal"
+          }
+        ]
+      },
+      {
+        "heading": "Contact",
+        "links": [
+          {
+            "label": "Dealer Enquiries",
+            "href": "/#contact"
+          },
+          {
+            "label": "Request Brochure",
+            "href": "/#brochure"
+          },
+          {
+            "label": "Who We Serve",
+            "href": "/#who-we-serve"
+          }
+        ]
+      }
+    ],
+    "copyright": "PEGASUS HAIR TOOLS · A PRESTO INDUSTRIES BRAND",
+    "privacyUrl": "#",
+    "termsUrl": "#"
+  },
+  "home.preloader": {
+    "kicker": "PRESTO INDUSTRIES — EST. 1961",
+    "text": "Professional hair styling tools, handcrafted through material innovation and six decades of precision.",
+    "image": "/images/comb.png"
+  },
+  "home.hero": {
+    "kicker": "PROFESSIONAL HAIR TOOLS · SINCE 1961",
+    "titleLine1": "Infinite Styling,",
+    "titleLine2": "Handcrafted.",
+    "subtitle": "Seamless, hand-polished combs engineered by Presto Industries — where precision, craft and material science meet the professional’s chair.",
+    "video": "/videos/hair-banner.mp4",
+    "poster": "/images/pegasus_luxury_salon.jpg",
+    "primaryCtaLabel": "Explore Products",
+    "primaryCtaHref": "/#products",
+    "secondaryCtaLabel": "The Technology",
+    "secondaryCtaHref": "/#technology"
+  },
+  "home.about": {
+    "kicker": "Heritage",
+    "sub": "SINCE 1961",
+    "title": "Six decades of handcrafted precision.",
+    "body": "Founded by Lookman Qadir in 1961, Presto Industries began saw-cutting and hand-polishing combs in 1977. After years researching hair textures and climates across the world, Pegasus launched in 2012 — the culmination of a craft passed from one generation of toolmakers to the next.",
+    "image": "/images/pegasus_luxury_salon.jpg",
+    "ctaLabel": "Read Our Story",
+    "ctaHref": "/#journal"
+  },
+  "home.products": {
+    "kicker": "Products",
+    "title": "The Collections",
+    "sub": "Three material philosophies, each engineered for a specific styling and chemical discipline.",
+    "cardCta": "View Collection",
+    "items": [
+      {
+        "n": "01",
+        "title": "Hard Rubber",
+        "sub": "Flexinite Technology",
+        "blurb": "Precision cutting and styling for professionals. 100% Ebonite, high-heat and chemical resistant.",
+        "image": "/images/pegasus_hard_rubber.jpg",
+        "href": "/collections/hard-rubber"
+      },
+      {
+        "n": "02",
+        "title": "Cellulose Acetate",
+        "sub": "GlamLock Technology",
+        "blurb": "Seamless, hand-polished teeth that detangle easily, stimulate the scalp and leave hair smooth and shiny.",
+        "image": "/images/pegasus_cellulose.jpg",
+        "href": "/collections/cellulose"
+      },
+      {
+        "n": "03",
+        "title": "Ecowood",
+        "sub": "StaticBlock Technology",
+        "blurb": "Sustainable, natural and eco-friendly. Prevents fly-aways and reduces frizz with a gentle glide.",
+        "image": "/images/pegasus_ecowood.jpg",
+        "href": "/collections/ecowood"
+      }
+    ]
+  },
+  "home.technology": {
+    "kicker": "Technology",
+    "sub": "GLAMLOCK · FLEXINITE · STATICBLOCK",
+    "title": "Three technologies, one seamless glide.",
+    "body": "Ordinary combs have sharp, seamed teeth that roughen the hair. Ours are engineered instead — GlamLock hand-polishes every tooth seamless, Flexinite responds to salon heat while resisting chemicals, and StaticBlock naturally dissipates the fly-aways that friction creates.",
+    "image": "/images/pegasus_cellulose.jpg",
+    "ctaLabel": "Discover the Technology",
+    "ctaHref": "/collections/hard-rubber"
+  },
+  "home.philosophy": {
+    "kicker": "Philosophy",
+    "statementBefore": "Pegasus precision crafted combs are created for the",
+    "highlight": "best stylists",
+    "statementAfter": "in the world. We combine technology, craftsmanship, innovative colours and design.",
+    "body": "Since 1961, Presto Industries has engineered professional styling tools trusted by hairdressers across the world. This is the craft behind Pegasus — infinite styling, in every strand."
+  },
+  "home.sustainability": {
+    "kicker": "Sustainability",
+    "sub": "KIND TO HAIR, KIND TO EARTH",
+    "title": "Beautiful hair, in balance with nature.",
+    "body": "Our Ecowood range is completely earth and scalp friendly — naturally anti-static and anti-bacterial, handcrafted from sustainable natural wood. Because caring for hair should never mean compromising the world it lives in.",
+    "image": "/images/pegasus_ecowood.jpg",
+    "ctaLabel": "Explore Ecowood",
+    "ctaHref": "/collections/ecowood"
+  },
+  "home.journal": {
+    "kicker": "Journal",
+    "title": "The Pegasus Académie",
+    "sub": "Notes on hair, craft and material science from the Pegasus editorial team.",
+    "articles": [
+      {
+        "title": "No More Frizz!",
+        "category": "trichology",
+        "readTime": "4 min read",
+        "date": "Pegasus Académie",
+        "author": "Pegasus Académie",
+        "authorRole": "Editorial Team, Pegasus Hair Tools",
+        "summary": "Dry, frizzy hair complicates styling and makes every morning harder than it needs to be. Here is how the right comb calms the chaos for better-looking hair daily.",
+        "image": "/images/pegasus_luxury_salon.jpg",
+        "content": "Dry and frizzy hair is the most common styling complaint we hear from hairdressers and their clients. Frizz makes hair difficult to manage, styles refuse to hold, and the finished look loses its polish within hours.\n\nMuch of that frizz is self-inflicted — created by friction from the wrong combing tools. Ordinary injection-moulded combs carry microscopic seams along every tooth that roughen the hair surface with every pass, lifting the cuticle and inviting static.\n\n#### Calm Hair Starts With the Right Comb\nPegasus combs are saw-cut and hand polished so every tooth is seamless and rounded. Combined with StaticBlock Technology in our Ecowood range — naturally anti-static and anti-bacterial — fly-aways are prevented and frizz is visibly reduced. Smooth, polished teeth glide gently through the hair, so you can style without the struggle, every single day."
+      },
+      {
+        "title": "Give Your Hair the Soft Touch of Protection",
+        "category": "trichology",
+        "readTime": "5 min read",
+        "date": "Pegasus Académie",
+        "author": "Pegasus Académie",
+        "authorRole": "Editorial Team, Pegasus Hair Tools",
+        "summary": "Understanding the hair cuticle — and why the wrong comb quietly damages your hair, especially when it is wet or undergoing chemical treatments.",
+        "image": "/images/pegasus_cellulose.jpg",
+        "content": "Every strand of hair is wrapped in a protective layer called the cuticle — overlapping scales that, when healthy, lay flat and reflect light for natural shine. Damage that layer and hair turns dull, coarse and prone to split ends.\n\nThe wrong comb is one of the most common culprits. Sharp, seamed teeth scrape the cuticle with every stroke, and the risk multiplies when hair is at its most vulnerable: wet after a wash, or mid-way through colouring and chemical treatments.\n\n#### Protection by Design\nPegasus GlamLock combs are crafted with seamless, hand-polished teeth that detangle easily without scraping. The smooth rounded tips massage the scalp, stimulate healthy blood circulation and spread the hair's natural oils evenly from roots to tips — protection and shine in a single stroke."
+      },
+      {
+        "title": "Handmade Combs by Pegasus to Show Care Towards Your Mane",
+        "category": "history",
+        "readTime": "5 min read",
+        "date": "Pegasus Académie",
+        "author": "Pegasus Académie",
+        "authorRole": "Editorial Team, Pegasus Hair Tools",
+        "summary": "Why hand-sawn combs with rounded, hand-polished edges stimulate natural oils and distribute them effectively — craftsmanship your hair can feel.",
+        "image": "/images/pegasus_ecowood.jpg",
+        "content": "Since Presto Industries began manufacturing combs in 1977, one principle has never changed: a comb worth using must be made by hand.\n\nEach Pegasus comb is hand sawn — every tooth individually cut, then rounded and hand-polished until no seam or sharp edge remains. It is slow, deliberate work that mass-produced moulded combs simply cannot replicate.\n\n#### Craftsmanship Your Scalp Can Feel\nThose rounded, polished edges do more than feel luxurious. They stimulate the scalp's natural oils and distribute them effectively along the full length of the hair, nourishing every strand from root to tip. The result is hair that looks healthier because it genuinely is — cared for by a tool that was itself made with care."
+      },
+      {
+        "title": "FLEXINITE Technology Infused Hair Combs by Pegasus",
+        "category": "technology",
+        "readTime": "6 min read",
+        "date": "Pegasus Académie",
+        "author": "Pegasus Académie",
+        "authorRole": "Editorial Team, Pegasus Hair Tools",
+        "summary": "100% hard rubber + FLEXINITE technology — developed after extensive research into global hair textures and climate conditions.",
+        "image": "/images/pegasus_hard_rubber.jpg",
+        "content": "Pegasus hard rubber combs are made of 100% hard rubber (Ebonite) infused with our proprietary FLEXINITE technology — the result of extensive research examining hair textures and climate conditions across the world.\n\nFLEXINITE makes the comb respond to temperature changes. Under dryers and irons the material stays high-heat resistant while remaining flexible, strong and durable — a truly versatile experience for cutting, colouring and styling.\n\n#### Built for Professionals\nThat is why professional hairdressers across the world trust the Pegasus hard rubber range for precision cutting and styling. Chemical resistant against daily salon colour work, gentle on every hair type, and built to last years of session use — this is infinite styling, engineered."
+      }
+    ]
+  },
+  "home.whoWeServe": {
+    "kicker": "Network",
+    "title": "Who We Serve",
+    "sub": "PEGASUS combs are backed by a strong marketing and communication support team, created to empower distributors and to power the brand ahead in both B2B and B2C markets.",
+    "items": [
+      {
+        "label": "Distributors",
+        "icon": "truck"
+      },
+      {
+        "label": "Importers",
+        "icon": "ship"
+      },
+      {
+        "label": "Masstige Brand",
+        "icon": "building"
+      },
+      {
+        "label": "Super Markets",
+        "icon": "cart"
+      },
+      {
+        "label": "Retail Outlets",
+        "icon": "store"
+      },
+      {
+        "label": "Hair Salons",
+        "icon": "scissors"
+      }
+    ]
+  },
+  "home.brochure": {
+    "kicker": "Catalogue",
+    "title": "Request the Brochure",
+    "sub": "Access six decades of engineering excellence in our printed master catalogue.",
+    "cardKicker": "printed publication",
+    "cardTitle": "The Art of Frictionless Control",
+    "cardText": "Printed on matte eco-linen tactile paper. Featuring high-resolution technical diagrams of FLEXINITE, GLAMLOCK and STATICBLOCK combs.",
+    "cardImage": "/images/pegasus_luxury_salon.jpg",
+    "stat1Value": "180 Pages",
+    "stat1Label": "Premium Print",
+    "stat2Value": "80+ Countries",
+    "stat2Label": "Global Distribution"
+  },
+  "home.contact": {
+    "kicker": "Contact",
+    "title": "Dealer & Corporate Enquiries",
+    "sub": "Connecting professional salons, distributors and retail groups with Presto Industries.",
+    "dealerText": "Register interest to become an authorized salon distributor or retail partner. Receive priority allocations on high-demand FLEXINITE collections.",
+    "businessText": "For custom brand integrations, education partnerships, fashion-week runway sponsorship, or corporate bulk procurement orders.",
+    "defaultLocation": "mumbai",
+    "locations": [
+      {
+        "id": "paris",
+        "name": "Paris",
+        "role": "Creative & Couture Division Office",
+        "address": "24 Rue du Faubourg Saint-Honoré, 75008 Paris, France",
+        "phone": "+33 (0) 1 44 55 66 00",
+        "email": "couture.paris@pegasushairtools.com",
+        "details": "Serving high-fashion runway stylists across France, Italy, and Spain.",
+        "mapX": 48.5,
+        "mapY": 38
+      },
+      {
+        "id": "london",
+        "name": "London",
+        "role": "Creative Salon Academy & Logistics",
+        "address": "18 Savile Row, Mayfair, London W1S 3JR, United Kingdom",
+        "phone": "+44 (0) 20 7946 0958",
+        "email": "academy.uk@pegasushairtools.com",
+        "details": "The educational epicentre of Pegasus professional styling courses.",
+        "mapX": 47,
+        "mapY": 35
+      },
+      {
+        "id": "newyork",
+        "name": "New York",
+        "role": "North American Logistics & Corporate HQ",
+        "address": "Fifth Avenue, Flatiron District, New York, NY 10010, USA",
+        "phone": "+1 (212) 555-0199",
+        "email": "americas@pegasushairtools.com",
+        "details": "Direct distribution network and support for salon conglomerates in the US and Canada.",
+        "mapX": 28,
+        "mapY": 41
+      },
+      {
+        "id": "tokyo",
+        "name": "Tokyo",
+        "role": "Asia Pacific Distribution Center",
+        "address": "5-Chome Minami-Aoyama, Minato City, Tokyo 107-0062, Japan",
+        "phone": "+81 3-5555-0143",
+        "email": "apac.tokyo@pegasushairtools.com",
+        "details": "Connecting elite Japanese hairdressers with German precision engineering.",
+        "mapX": 82,
+        "mapY": 44
+      },
+      {
+        "id": "mumbai",
+        "name": "Mumbai",
+        "role": "Presto Industries Headquarters & Works",
+        "address": "215/216, Vasan Udyog Bhavan, 2nd Floor, Senapati Bapat Marg, opp. Phoenix Mill, Lower Parel, Mumbai, Maharashtra 400013",
+        "phone": "+91 22431 51400",
+        "email": "info@pegasushairtools.com",
+        "details": "Where our six-decade manufacturing legacy and FLEXINITE material research resides.",
+        "mapX": 66,
+        "mapY": 52
+      }
+    ]
+  },
+  "collection.hard-rubber": {
+    "seoTitle": "Hard Rubber Combs — Flexinite Technology | PEGASUS",
+    "seoDescription": "Pegasus Hard Rubber combs powered by Flexinite Technology. Precision cutting and styling for professionals — high-heat and chemical resistant, flexible, strong and durable.",
+    "tag": "HARD RUBBER RANGE — 100% EBONITE",
+    "title": "Hard Rubber Combs Powered by Flexinite Technology",
+    "subtitle": "Precision Cutting & Styling. For Professionals.",
+    "heroImage": "/images/pegasus_hard_rubber.jpg",
+    "intro": "The only professional combs that provide precision, quality and sustainability along with glamour and funk — to groom all hair types.",
+    "benefits": [
+      "Designed specifically for professional hairdressers globally",
+      "High-heat and chemical resistant",
+      "Flexible, strong and durable construction",
+      "Infinite styling possibilities for all hair types"
+    ],
+    "techName": "FLEXINITE",
+    "techTagline": "A Truly Versatile Experience",
+    "techDesc": "Made from 100% hard rubber (Ebonite) with proprietary Flexinite Technology, developed after extensive research examining global hair textures and climate conditions. The material responds to temperature changes, enabling versatile temperature-sensitive performance across cutting, colouring and heat-styling applications.",
+    "features": [
+      {
+        "title": "Thermo-Responsive Body",
+        "desc": "Responds intelligently to temperature changes under dryers and irons, keeping the glide frictionless where ordinary polymers snag."
+      },
+      {
+        "title": "Chemical Tolerance",
+        "desc": "Virtually impervious to bleach, colour and peroxide — built for the daily chemistry of the professional salon backwash."
+      },
+      {
+        "title": "Saw-Cut & Hand Polished",
+        "desc": "Every tooth is individually saw-cut, then hand-bevelled and polished so no raw seam ever touches the hair cuticle."
+      },
+      {
+        "title": "Professional Balance",
+        "desc": "Weighted and profiled for precision sectioning, cutting and styling in high-volume session work."
+      }
+    ]
+  },
+  "collection.cellulose": {
+    "seoTitle": "Cellulose Acetate Combs — GlamLock Technology | PEGASUS",
+    "seoDescription": "Pegasus Cellulose Acetate combs crafted with GlamLock technology. Seamless, hand-polished teeth that detangle easily, stimulate the scalp and make hair smooth and shiny.",
+    "tag": "CELLULOSE ACETATE RANGE",
+    "title": "The Cellulose Acetate Collection",
+    "subtitle": "Seamless. Hand Polished. Scalp Friendly.",
+    "heroImage": "/images/pegasus_cellulose.jpg",
+    "intro": "Each Cellulose Acetate comb is saw-cut, then hand polished and buffed to ensure smooth, rounded teeth that massage your scalp — a class apart from other combs in the market.",
+    "benefits": [
+      "Seamless teeth detangle hair easily without snagging",
+      "Stimulates the scalp for healthy blood circulation",
+      "Spreads natural oils evenly from roots to tips",
+      "Hair and scalp friendly, plant-derived material"
+    ],
+    "techName": "GLAMLOCK",
+    "techTagline": "Smooth. Shiny. Seamless.",
+    "techDesc": "Ordinary combs have sharp teeth which can roughen the hair and cause scalp damage. Pegasus Cellulose Acetate combs are crafted with GlamLock technology, wherein seamless teeth detangle hair easily and stimulate the scalp — making hair smooth and shiny.",
+    "features": [
+      {
+        "title": "Seamless Rounded Teeth",
+        "desc": "Hand-finished tips free of moulding seams glide through wet or dry hair without scraping the cuticle."
+      },
+      {
+        "title": "Natural Oil Distribution",
+        "desc": "Smooth rounded teeth evenly spread the hair’s natural oils from the roots to the tips for natural shine."
+      },
+      {
+        "title": "Scalp Stimulation",
+        "desc": "Massaging tooth profiles encourage healthy blood circulation with every pass."
+      },
+      {
+        "title": "Handcrafted Quality",
+        "desc": "Saw-cut, hand polished and buffed — tactile, body-temperature-adaptive material with an elegant finish."
+      }
+    ]
+  },
+  "collection.ecowood": {
+    "seoTitle": "Ecowood Combs — StaticBlock Technology | PEGASUS",
+    "seoDescription": "Pegasus Ecowood combs backed by StaticBlock Technology. Sustainable, natural and eco-friendly — they prevent fly-aways, reduce frizz and glide gently through your hair.",
+    "tag": "ECO MADE RANGE",
+    "title": "Ecowood Combs Backed by StaticBlock Technology",
+    "subtitle": "Sustainable. Natural. Eco-Friendly.",
+    "heroImage": "/images/pegasus_ecowood.jpg",
+    "intro": "Completely earth and scalp friendly. Inspired by nature, the secret to happy hair and a nourished scalp lies in this ultimate comb — handcrafted for perfection.",
+    "benefits": [
+      "Prevents fly-aways and reduces frizz",
+      "Smooth, polished teeth for a gentle glide",
+      "Naturally anti-static and anti-bacterial",
+      "Perfect for sensitive scalps — no scraping or bruising"
+    ],
+    "techName": "STATICBLOCK",
+    "techTagline": "Calm Hair. Naturally.",
+    "techDesc": "Pegasus Ecowood combs with StaticBlock Technology prevent fly-aways and reduce frizz. Their teeth are smooth and polished, ensuring a gentle glide through your hair, while the natural element of the comb is both anti-static and anti-bacterial.",
+    "features": [
+      {
+        "title": "Static Dissipation",
+        "desc": "The natural wood body neutralises the electrical charge that friction builds during dry combing — no more fly-aways."
+      },
+      {
+        "title": "Gentle Rounded Tips",
+        "desc": "Smooth rounded tips prevent scraping or bruising, making Ecowood perfect for sensitive scalps."
+      },
+      {
+        "title": "Anti-Bacterial by Nature",
+        "desc": "The organic material is naturally anti-bacterial, keeping the tool hygienic between salon services."
+      },
+      {
+        "title": "Earth Friendly",
+        "desc": "Sustainably sourced and handcrafted for perfection — a comb that cares for your hair and the planet."
+      }
+    ]
+  }
+}

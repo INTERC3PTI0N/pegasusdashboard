@@ -2,7 +2,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { BookOpen, CheckCircle2, Award, TrendingUp, ArrowRight, PlayCircle, ShieldAlert } from 'lucide-react';
 import { requireUser } from '@/lib/access';
-import { products, type Product } from '@/lib/catalog';
+import { getProducts } from '@/lib/courses';
+import type { Product } from '@/lib/catalog';
 import { getAllProgress, getCertificates } from '@/lib/store';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardAction } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,9 +18,10 @@ export default async function DashboardPage({
   searchParams: Promise<{ denied?: string }>;
 }) {
   const user = await requireUser();
+  const products = await getProducts();
   const { denied } = await searchParams;
   const progress = await getAllProgress(user.id);
-  const certificates = await getCertificates(user.id);
+  const certificates = (await getCertificates(user.id)).filter((c) => !c.revokedAt);
 
   // Only products this customer purchased — everything else stays invisible.
   const owned: Product[] = products.filter((p) => user.entitlements.includes(p.slug));

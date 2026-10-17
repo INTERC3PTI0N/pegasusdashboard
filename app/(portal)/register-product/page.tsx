@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { requireCustomer } from '@/lib/access';
-import { products } from '@/lib/catalog';
+import { getProducts } from '@/lib/courses';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { RedeemForm } from './redeem-form';
@@ -9,6 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function RegisterProductPage() {
   const user = await requireCustomer();
+  const products = await getProducts();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">

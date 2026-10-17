@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { BadgeCheck, ShieldX } from 'lucide-react';
 import { findCertificate } from '@/lib/store';
-import { getProduct } from '@/lib/catalog';
+import { getProduct } from '@/lib/courses';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 export default async function VerifyPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const cert = await findCertificate(id);
-  const product = cert ? getProduct(cert.productSlug) : undefined;
+  const product = cert ? await getProduct(cert.productSlug) : undefined;
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center bg-mist px-4 py-12">
@@ -26,7 +26,30 @@ export default async function VerifyPage({ params }: { params: Promise<{ id: str
         priority
       />
 
-      {cert ? (
+      {cert?.revokedAt ? (
+        <div className="lux-card w-full max-w-md rounded-xl p-8 text-center space-y-5">
+          <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-destructive/10">
+            <ShieldX className="size-7 text-destructive" />
+          </div>
+          <div>
+            <p className="mono-tag text-[10px] text-destructive mb-1">Revoked</p>
+            <h1 className="editorial-text text-2xl">This certificate is no longer valid</h1>
+          </div>
+          <div className="rounded-lg border bg-mist/60 p-5 text-left space-y-3">
+            <Row label="Originally issued to" value={cert.userName} strong />
+            <Row label="Programme" value={cert.productName} />
+            <Row
+              label="Revoked"
+              value={cert.revokedAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+            />
+            {cert.revokedReason && <Row label="Reason" value={cert.revokedReason} />}
+            <Row label="Certificate ID" value={cert.id} mono />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Pegasus Academy has withdrawn this certificate. Do not accept it as proof of qualification.
+          </p>
+        </div>
+      ) : cert ? (
         <div className="lux-card w-full max-w-md rounded-xl p-8 text-center space-y-5">
           <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-primary/10">
             <BadgeCheck className="size-7 text-primary" />

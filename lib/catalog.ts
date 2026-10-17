@@ -6,7 +6,10 @@ export interface Lesson {
   type: LessonType;
   duration: string; // "8 min" etc.
   summary: string;
-  /** File in /media (not public). Served only to owners via /api/media/[slug]/[lessonId]. */
+  /**
+   * A file bundled in /media (e.g. "pega.mp4") or an upload from the media library ("/cms-media/<id>").
+   * Never public: served only to owners via /api/media/[slug]/[lessonId].
+   */
   videoFile?: string;
   guide?: { heading: string; body: string }[];
 }
@@ -21,9 +24,13 @@ export interface Product {
   lessons: Lesson[];
 }
 
-const DEMO_VIDEO = 'pega.mp4';
+const DEMO_VIDEO = '/media/pega.mp4'; // bundled in /media (not public)
 
-export const products: Product[] = [
+/**
+ * The original course catalogue. It seeds the `courses` table on first use; after that the
+ * catalogue is edited in Admin → Courses and read through lib/courses.ts.
+ */
+export const seedProducts: Product[] = [
   {
     slug: 'hard-rubber',
     name: 'Hard Rubber · Flexinite',
@@ -252,16 +259,3 @@ export const products: Product[] = [
     ],
   },
 ];
-
-export function getProduct(slug: string): Product | undefined {
-  return products.find((p) => p.slug === slug);
-}
-
-export function getLesson(productSlug: string, lessonId: string) {
-  const product = getProduct(productSlug);
-  if (!product) return undefined;
-  const index = product.lessons.findIndex((l) => l.id === lessonId);
-  if (index === -1) return undefined;
-  return { product, lesson: product.lessons[index], index };
-}
-
