@@ -67,6 +67,7 @@ export const docs: DocDef[] = [
     description: 'Logo, main navigation, collections menu and the Online Shop button.',
     fields: [
       img('logo', 'Logo'),
+      img('logoOnDark', 'Logo on dark backgrounds (header over the hero video)'),
       { name: 'navLinks', label: 'Main navigation', type: 'list', itemTitle: 'label', fields: link() },
       { name: 'collectionLinks', label: 'Collections menu (mobile)', type: 'list', itemTitle: 'label', fields: link() },
       t('shopLabel', 'Shop button text'),

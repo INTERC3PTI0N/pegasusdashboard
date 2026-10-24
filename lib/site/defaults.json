@@ -5,6 +5,7 @@
   },
   "global.header": {
     "logo": "/images/pegasus-logo.png",
+    "logoOnDark": "/images/pegasus-logo-light.png",
     "navLinks": [
       {
         "label": "Products",

@@ -27,7 +27,8 @@ interface Row {
 function toState(key: string, row?: Row): DocState {
   return {
     key,
-    content: row?.draft ?? row?.published ?? siteDefaults[key] ?? {},
+    // Over the defaults, so fields added after a block was saved still show their default.
+    content: { ...siteDefaults[key], ...(row?.draft ?? row?.published ?? {}) },
     hasDraft: !!row?.draft,
     isPublished: !!row?.published,
     updatedAt: row?.updatedAt ?? null,
@@ -53,7 +54,7 @@ export async function getSiteContent(draft = false): Promise<Record<string, Cont
   return Object.fromEntries(
     docs.map((d) => {
       const row = rows.find((r) => r.key === d.key);
-      return [d.key, (draft && row?.draft) || row?.published || siteDefaults[d.key]];
+      return [d.key, { ...siteDefaults[d.key], ...((draft && row?.draft) || row?.published || {}) }];
     })
   );
 }

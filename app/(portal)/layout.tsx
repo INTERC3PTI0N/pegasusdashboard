@@ -38,7 +38,7 @@ export default async function PortalLayout({ children }: { children: React.React
         <main className="flex-1 px-4 py-8 md:px-8 lg:px-12">{children}</main>
         <footer className="border-t px-4 md:px-8 py-4">
           <p className="mono-tag text-[9px] text-muted-foreground/60">
-            Pegasus Hair Tools — Infinite Styling · Content exclusive to verified product owners
+            Pegasus Hair Tools — Mastery in Your Hands · Content exclusive to verified product owners
           </p>
         </footer>
       </div>

@@ -11,8 +11,8 @@ export default function LoginPage() {
             src="/images/pegasus-logo.png"
             alt="Pegasus"
             width={150}
-            height={40}
-            className="h-9 w-auto mb-10"
+            height={70}
+            className="h-14 w-auto mb-10"
             priority
           />
           <p className="mono-tag text-[10px] text-primary mb-3">Customer Academy</p>

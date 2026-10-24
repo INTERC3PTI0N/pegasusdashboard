@@ -31,8 +31,8 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
             src="/images/pegasus-logo.png"
             alt="Pegasus"
             width={120}
-            height={32}
-            className="h-7 w-auto"
+            height={56}
+            className="h-10 w-auto"
             priority
           />
           <span className="mono-tag text-[9px] text-primary mt-1">Academy</span>

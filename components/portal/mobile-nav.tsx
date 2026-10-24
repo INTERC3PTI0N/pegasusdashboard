@@ -28,9 +28,9 @@ export function MobileNav({ products }: { products: SidebarProduct[] }) {
           <Image
             src="/images/pegasus-logo.png"
             alt="Pegasus"
-            width={100}
-            height={28}
-            className="h-6 w-auto"
+            width={96}
+            height={45}
+            className="h-9 w-auto"
           />
         </Link>
       </div>

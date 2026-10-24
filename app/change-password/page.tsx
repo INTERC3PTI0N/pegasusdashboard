@@ -11,7 +11,7 @@ export default async function ChangePasswordPage() {
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center bg-mist px-4 py-12">
-      <Image src="/images/pegasus-logo.png" alt="Pegasus" width={130} height={36} className="mb-8 h-8 w-auto" priority />
+      <Image src="/images/pegasus-logo.png" alt="Pegasus" width={128} height={60} className="mb-8 h-12 w-auto" priority />
       <div className="lux-card w-full max-w-sm space-y-6 rounded-xl p-8">
         <div>
           <p className="mono-tag mb-1 text-[10px] text-primary">{forced ? 'Welcome' : 'Account'}</p>
