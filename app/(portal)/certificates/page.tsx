@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Award, ArrowRight, Lock } from 'lucide-react';
-import { requireUser } from '@/lib/access';
+import { requireCustomer, accessFor } from '@/lib/access';
+import { awardsCertificate, programmeProgress } from '@/lib/course-view';
 import { getProducts } from '@/lib/courses';
 import { getAllProgress, getCertificates } from '@/lib/store';
 import { generateCertificate } from '@/app/actions';
@@ -13,51 +14,48 @@ import { Button } from '@/components/ui/button';
 export const dynamic = 'force-dynamic';
 
 export default async function CertificatesPage() {
-  const user = await requireUser();
-  const products = await getProducts();
-  const progress = await getAllProgress(user.id);
-  const certificates = await getCertificates(user.id);
-
-  const owned = products.filter((p) => user.entitlements.includes(p.slug));
+  const user = await requireCustomer();
+  const [products, progress, certificates] = await Promise.all([getProducts(), getAllProgress(user.id), getCertificates(user.id)]);
+  const access = accessFor(user);
+  // One certificate, claimed on the Masterclass once every lesson of both courses is complete.
+  const owned = access.anyKit ? products.filter(awardsCertificate) : [];
+  const programme = programmeProgress(products, progress);
 
   const rows = owned.map((p) => {
-    const done = progress[p.slug]?.length ?? 0;
-    const percent = Math.round((done / p.lessons.length) * 100);
     const cert = certificates.find((c) => c.productSlug === p.slug && !c.revokedAt);
     const revoked = !cert && certificates.some((c) => c.productSlug === p.slug && c.revokedAt);
-    return { product: p, percent, cert, revoked };
+    return { product: p, percent: programme.percent, complete: programme.complete, cert, revoked };
   });
 
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <div>
         <p className="mono-tag text-[10px] text-primary mb-2">Certification</p>
-        <h1 className="editorial-text text-4xl">Certificates</h1>
+        <h1 className="editorial-text text-4xl">Certificate</h1>
         <p className="mt-2 text-sm text-muted-foreground max-w-2xl">
-          Complete every lesson in a course to earn its Pegasus Academy certificate. Each
-          certificate carries a unique ID and QR code so clients and employers can verify it
-          is genuinely assigned to you.
+          Complete all {programme.total} lessons to earn your PEGASUS® Academy certificate. Each certificate includes a
+          unique ID and QR code, allowing clients and employers to verify its authenticity and confirm it was issued to you.
         </p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        {rows.map(({ product, percent, cert, revoked }) => (
+      <div className="grid max-w-xl gap-5">
+        {rows.map(({ product, percent, complete, cert, revoked }) => (
           <Card key={product.slug} className="overflow-hidden py-0 gap-0">
-            <div className="relative h-32">
+            <div className="relative aspect-video">
               <Image src={product.image} alt={product.name} fill className="object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-ink/10" />
               <div className="absolute bottom-3 left-4 right-4 flex items-end justify-between">
-                <p className="mono-tag text-[9px] text-white/80">{product.line}</p>
+                <p className="mono-tag text-[9px] text-white/80">{product.name}</p>
                 {cert && <Badge className="gap-1"><Award className="size-3" /> Earned</Badge>}
               </div>
             </div>
             <CardContent className="p-5 space-y-4">
               <div>
-                <h3 className="font-semibold">{product.name}</h3>
+                <h3 className="font-semibold uppercase">{product.line || product.name}</h3>
                 <p className="text-sm text-muted-foreground">
                   {cert
                     ? `Certificate ${cert.id} · issued ${new Date(cert.issuedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`
-                    : 'Mastery Certification'}
+                    : 'PEGASUS® Academy certificate'}
                 </p>
               </div>
 
@@ -71,7 +69,15 @@ export default async function CertificatesPage() {
                 <p className="rounded-md border border-destructive/30 bg-destructive/5 px-3 py-2 text-sm text-destructive">
                   This certificate was revoked. Please contact Pegasus Academy support.
                 </p>
-              ) : percent === 100 ? (
+              ) : !access.mastery ? (
+                <div className="space-y-2 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm">
+                  <p className="flex items-center gap-1.5 font-medium"><Lock className="size-3.5" /> Included with the Mastery Kit</p>
+                  <p className="text-muted-foreground">Buy the Mastery Kit to unlock the Masterclass and earn this certificate.</p>
+                  <Button asChild size="sm" className="w-full">
+                    <Link href="/register-kit">Register Mastery Kit</Link>
+                  </Button>
+                </div>
+              ) : complete ? (
                 <form action={generateCertificate.bind(null, product.slug)}>
                   <Button type="submit" variant="ink" className="w-full">
                     <Award /> Claim your certificate
@@ -81,13 +87,13 @@ export default async function CertificatesPage() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <Lock className="size-3" /> Complete the course to unlock
+                      <Lock className="size-3" /> {programme.done} of {programme.total} lessons complete
                     </span>
                     <span className="tabular-nums">{percent}%</span>
                   </div>
                   <Progress value={percent} className="h-1.5" />
                   <Button asChild variant="outline" size="sm" className="w-full mt-1">
-                    <Link href={`/products/${product.slug}`}>Continue course</Link>
+                    <Link href={`/courses/${products.find((p) => p.lessons.some((l) => !progress[p.slug]?.includes(l.id)))?.slug ?? product.slug}`}>Continue learning</Link>
                   </Button>
                 </div>
               )}
@@ -100,7 +106,7 @@ export default async function CertificatesPage() {
         <Card className="py-12 text-center">
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Register a Pegasus product to start working toward certification.
+              Register your Pegasus kit to start your training.
             </p>
           </CardContent>
         </Card>

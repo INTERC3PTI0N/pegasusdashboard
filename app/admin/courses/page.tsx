@@ -18,8 +18,9 @@ export default async function CoursesPage() {
         <p className="mono-tag text-[10px] text-primary mb-2">Academy</p>
         <h1 className="editorial-text text-4xl">Courses</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-          Each course belongs to a product and is unlocked by that product&apos;s keys. Edit lessons, videos and
-          written guides here — changes are live for customers as soon as you save.
+          Courses are unlocked by kits: each lesson is marked <b>Essential</b> (Essential and Mastery Kits) or
+          <b> Mastery</b> (Mastery Kit only — Essential holders see it locked, with its preview clip). Changes are live
+          as soon as you save.
         </p>
       </div>
 
@@ -28,7 +29,6 @@ export default async function CoursesPage() {
           <CardContent className="divide-y p-0">
             {products.map((p, i) => {
               const f = funnel.find((x) => x.slug === p.slug);
-              const videos = p.lessons.filter((l) => l.type === 'video').length;
               return (
                 <div key={p.slug} className="flex items-center gap-4 px-5 py-4">
                   <CourseOrder slug={p.slug} first={i === 0} last={i === products.length - 1} />
@@ -37,7 +37,8 @@ export default async function CoursesPage() {
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">{p.name}</p>
                     <p className="text-xs text-muted-foreground">
-                      {p.lessons.length} lessons ({videos} video, {p.lessons.length - videos} guide) · {f?.owners ?? 0} owners ·{' '}
+                      {p.lessons.length} lessons ({p.lessons.filter((l) => l.tier === 'essential').length} Essential,{' '}
+                      {p.lessons.filter((l) => l.tier !== 'essential').length} Mastery) · {f?.started ?? 0} started ·{' '}
                       {f?.certified ?? 0} certified · <span className="font-mono">/{p.slug}</span>
                     </p>
                   </div>

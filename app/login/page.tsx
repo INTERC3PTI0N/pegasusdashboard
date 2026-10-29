@@ -1,11 +1,13 @@
 import Image from 'next/image';
 import { LoginForm } from './login-form';
+import { LanguageSwitcher } from '@/components/language-switcher';
 
 export default function LoginPage() {
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       {/* Left — form */}
-      <div className="flex flex-col justify-center px-6 py-12 lg:px-20">
+      <div className="relative flex flex-col justify-center px-6 py-12 lg:px-20">
+        <LanguageSwitcher className="absolute right-4 top-4" />
         <div className="mx-auto w-full max-w-sm">
           <Image
             src="/images/pegasus-logo.png"
@@ -15,7 +17,7 @@ export default function LoginPage() {
             className="h-14 w-auto mb-10"
             priority
           />
-          <p className="mono-tag text-[10px] text-primary mb-3">Customer Academy</p>
+          <p className="mono-tag text-[10px] text-primary mb-3">PEGASUS Masterclass</p>
           <h1 className="editorial-text text-4xl mb-2">Welcome back</h1>
           <p className="text-sm text-muted-foreground mb-8">
             Sign in to access the tutorials, guides and certification for your Pegasus tools.

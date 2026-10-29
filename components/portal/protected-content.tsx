@@ -52,7 +52,17 @@ export function Watermark({ text, className }: { text: string; className?: strin
   );
 }
 
-export function ProtectedVideo({ src, poster, watermark }: { src: string; poster?: string; watermark: string }) {
+export function ProtectedVideo({
+  src,
+  poster,
+  watermark,
+  onEnded,
+}: {
+  src: string;
+  poster?: string;
+  watermark: string;
+  onEnded?: () => void;
+}) {
   const wrap = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [full, setFull] = useState(false);
@@ -87,6 +97,10 @@ export function ProtectedVideo({ src, poster, watermark }: { src: string; poster
         controlsList="nodownload nofullscreen noremoteplayback"
         disablePictureInPicture
         disableRemotePlayback
+        onEnded={() => {
+          if (document.fullscreenElement) document.exitFullscreen();
+          onEnded?.();
+        }}
         className={cn('w-full', full ? 'h-full object-contain' : 'aspect-video')}
       />
       <Watermark text={watermark} className="text-white/45 [text-shadow:0_1px_2px_rgb(0_0_0/0.6)]" />

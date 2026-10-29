@@ -45,6 +45,10 @@ export async function getAnalytics(days = 30) {
         certsActive: number;
         certsRevoked: number;
         newEnquiries: number;
+        mastery: number;
+        essentialActive: number;
+        essentialExpiring: number;
+        essentialExpired: number;
       }[]
     >`
       select
@@ -59,18 +63,25 @@ export async function getAnalytics(days = 30) {
         (select count(*)::int from product_keys where voided_at is not null and used_by is null) as keys_voided,
         (select count(*)::int from certificates where revoked_at is null) as certs_active,
         (select count(*)::int from certificates where revoked_at is not null) as certs_revoked,
-        (select count(*)::int from leads where status = 'new') as new_enquiries`,
+        (select count(*)::int from leads where status = 'new') as new_enquiries,
+        (select count(*)::int from user_kits where kit = 'mastery') as mastery,
+        (select count(*)::int from user_kits e where e.kit = 'essential' and e.expires_at > now()
+           and not exists (select 1 from user_kits m where m.user_id = e.user_id and m.kit = 'mastery')) as essential_active,
+        (select count(*)::int from user_kits e where e.kit = 'essential' and e.expires_at > now()
+           and e.expires_at <= now() + interval '30 days'
+           and not exists (select 1 from user_kits m where m.user_id = e.user_id and m.kit = 'mastery')) as essential_expiring,
+        (select count(*)::int from user_kits e where e.kit = 'essential' and e.expires_at <= now()
+           and not exists (select 1 from user_kits m where m.user_id = e.user_id and m.kit = 'mastery')) as essential_expired`,
     getProducts(),
-    sql<{ slug: string; n: number }[]>`
-      select unnest(entitlements) as slug, count(*)::int as n from users where role = 'customer' group by 1`,
+    sql<{ n: number }[]>`select count(distinct user_id)::int as n from user_kits`,
     sql<{ userId: string; productSlug: string; lessons: string[] }[]>`
       select p.user_id, p.product_slug, p.lessons from progress p
-      join users u on u.id = p.user_id and p.product_slug = any(u.entitlements)`,
+      where exists (select 1 from user_kits k where k.user_id = p.user_id)`,
     sql<{ productSlug: string; n: number }[]>`
       select product_slug, count(*)::int as n from certificates where revoked_at is null group by 1`,
   ]);
 
-  // Course funnel: owners → started → finished every lesson → certified.
+  // Course funnel: customers with a kit → started → finished every lesson → certified.
   const funnel = products.map((p) => {
     const ids = new Set(p.lessons.map((l) => l.id));
     const rows = progressRows.filter((r) => r.productSlug === p.slug);
@@ -79,7 +90,7 @@ export async function getAnalytics(days = 30) {
       slug: p.slug,
       name: p.name,
       lessons: p.lessons.length,
-      owners: owners.find((o) => o.slug === p.slug)?.n ?? 0,
+      owners: owners[0]?.n ?? 0,
       started: doneCounts.filter((n) => n > 0).length,
       completed: ids.size ? doneCounts.filter((n) => n >= ids.size).length : 0,
       certified: certRows.find((c) => c.productSlug === p.slug)?.n ?? 0,

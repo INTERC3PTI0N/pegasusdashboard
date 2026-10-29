@@ -3,9 +3,14 @@ import { getCustomers, type User } from './users';
 import { getEveryonesProgress, getAllCertificates } from './store';
 import { getProducts } from './courses';
 import type { Product } from './catalog';
+import { kitAccess, type Access } from './kits';
+import { courseView } from './course-view';
 
 export interface CustomerRow {
   user: User;
+  access: Access;
+  /** 'Mastery' | 'Essential' | 'Essential (expired)' | '' */
+  kitLabel: string;
   owned: Product[];
   done: number;
   total: number;
@@ -15,7 +20,7 @@ export interface CustomerRow {
 
 export interface CustomerFilter {
   q?: string;
-  product?: string;
+  kit?: string; // mastery | essential (active, without mastery) | expired | none
   status?: string; // active | suspended | unregistered | completed
   sort?: string; // joined | seen | progress | name
 }
@@ -30,14 +35,17 @@ export async function customerRows(f: CustomerFilter = {}): Promise<{ rows: Cust
   ]);
 
   let rows = customers.map((user) => {
-    const owned = products.filter((p) => user.entitlements.includes(p.slug));
-    const total = owned.reduce((s, p) => s + p.lessons.length, 0);
-    const done = owned.reduce(
-      (s, p) => s + (progress[user.id]?.[p.slug] ?? []).filter((id) => p.lessons.some((l) => l.id === id)).length,
-      0
-    );
+    const access = kitAccess(user.kits);
+    const owned = access.anyKit ? products : [];
+    // Progress over the modules their kit opens.
+    const views = owned.map((p) => courseView(p, access, progress[user.id]?.[p.slug]));
+    const total = views.reduce((s, v) => s + v.open, 0);
+    const done = views.reduce((s, v) => s + v.done, 0);
+    const kitLabel = access.mastery ? 'Mastery' : access.essential ? 'Essential' : access.essentialExpired ? 'Essential (expired)' : '';
     return {
       user,
+      access,
+      kitLabel,
       owned,
       done,
       total,
@@ -52,10 +60,13 @@ export async function customerRows(f: CustomerFilter = {}): Promise<{ rows: Cust
       [u.name, u.email, u.salon, u.country, u.phone].some((x) => x.toLowerCase().includes(q))
     );
   }
-  if (f.product) rows = rows.filter((r) => r.user.entitlements.includes(f.product!));
+  if (f.kit === 'mastery') rows = rows.filter((r) => r.access.mastery);
+  if (f.kit === 'essential') rows = rows.filter((r) => r.access.essential && !r.access.mastery);
+  if (f.kit === 'expired') rows = rows.filter((r) => r.access.essentialExpired && !r.access.mastery);
+  if (f.kit === 'none') rows = rows.filter((r) => !r.access.anyKit);
   if (f.status === 'active') rows = rows.filter((r) => !r.user.suspendedAt);
   if (f.status === 'suspended') rows = rows.filter((r) => r.user.suspendedAt);
-  if (f.status === 'unregistered') rows = rows.filter((r) => r.owned.length === 0);
+  if (f.status === 'unregistered') rows = rows.filter((r) => !r.access.anyKit);
   if (f.status === 'completed') rows = rows.filter((r) => r.total > 0 && r.done === r.total);
 
   const time = (d: Date | null) => d?.getTime() ?? 0;

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Users, Activity, KeyRound, Award, Inbox, ShieldAlert, ArrowRight } from 'lucide-react';
+import { Users, Activity, KeyRound, Award, Inbox, ShieldAlert, ArrowRight, Package } from 'lucide-react';
 import { requireAdmin } from '@/lib/access';
 import { getAnalytics } from '@/lib/analytics';
 import { getAuditLog } from '@/lib/site/store';
@@ -34,6 +34,13 @@ export default async function AdminOverviewPage({
       icon: Users,
       note: `${k.newCustomers} new in ${days} days (${trend >= 0 ? '+' : ''}${trend} vs previous ${days})`,
       href: can(admin.adminRole, 'customers') ? '/admin/customers?sort=joined' : null,
+    },
+    {
+      label: 'Kits registered',
+      value: k.mastery + k.essentialActive,
+      icon: Package,
+      note: `${k.mastery} Mastery · ${k.essentialActive} Essential${k.essentialExpiring ? ` (${k.essentialExpiring} ending in 30 days)` : ''} · ${k.essentialExpired} expired`,
+      href: can(admin.adminRole, 'customers') ? '/admin/customers?kit=essential' : null,
     },
     { label: `Active (${days} days)`, value: k.active, icon: Activity, note: `${k.suspended} suspended`, href: null },
     {
@@ -86,7 +93,7 @@ export default async function AdminOverviewPage({
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tiles.map((t) => {
           const body = (
             <Card className="h-full gap-1 py-5 transition-colors hover:border-primary/40">
@@ -113,14 +120,14 @@ export default async function AdminOverviewPage({
       <Card className="gap-0 py-0">
         <CardHeader className="border-b !py-5">
           <CardTitle>Course funnel</CardTitle>
-          <CardDescription>All time: customers who own each course, started it, finished every lesson, and hold a certificate.</CardDescription>
+          <CardDescription>All time: customers with a kit, who started, finished every module (Mastery only can), and hold the Mastery Certificate.</CardDescription>
         </CardHeader>
         <CardContent className="px-3 pb-3 pt-1">
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Course</TableHead>
-                <TableHead className="text-right">Owners</TableHead>
+                <TableHead className="text-right">With a kit</TableHead>
                 <TableHead className="text-right">Started</TableHead>
                 <TableHead className="text-right">Finished</TableHead>
                 <TableHead className="text-right">Certified</TableHead>

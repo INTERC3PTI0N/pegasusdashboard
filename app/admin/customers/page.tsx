@@ -20,7 +20,7 @@ const STATUSES = [
   ['', 'All'],
   ['active', 'Active'],
   ['suspended', 'Suspended'],
-  ['unregistered', 'No products yet'],
+  ['unregistered', 'No kit yet'],
   ['completed', 'Completed everything'],
 ] as const;
 const SORTS = [
@@ -33,18 +33,18 @@ const SORTS = [
 export default async function CustomersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; product?: string; status?: string; sort?: string; page?: string; deleted?: string }>;
+  searchParams: Promise<{ q?: string; kit?: string; status?: string; sort?: string; page?: string; deleted?: string }>;
 }) {
   await requireAdmin('customers');
   const params = await searchParams;
-  const { q = '', product = '', status = '', sort = 'joined', deleted } = params;
+  const { q = '', kit = '', status = '', sort = 'joined', deleted } = params;
   const page = Math.max(1, Number(params.page) || 1);
-  const { rows, products } = await customerRows({ q, product, status, sort });
+  const { rows } = await customerRows({ q, kit, status, sort });
   const pageRows = rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
   const pages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
 
   const href = (next: Record<string, string>) => {
-    const p = new URLSearchParams({ q, product, status, sort, ...next });
+    const p = new URLSearchParams({ q, kit, status, sort, ...next });
     for (const [k, v] of [...p]) if (!v || (k === 'sort' && v === 'joined')) p.delete(k);
     return `?${p}`;
   };
@@ -59,7 +59,7 @@ export default async function CustomersPage({
           <h1 className="editorial-text text-4xl">Customers</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             {rows.length} {rows.length === 1 ? 'customer' : 'customers'}
-            {(q || product || status) && ' match these filters'}
+            {(q || kit || status) && ' match these filters'}
           </p>
         </div>
         <a
@@ -84,11 +84,12 @@ export default async function CustomersPage({
                 className="h-9 w-72 rounded-md border bg-transparent pl-8 pr-3 text-sm"
               />
             </div>
-            <select name="product" defaultValue={product} className="h-9 rounded-md border bg-transparent px-2 text-sm">
-              <option value="">Any course</option>
-              {products.map((p) => (
-                <option key={p.slug} value={p.slug}>{p.name}</option>
-              ))}
+            <select name="kit" defaultValue={kit} className="h-9 rounded-md border bg-transparent px-2 text-sm">
+              <option value="">Any kit</option>
+              <option value="mastery">Mastery Kit</option>
+              <option value="essential">Essential Kit (active)</option>
+              <option value="expired">Essential Kit (expired)</option>
+              <option value="none">No kit registered</option>
             </select>
             {status && <input type="hidden" name="status" value={status} />}
             {sort !== 'joined' && <input type="hidden" name="sort" value={sort} />}
@@ -108,7 +109,7 @@ export default async function CustomersPage({
             <TableHeader>
               <TableRow>
                 <TableHead>Customer</TableHead>
-                <TableHead>Courses</TableHead>
+                <TableHead>Kit</TableHead>
                 <TableHead className="w-40">Progress</TableHead>
                 <TableHead className="text-right">Certs</TableHead>
                 <TableHead>Last seen</TableHead>
@@ -116,7 +117,7 @@ export default async function CustomersPage({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {pageRows.map(({ user, owned, percent, certificates }) => (
+              {pageRows.map(({ user, owned, kitLabel, percent, certificates }) => (
                 <TableRow key={user.id}>
                   <TableCell>
                     <Link href={`/admin/customers/${user.id}`} className="flex items-center gap-3 hover:text-primary">
@@ -135,12 +136,13 @@ export default async function CustomersPage({
                     </Link>
                   </TableCell>
                   <TableCell>
-                    <div className="flex max-w-48 flex-wrap gap-1">
-                      {owned.map((p) => (
-                        <Badge key={p.slug} variant="secondary" className="text-[10px]">{p.name.split(' · ')[0]}</Badge>
-                      ))}
-                      {owned.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
-                    </div>
+                    {kitLabel ? (
+                      <Badge variant={kitLabel === 'Mastery' ? 'default' : kitLabel === 'Essential' ? 'secondary' : 'destructive'} className="text-[10px]">
+                        {kitLabel}
+                      </Badge>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {owned.length > 0 && (

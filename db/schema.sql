@@ -141,6 +141,23 @@ create table if not exists courses (
   updated_by text
 );
 
+-- ── Kits (what customers register): Essential (12 months, first videos) / Mastery (all) ─
+
+create table if not exists user_kits (
+  user_id       text not null references users(id) on delete cascade,
+  kit           text not null check (kit in ('essential', 'mastery')),
+  registered_at timestamptz not null default now(),
+  expires_at    timestamptz,                     -- null = unlimited (Mastery)
+  key_code      text,                            -- last key used; null when granted by an admin
+  granted_by    text,                            -- admin email for manual grants
+  primary key (user_id, kit)
+);
+
+-- Keys now unlock a kit (product_keys.product_slug holds 'essential' or 'mastery').
+-- Unused keys from the old per-product scheme can never unlock anything: void them.
+update product_keys set voided_at = now()
+where product_slug not in ('essential', 'mastery') and used_by is null and voided_at is null;
+
 -- Supabase exposes the public schema over its REST API. The app connects directly as the
 -- database owner (which bypasses RLS), so enabling RLS with no policies locks the API out.
 alter table users        enable row level security;
@@ -154,3 +171,4 @@ alter table leads                 enable row level security;
 alter table audit_log             enable row level security;
 alter table customer_notes        enable row level security;
 alter table courses               enable row level security;
+alter table user_kits             enable row level security;

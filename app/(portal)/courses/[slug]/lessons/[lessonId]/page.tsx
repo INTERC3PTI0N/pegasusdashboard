@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, PlayCircle, FileText, CheckCircle2, Circle } from 'lucide-react';
-import { requireProductAccess } from '@/lib/access';
+import { ArrowLeft, ArrowRight, PlayCircle, FileText, CheckCircle2, Circle, Lock, KeyRound } from 'lucide-react';
+import { requireCourse } from '@/lib/access';
+import { courseView } from '@/lib/course-view';
+import { KITS } from '@/lib/kits';
 import { getLesson } from '@/lib/courses';
 import { getCompletedLessons } from '@/lib/store';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,6 +13,7 @@ import { Progress } from '@/components/ui/progress';
 import { Separator } from '@/components/ui/separator';
 import { MarkCompleteButton } from './mark-complete';
 import { ProtectedVideo, Watermark } from '@/components/portal/protected-content';
+import { LockedPreview } from '@/components/portal/locked-preview';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,16 +23,17 @@ export default async function LessonPage({
   params: Promise<{ slug: string; lessonId: string }>;
 }) {
   const { slug, lessonId } = await params;
-  // Entitlement gate — lesson content only exists for this product's purchasers.
-  const { user, product } = await requireProductAccess(slug);
+  // Kit gate — any kit may see the page; the lesson itself only renders if the kit opens it.
+  const { user, product, access } = await requireCourse(slug);
 
   const found = await getLesson(slug, lessonId);
   if (!found) notFound();
   const { lesson, index } = found;
 
-  const done = new Set(await getCompletedLessons(user.id, product.slug));
-  const isDone = done.has(lesson.id);
-  const percent = Math.round((done.size / product.lessons.length) * 100);
+  const c = courseView(product, access, await getCompletedLessons(user.id, product.slug));
+  const open = c.canOpen(lesson.tier);
+  const isDone = c.isDone(lesson.id);
+  const percent = c.percent;
 
   const prev = product.lessons[index - 1];
   const next = product.lessons[index + 1];
@@ -41,7 +45,7 @@ export default async function LessonPage({
         <div className="space-y-6 min-w-0">
           <div>
             <Link
-              href={`/products/${product.slug}`}
+              href={`/courses/${product.slug}`}
               className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
               <ArrowLeft className="size-4" /> {product.name}
@@ -65,8 +69,32 @@ export default async function LessonPage({
             <p className="mt-2 text-sm text-muted-foreground max-w-2xl">{lesson.summary}</p>
           </div>
 
-          {/* Content */}
-          {lesson.type === 'video' && lesson.videoFile ? (
+          {/* Content — or, when the kit doesn't open this lesson, its preview */}
+          {!open ? (
+            <Card className="overflow-hidden py-0 gap-0">
+              <LockedPreview
+                key={`${lesson.id}-preview`}
+                src={lesson.previewFile ? `/api/media/${product.slug}/${lesson.id}?preview=1` : undefined}
+                poster={product.image}
+                watermark={user.email}
+              />
+              <CardContent className="flex flex-wrap items-center gap-4 p-5">
+                <div className="min-w-0 flex-1 text-sm">
+                  <p className="font-medium">
+                    {lesson.previewFile ? 'Preview' : `This lesson is part of the ${KITS[lesson.tier ?? 'mastery'].name}.`}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {access.essentialExpired && !access.mastery && lesson.tier === 'essential'
+                      ? 'Your Essential Kit access has ended — register a kit to continue.'
+                      : 'Buy the Mastery Kit to get complete access.'}
+                  </p>
+                </div>
+                <Button asChild>
+                  <Link href="/register-kit"><KeyRound /> Register Mastery Kit</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ) : lesson.type === 'video' && lesson.videoFile ? (
             <Card className="overflow-hidden py-0">
               <ProtectedVideo
                 key={lesson.id}
@@ -91,29 +119,29 @@ export default async function LessonPage({
 
           {/* Completion + prev/next */}
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <MarkCompleteButton
-              productSlug={product.slug}
-              lessonId={lesson.id}
-              initialComplete={isDone}
-            />
+            {open ? (
+              <MarkCompleteButton productSlug={product.slug} lessonId={lesson.id} initialComplete={isDone} />
+            ) : (
+              <span />
+            )}
             <div className="flex gap-2">
               {prev && (
                 <Button asChild variant="outline" size="sm">
-                  <Link href={`/products/${product.slug}/lessons/${prev.id}`}>
+                  <Link href={`/courses/${product.slug}/lessons/${prev.id}`}>
                     <ArrowLeft /> Previous
                   </Link>
                 </Button>
               )}
               {next && (
                 <Button asChild size="sm">
-                  <Link href={`/products/${product.slug}/lessons/${next.id}`}>
+                  <Link href={`/courses/${product.slug}/lessons/${next.id}`}>
                     Next lesson <ArrowRight />
                   </Link>
                 </Button>
               )}
               {!next && (
                 <Button asChild variant="ink" size="sm">
-                  <Link href={`/products/${product.slug}`}>Finish course →</Link>
+                  <Link href={`/courses/${product.slug}`}>Finish course →</Link>
                 </Button>
               )}
             </div>
@@ -124,37 +152,37 @@ export default async function LessonPage({
         <aside className="space-y-4">
           <Card className="py-5 gap-3">
             <CardContent className="space-y-3">
-              <p className="mono-tag text-[10px] text-muted-foreground">Course progress</p>
+              <p className="mono-tag text-[10px] text-muted-foreground">
+                Progress · {c.done}/{c.open} lessons
+              </p>
               <div className="flex items-center gap-3">
                 <Progress value={percent} className="h-2" />
                 <span className="text-sm tabular-nums font-medium">{percent}%</span>
               </div>
               <Separator />
               <ol className="space-y-1">
-                {product.lessons.map((l, i) => {
+                {product.lessons.map((l) => {
                   const active = l.id === lesson.id;
-                  const lDone = done.has(l.id);
+                  const lDone = c.isDone(l.id);
+                  const lOpen = c.canOpen(l.tier);
                   return (
                     <li key={l.id}>
                       <Link
-                        href={`/products/${product.slug}/lessons/${l.id}`}
+                        href={`/courses/${product.slug}/lessons/${l.id}`}
                         className={`flex items-start gap-2.5 rounded-md px-2 py-1.5 text-sm transition-colors ${
                           active
                             ? 'bg-secondary font-medium'
                             : 'text-muted-foreground hover:bg-secondary/60'
                         }`}
                       >
-                        {lDone ? (
+                        {!lOpen ? (
+                          <Lock className="mt-0.5 size-4 shrink-0 text-muted-foreground/60" />
+                        ) : lDone ? (
                           <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" />
                         ) : (
                           <Circle className="mt-0.5 size-4 shrink-0 text-muted-foreground/40" />
                         )}
-                        <span className="leading-snug">
-                          <span className="mono-tag mr-1.5 text-[9px] text-muted-foreground/60">
-                            {String(i + 1).padStart(2, '0')}
-                          </span>
-                          {l.title}
-                        </span>
+                        <span className="leading-snug">{l.title}</span>
                       </Link>
                     </li>
                   );

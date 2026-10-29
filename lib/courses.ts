@@ -77,7 +77,7 @@ export async function moveCourse(slug: string, direction: -1 | 1) {
 export async function courseUsage(slug: string) {
   const [r] = await db()<{ owners: number; keys: number; certificates: number }[]>`
     select
-      (select count(*)::int from users where ${slug}::text = any(entitlements)) as owners,
+      (select count(*)::int from progress where product_slug = ${slug} and cardinality(lessons) > 0) as owners,
       (select count(*)::int from product_keys where product_slug = ${slug}) as keys,
       (select count(*)::int from certificates where product_slug = ${slug}) as certificates`;
   return r;

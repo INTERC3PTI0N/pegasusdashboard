@@ -5,6 +5,7 @@ import { getProduct } from './courses';
 import type { Product } from './catalog';
 import type { User } from './users';
 import { can, type Permission } from './permissions';
+import { kitAccess, type Access } from './kits';
 
 /** Require a signed-in user or bounce to /login. Enforces a pending password change. */
 export async function requireUser({ allowPasswordChange = false } = {}): Promise<User> {
@@ -34,20 +35,19 @@ export async function requireAdmin(permission?: Permission): Promise<User> {
   return user;
 }
 
-export function ownsProduct(user: User, productSlug: string): boolean {
-  return user.entitlements.includes(productSlug);
+export function accessFor(user: User): Access {
+  return kitAccess(user.kits);
 }
 
 /**
- * Entitlement gate: the content of a product is only reachable by that
- * product's purchasers. Anyone else gets a 404-style denial (redirect to
- * dashboard) — the content is never rendered for them.
+ * Course gate: any registered kit (even an expired Essential) may open the course page and see
+ * what is locked; each lesson is then checked with canOpenLesson(). Customers with no kit are
+ * sent to register one — course content is never rendered for them.
  */
-export async function requireProductAccess(productSlug: string): Promise<{ user: User; product: Product }> {
+export async function requireCourse(slug: string): Promise<{ user: User; product: Product; access: Access }> {
   const user = await requireCustomer();
-  const product = await getProduct(productSlug);
-  if (!product || !ownsProduct(user, product.slug)) {
-    redirect('/dashboard?denied=1');
-  }
-  return { user, product };
+  const product = await getProduct(slug);
+  const access = accessFor(user);
+  if (!product || !access.anyKit) redirect('/register-kit');
+  return { user, product, access };
 }

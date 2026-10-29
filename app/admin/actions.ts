@@ -10,8 +10,9 @@ import {
   setSuspended,
   signOutEverywhere,
   deleteUser,
-  grantEntitlement,
-  revokeEntitlement,
+  grantKit,
+  revokeKit,
+  setKitExpiry,
   addNote,
   deleteNote,
   temporaryPassword,
@@ -41,6 +42,7 @@ import { sanitize } from '@/lib/site/schema';
 import { courseFields } from '@/lib/course-schema';
 import type { Product } from '@/lib/catalog';
 import type { AdminRole } from '@/lib/permissions';
+import { KITS, isKitId, type KitId } from '@/lib/kits';
 
 export type Result = { ok: boolean; message: string; secret?: string };
 
@@ -114,23 +116,50 @@ export async function deleteCustomer(id: string, confirmEmail: string): Promise<
   const user = await customerOr404(id);
   if (confirmEmail.trim().toLowerCase() !== user.email) return { ok: false, message: 'Type the customer’s email exactly to confirm.' };
   await deleteUser(id);
-  await audit(admin, 'customer.delete', user.email, { id, entitlements: user.entitlements });
+  await audit(admin, 'customer.delete', user.email, { id, kits: user.kits.map((k) => k.kit) });
   revalidatePath('/admin/customers');
   redirect('/admin/customers?deleted=1');
 }
 
 // ── Products & progress ─────────────────────────────────────────────────────
 
-export async function setCustomerProduct(id: string, slug: string, owned: boolean): Promise<Result> {
+/**
+ * Kits on a customer: 'grant' (Essential: 12 months from now, or +12 months if time is left;
+ * Mastery: unlimited), 'revoke', or 'expiry' to set an exact Essential end date (YYYY-MM-DD, or '' for none).
+ */
+export async function setCustomerKit(
+  id: string,
+  kit: KitId,
+  op: 'grant' | 'revoke' | 'expiry',
+  date?: string
+): Promise<Result> {
   const admin = await requireAdmin('customers');
   const user = await customerOr404(id);
-  const product = await getProduct(slug);
-  if (!product) return { ok: false, message: 'Unknown course.' };
-  if (owned) await grantEntitlement(id, slug);
-  else await revokeEntitlement(id, slug);
-  await audit(admin, owned ? 'customer.grant_product' : 'customer.revoke_product', user.email, { id, product: slug });
+  if (!isKitId(kit)) return { ok: false, message: 'Unknown kit.' };
+  const name = KITS[kit].name;
+  if (op === 'grant') {
+    await grantKit(id, kit, { grantedBy: admin.email });
+  } else if (op === 'revoke') {
+    await revokeKit(id, kit);
+  } else {
+    if (!user.kits.some((k) => k.kit === kit)) return { ok: false, message: `They don't have the ${name}.` };
+    const when = date ? new Date(`${date}T23:59:59`) : null;
+    if (date && Number.isNaN(when!.getTime())) return { ok: false, message: 'Enter a valid date.' };
+    await setKitExpiry(id, kit, when);
+  }
+  await audit(admin, `customer.kit_${op}`, user.email, { id, kit, date: date ?? null });
   refreshCustomer(id);
-  return { ok: true, message: owned ? `${product.name} unlocked.` : `${product.name} access removed (progress kept).` };
+  return {
+    ok: true,
+    message:
+      op === 'grant'
+        ? `${name} ${user.kits.some((k) => k.kit === kit) && KITS[kit].months ? 'extended by 12 months' : 'granted'}.`
+        : op === 'revoke'
+          ? `${name} removed (progress kept).`
+          : date
+            ? `${name} access now ends ${date}.`
+            : `${name} access no longer expires.`,
+  };
 }
 
 /** Override a customer's progress: 'complete' = every lesson done, 'reset' = none, or a lesson list. */

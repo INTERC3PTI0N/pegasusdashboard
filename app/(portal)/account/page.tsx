@@ -6,6 +6,13 @@ import { ProfileForm } from './profile-form';
 
 export const dynamic = 'force-dynamic';
 
+/** "14th OCTOBER 2026" */
+function memberSince(d: Date) {
+  const day = d.getDate();
+  const suffix = day % 10 === 1 && day !== 11 ? 'st' : day % 10 === 2 && day !== 12 ? 'nd' : day % 10 === 3 && day !== 13 ? 'rd' : 'th';
+  return `${day}${suffix} ${d.toLocaleDateString('en-GB', { month: 'long' }).toUpperCase()} ${d.getFullYear()}`;
+}
+
 export default async function AccountPage() {
   const user = await requireCustomer();
   return (
@@ -14,7 +21,7 @@ export default async function AccountPage() {
         <p className="mono-tag text-[10px] text-primary mb-2">Account</p>
         <h1 className="editorial-text text-4xl">My account</h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Member since {user.createdAt.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
+          Member since {memberSince(user.createdAt)}
         </p>
       </div>
       <Card>

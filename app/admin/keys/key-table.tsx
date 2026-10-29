@@ -77,7 +77,7 @@ export function KeyTable({ keys }: { keys: KeyRow[] }) {
                 />
               </TableHead>
               <TableHead>Key</TableHead>
-              <TableHead>Course</TableHead>
+              <TableHead>Kit</TableHead>
               <TableHead>Batch</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Redeemed by</TableHead>
@@ -126,7 +126,7 @@ export function KeyTable({ keys }: { keys: KeyRow[] }) {
             ))}
             {keys.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">No product keys match.</TableCell>
+                <TableCell colSpan={7} className="py-10 text-center text-muted-foreground">No kit keys match.</TableCell>
               </TableRow>
             )}
           </TableBody>

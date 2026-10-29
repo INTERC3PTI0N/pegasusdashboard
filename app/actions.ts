@@ -6,17 +6,19 @@ import { revalidatePath } from 'next/cache';
 import { findUserForLogin, createCustomer } from '@/lib/users';
 import { verifyPassword } from '@/lib/password';
 import { setSession, clearSession, getCurrentUser } from '@/lib/auth';
-import { ownsProduct, requireAdmin, requireCustomer } from '@/lib/access';
-import { getProduct } from '@/lib/courses';
+import { accessFor, requireAdmin, requireCustomer } from '@/lib/access';
+import { canOpenLesson, isKitId } from '@/lib/kits';
+import { getProduct, getProducts } from '@/lib/courses';
+import { awardsCertificate, programmeProgress } from '@/lib/course-view';
 import { audit } from '@/lib/site/store';
 import {
   setLessonComplete,
-  getCompletedLessons,
+  getAllProgress,
   issueCertificate,
   findCertificateFor,
   hasRevokedCertificate,
   addProductKeys,
-  redeemProductKey,
+  redeemKitKey,
 } from '@/lib/store';
 
 type FormState = { error?: string } | undefined;
@@ -55,7 +57,7 @@ export async function signup(_prev: SignupState, formData: FormData): Promise<Si
   const user = await createCustomer({ name, salon, email, password });
   if (!user) return fail('An account with this email already exists. Sign in instead.');
   await setSession(user);
-  redirect('/register-product');
+  redirect('/register-kit');
 }
 
 export async function logout() {
@@ -65,25 +67,26 @@ export async function logout() {
 
 export async function toggleLessonComplete(productSlug: string, lessonId: string, complete: boolean) {
   const user = await getCurrentUser();
-  if (!user || !ownsProduct(user, productSlug)) return; // entitlement gate on mutation too
-  const product = await getProduct(productSlug);
-  if (!product || !product.lessons.some((l) => l.id === lessonId)) return;
+  if (!user) return;
+  const lesson = (await getProduct(productSlug))?.lessons.find((l) => l.id === lessonId);
+  // Kit gate on mutation too: only lessons the customer's kit opens can be ticked.
+  if (!lesson || !canOpenLesson(accessFor(user), lesson.tier)) return;
   await setLessonComplete(user.id, productSlug, lessonId, complete);
   revalidatePath('/dashboard');
-  revalidatePath(`/products/${productSlug}`);
-  revalidatePath(`/products/${productSlug}/lessons/${lessonId}`);
+  revalidatePath(`/courses/${productSlug}`, 'layout');
   revalidatePath('/certificates');
 }
 
 export async function generateCertificate(productSlug: string) {
   const user = await getCurrentUser();
-  if (!user || !ownsProduct(user, productSlug)) return;
-  const product = await getProduct(productSlug);
-  if (!product) return;
+  // The Mastery Certificate comes with the Mastery Kit only.
+  if (!user || !accessFor(user).mastery) return;
+  const products = await getProducts();
+  const product = products.find((p) => p.slug === productSlug);
+  if (!product || !awardsCertificate(product)) return;
 
-  // Only issue when every lesson is complete
-  const done = new Set(await getCompletedLessons(user.id, productSlug));
-  if (!product.lessons.every((l) => done.has(l.id))) return;
+  // Only issue when every lesson of every course (Essential Course + Masterclass) is complete
+  if (!programmeProgress(products, await getAllProgress(user.id)).complete) return;
   // A revoked certificate is only replaced by an admin reissue, never by self-claiming.
   if (!(await findCertificateFor(user.id, productSlug)) && (await hasRevokedCertificate(user.id, productSlug))) return;
 
@@ -101,7 +104,7 @@ export async function generateCertificate(productSlug: string) {
   redirect(`/certificates/${cert.id}`);
 }
 
-// ── Product keys ────────────────────────────────────────────────────────────
+// ── Kit keys ────────────────────────────────────────────────────────────────
 
 const CODE_RE = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
 
@@ -114,20 +117,20 @@ function normalizeKey(raw: string): string {
 export async function redeemKey(_prev: FormState, formData: FormData): Promise<FormState> {
   const user = await requireCustomer();
   const code = normalizeKey(String(formData.get('key') ?? '').trim());
-  if (!CODE_RE.test(code)) return { error: 'Product keys look like XXXX-XXXX-XXXX.' };
+  if (!CODE_RE.test(code)) return { error: 'Kit keys look like XXXX-XXXX-XXXX.' };
 
-  const result = await redeemProductKey(user, code);
+  const result = await redeemKitKey(user, code);
   if (!result.ok) {
     return {
       error: {
-        invalid: 'That product key is not valid. Check it against your product card.',
-        used: 'That product key has already been used.',
-        owned: 'You already have this product unlocked — the key was not used.',
+        invalid: 'That kit key is not valid. Check it against the card in your kit.',
+        used: 'That kit key has already been used.',
+        owned: 'You already have the Mastery Kit, which includes everything — the key was not used.',
       }[result.error],
     };
   }
   revalidatePath('/', 'layout');
-  redirect(`/products/${result.productSlug}?welcome=1`);
+  redirect(`/dashboard?registered=${result.kit}`);
 }
 
 export type UploadResult = {
@@ -150,9 +153,9 @@ function generateKeys(count: number): string[] {
 
 export async function uploadProductKeys(_prev: UploadResult | undefined, formData: FormData): Promise<UploadResult> {
   const admin = await requireAdmin('keys');
-  const productSlug = String(formData.get('product') ?? '');
+  const productSlug = String(formData.get('product') ?? ''); // the kit this batch unlocks
   const batch = String(formData.get('batch') ?? '').trim().slice(0, 80);
-  if (!await getProduct(productSlug)) return { added: 0, duplicates: 0, invalid: [], error: 'Pick a product.' };
+  if (!isKitId(productSlug)) return { added: 0, duplicates: 0, invalid: [], error: 'Pick a kit.' };
 
   if (formData.get('intent') === 'generate') {
     const count = Math.floor(Number(formData.get('count')));

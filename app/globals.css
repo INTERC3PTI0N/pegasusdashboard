@@ -176,3 +176,21 @@
     box-shadow: none !important;
   }
 }
+
+/* Google Translate (language switcher): keep our own UI, hide Google's banner, tooltips and highlights. */
+.goog-te-banner-frame,
+iframe.skiptranslate,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-tooltip {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}

@@ -12,7 +12,7 @@ export function RedeemForm() {
 
   return (
     <form action={action} className="space-y-3">
-      <Label htmlFor="key">Product key</Label>
+      <Label htmlFor="key">Kit code</Label>
       <div className="flex flex-col gap-3 sm:flex-row">
         <Input
           id="key"
@@ -25,7 +25,7 @@ export function RedeemForm() {
           className="font-mono uppercase tracking-widest"
         />
         <Button type="submit" disabled={pending} className="sm:w-44">
-          <KeyRound /> {pending ? 'Checking…' : 'Unlock product'}
+          <KeyRound /> {pending ? 'Checking…' : 'Unlock course'}
         </Button>
       </div>
       {state?.error && (

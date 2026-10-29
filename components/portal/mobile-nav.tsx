@@ -54,20 +54,20 @@ export function MobileNav({ products }: { products: SidebarProduct[] }) {
               <Award className="size-4" /> Certificates
             </Link>
             <Link
-              href="/register-product"
+              href="/register-kit"
               onClick={() => setOpen(false)}
               className="flex items-center gap-2.5 rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary"
             >
-              <KeyRound className="size-4" /> Register product
+              <KeyRound className="size-4" /> Register Kit
             </Link>
           </nav>
           <div>
-            <p className="mono-tag px-3 pb-2 text-[10px] text-muted-foreground">My Products</p>
+            <p className="mono-tag px-3 pb-2 text-[10px] text-muted-foreground">My Courses</p>
             {products.map((p) =>
               p.owned ? (
                 <Link
                   key={p.slug}
-                  href={`/products/${p.slug}`}
+                  href={`/courses/${p.slug}`}
                   onClick={() => setOpen(false)}
                   className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium hover:bg-secondary"
                 >

@@ -16,7 +16,8 @@ export function SignupForm() {
       <form action={formAction} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="name">Full name</Label>
-          <Input id="name" name="name" defaultValue={state?.values.name} required maxLength={100} autoComplete="name" />
+          <Input id="name" name="name" defaultValue={state?.values.name} required maxLength={100} autoComplete="name" aria-describedby="name-hint" />
+          <p id="name-hint" className="text-xs text-muted-foreground">Your name will appear on your certificate exactly as entered here.</p>
         </div>
         <div className="space-y-2">
           <Label htmlFor="salon">Salon / studio <span className="text-muted-foreground">(optional)</span></Label>

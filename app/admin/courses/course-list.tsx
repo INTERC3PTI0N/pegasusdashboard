@@ -49,7 +49,7 @@ export function NewCourseForm() {
       <div className="space-y-1">
         <Label htmlFor="c-slug">URL name</Label>
         <Input id="c-slug" name="slug" value={slug} onChange={(e) => { setTouched(true); setSlug(e.target.value); }} className="font-mono" />
-        <p className="text-xs text-muted-foreground">Used in links and on keys. Can’t be changed later.</p>
+        <p className="text-xs text-muted-foreground">Used in the course’s web address. Can’t be changed later.</p>
       </div>
       <Button disabled={pending || !name || !slug}><Plus /> Create course</Button>
       <ActionMessage result={result} />

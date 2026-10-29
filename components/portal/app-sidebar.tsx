@@ -20,7 +20,7 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
   const mainNav = [
     { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/certificates', label: 'Certificates', icon: Award },
-    { href: '/register-product', label: 'Register product', icon: KeyRound },
+    { href: '/register-kit', label: 'Register Kit', icon: KeyRound },
   ];
 
   return (
@@ -66,10 +66,10 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
         </div>
 
         <div>
-          <p className="mono-tag px-2 pb-2 text-[10px] text-muted-foreground">My Products</p>
+          <p className="mono-tag px-2 pb-2 text-[10px] text-muted-foreground">My Courses</p>
           <ul className="space-y-0.5">
             {products.map((p) => {
-              const href = `/products/${p.slug}`;
+              const href = `/courses/${p.slug}`;
               const active = pathname.startsWith(href);
               return (
                 <li key={p.slug}>
@@ -96,7 +96,7 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
                   ) : (
                     <span
                       className="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-sm text-muted-foreground/40 cursor-not-allowed select-none"
-                      title="Register this product with its key to unlock"
+                      title="Register your kit to unlock"
                     >
                       <Lock className="size-4 shrink-0" />
                       <span className="truncate">{p.name}</span>

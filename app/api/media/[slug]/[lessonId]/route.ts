@@ -1,7 +1,8 @@
 import { open, stat } from 'fs/promises';
 import path from 'path';
 import { getCurrentUser } from '@/lib/auth';
-import { ownsProduct } from '@/lib/access';
+import { accessFor } from '@/lib/access';
+import { canOpenLesson } from '@/lib/kits';
 import { getLesson } from '@/lib/courses';
 import { getMediaFile } from '@/lib/site/store';
 
@@ -11,16 +12,25 @@ const CHUNK = 1024 * 1024;
 const TYPES: Record<string, string> = { '.mp4': 'video/mp4', '.webm': 'video/webm' };
 
 /**
- * Gated video stream. Only a signed-in owner of the product gets bytes, only as small
+ * Gated video stream. Only a customer whose kit opens the lesson gets bytes, only as small
  * ranges (no single full-file response to save), and only for in-page playback.
  */
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string; lessonId: string }> }) {
   const { slug, lessonId } = await params;
   const user = await getCurrentUser();
   const found = await getLesson(slug, lessonId);
-  if (!user || !found?.lesson.videoFile || !ownsProduct(user, slug)) {
-    return new Response('Not found', { status: 404 });
-  }
+  if (!user || !found) return new Response('Not found', { status: 404 });
+
+  // Full video only if the customer's kit opens the lesson; the preview clip (if any) for any kit holder.
+  const access = accessFor(user);
+  const lesson = found.lesson;
+  const wantsPreview = new URL(request.url).searchParams.get('preview') === '1';
+  const source = canOpenLesson(access, lesson.tier)
+    ? (wantsPreview && lesson.previewFile) || lesson.videoFile
+    : wantsPreview && access.anyKit
+      ? lesson.previewFile
+      : undefined;
+  if (!source) return new Response('Not found', { status: 404 });
   // Browsers label <video> requests "video". Opening the URL in a tab ("document") or
   // fetch() from the console ("empty") is not playback.
   const dest = request.headers.get('sec-fetch-dest');
@@ -30,7 +40,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
 
   // The source comes from the catalog, never from the request: either a media-library upload
   // (stored in the database) or a file bundled in /media.
-  const source = found.lesson.videoFile;
   let size: number;
   let contentType: string;
   let read: (start: number, end: number) => Promise<Buffer>;

@@ -9,7 +9,8 @@ import { relativeTime } from '@/lib/customer-rows';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { ProfileCard, AccountActions, CourseCard, CertificateRow, NotesPanel } from './panels';
+import { ProfileCard, AccountActions, CourseCard, CertificateRow, NotesPanel, KitsCard } from './panels';
+import { KITS, KIT_IDS, kitAccess, canOpenLesson } from '@/lib/kits';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,17 +31,15 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
     getNotes(id),
   ]);
 
-  // Owned courses first, then the rest (so support can grant access from here).
-  const courses = [...products]
-    .sort((a, b) => Number(customer.entitlements.includes(b.slug)) - Number(customer.entitlements.includes(a.slug)))
-    .map((p) => {
+  const access = kitAccess(customer.kits);
+  const courses = products.map((p) => {
       const active = certificates.find((c) => c.productSlug === p.slug && !c.revokedAt);
       return {
         slug: p.slug,
         name: p.name,
         image: p.image,
-        lessons: p.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type })),
-        owned: customer.entitlements.includes(p.slug),
+        lessons: p.lessons.map((l) => ({ id: l.id, title: l.title, type: l.type, tier: l.tier, open: canOpenLesson(access, l.tier) })),
+        owned: access.anyKit,
         completed: progress[p.slug] ?? [],
         lastActivity: iso(lastActivity[p.slug] ?? null),
         certificate: active ? { id: active.id, issuedAt: active.issuedAt.toISOString() } : null,
@@ -89,10 +88,25 @@ export default async function CustomerDetailPage({ params }: { params: Promise<{
 
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         <div className="min-w-0 space-y-6">
+          <KitsCard
+            customerId={customer.id}
+            kits={KIT_IDS.map((id) => {
+              const k = customer.kits.find((x) => x.kit === id);
+              return {
+                kit: id,
+                name: KITS[id].name,
+                months: KITS[id].months,
+                registeredAt: iso(k?.registeredAt ?? null),
+                expiresAt: iso(k?.expiresAt ?? null),
+                active: !!k && (!k.expiresAt || k.expiresAt > new Date()),
+              };
+            })}
+          />
+
           <Card className="gap-0 py-0">
             <CardHeader className="border-b !py-5">
-              <CardTitle>Courses & progress</CardTitle>
-              <CardDescription>Grant or remove access, override lesson progress, issue certificates.</CardDescription>
+              <CardTitle>Course progress</CardTitle>
+              <CardDescription>Override lesson progress and issue certificates. Access comes from their kits above.</CardDescription>
             </CardHeader>
             <CardContent className="divide-y p-0">
               {courses.map((c) => (

@@ -2,6 +2,7 @@ import 'server-only';
 import { randomBytes } from 'crypto';
 import { db } from './db';
 import type { User } from './users';
+import { KITS, isKitId, type KitId } from './kits';
 
 export interface Certificate {
   id: string;
@@ -165,31 +166,40 @@ export async function keysUsedBy(userId: string): Promise<ProductKey[]> {
 }
 
 export type RedeemResult =
-  | { ok: true; productSlug: string }
+  | { ok: true; kit: KitId; expiresAt: Date | null }
   | { ok: false; error: 'invalid' | 'used' | 'owned' };
 
 /**
- * One-time redemption. The key row is locked for the transaction, so two accounts
- * redeeming the same key at once are serialized and only the first succeeds; spending
- * the key and unlocking the product commit together or not at all.
+ * One-time redemption of a kit key. The key row is locked for the transaction, so two accounts
+ * redeeming the same key at once are serialized and only the first succeeds; spending the key
+ * and granting the kit commit together or not at all.
+ * - Mastery key: unlimited access to everything (includes Essential).
+ * - Essential key: 12 months; if Essential time is left, it is extended by another 12 months.
+ * - Anyone who already has Mastery is refused without spending the key.
  */
-export async function redeemProductKey(user: User, code: string): Promise<RedeemResult> {
+export async function redeemKitKey(user: User, code: string): Promise<RedeemResult> {
   return db().begin(async (tx) => {
     const [key] = await tx<{ productSlug: string; usedBy: string | null; voidedAt: Date | null }[]>`
       select product_slug, used_by, voided_at from product_keys where code = ${code} for update`;
-    if (!key || key.voidedAt) return { ok: false, error: 'invalid' } as const;
+    if (!key || key.voidedAt || !isKitId(key.productSlug)) return { ok: false, error: 'invalid' } as const;
     if (key.usedBy) return { ok: false, error: 'used' } as const;
+    const kit = key.productSlug;
+    const hasMastery = await tx`
+      select 1 from user_kits where user_id = ${user.id} and kit = 'mastery' and (expires_at is null or expires_at > now())`;
+    if (hasMastery.length) return { ok: false, error: 'owned' } as const;
 
-    // Already owns the product: refuse without spending the key, so it can go to someone else.
-    const granted = await tx`
-      update users set entitlements = array_append(entitlements, ${key.productSlug}::text)
-      where id = ${user.id} and not (${key.productSlug}::text = any(entitlements))
-      returning id`;
-    if (granted.length === 0) return { ok: false, error: 'owned' } as const;
-
+    const months = KITS[kit].months;
+    const [granted] = await tx<{ expiresAt: Date | null }[]>`
+      insert into user_kits (user_id, kit, registered_at, expires_at, key_code)
+      values (${user.id}, ${kit}, now(), ${months === null ? null : tx`now() + ${months}::int * interval '1 month'`}, ${code})
+      on conflict (user_id, kit) do update set
+        expires_at = case when excluded.expires_at is null then null
+                          else greatest(coalesce(user_kits.expires_at, now()), now()) + ${months ?? 0}::int * interval '1 month' end,
+        key_code = excluded.key_code
+      returning expires_at`;
     await tx`
       update product_keys set used_by = ${user.id}, used_by_email = ${user.email}, used_at = now()
       where code = ${code}`;
-    return { ok: true, productSlug: key.productSlug } as const;
+    return { ok: true, kit, expiresAt: granted.expiresAt } as const;
   });
 }

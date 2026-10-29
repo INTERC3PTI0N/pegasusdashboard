@@ -19,7 +19,7 @@ const sections: { heading: string; items: NavItem[] }[] = [
       { href: '/admin/customers', label: 'Customers', icon: Users, permission: 'customers' },
       { href: '/admin/courses', label: 'Courses', icon: GraduationCap, permission: 'courses' },
       { href: '/admin/certificates', label: 'Certificates', icon: Award, permission: 'certificates' },
-      { href: '/admin/keys', label: 'Product keys', icon: KeyRound, permission: 'keys' },
+      { href: '/admin/keys', label: 'Kit keys', icon: KeyRound, permission: 'keys' },
     ],
   },
   {

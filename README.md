@@ -28,16 +28,17 @@ node --env-file=.env.local scripts/setup-db.mjs admin@yourcompany.com "a-strong-
 
 ## Test flow
 
-1. Admin signs in → **Product keys** → generates (or uploads) keys for a product.
-2. Customer opens `/signup`, creates an account → lands on **Register product**.
-3. Customer enters a key → that product's course unlocks; the key is spent.
-4. Customer completes every lesson → **Certificates** → claims the certificate.
-5. Anyone scans the QR / opens `/verify/<id>` to confirm it.
-6. Admin sees the customer, progress, certificate and which key they used.
+1. Admin signs in → **Kit keys** → generates (or uploads) Essential and Mastery keys.
+2. Customer opens `/signup`, creates an account → lands on **Register your kit**.
+3. Customer enters an Essential key → modules 1–4 unlock for 12 months; the rest show locked with previews.
+4. Customer enters a Mastery key → everything unlocks with no expiry.
+5. Mastery customer completes every module → **Certificates** → claims the Mastery Certificate.
+6. Anyone scans the QR / opens `/verify/<id>` to confirm it.
+7. Admin sees the customer, their kits and end dates, progress, certificate and which keys they used.
 
-Product keys are `XXXX-XXXX-XXXX` (letters and digits). Customers can type them in any
-case, with or without dashes. A key works once: a used key, an unknown key, or a key for a
-product the customer already owns is refused (the last without spending the key).
+Kit keys are `XXXX-XXXX-XXXX` (letters and digits). Customers can type them in any case,
+with or without dashes. A key works once: a used or unknown key is refused, and so is any key
+for a customer who already has the Mastery Kit (without spending the key).
 
 ## Features
 
@@ -56,9 +57,9 @@ product the customer already owns is refused (the last without spending the key)
   "continue learning" resume card, product library with per-course progress.
 - **Courses** — video lessons (HTML5 player) and written guides, curriculum list,
   per-lesson completion with optimistic UI, prev/next navigation, course outline sidebar.
-- **Product keys** — admins bulk upload or generate one-time keys per product
-  (`/admin/keys`); customers redeem them at `/register-product` to unlock a course.
-- **Certificates** — claimable at 100% completion; unique ID (`PGS-XXXX-XXXX`), the
+- **Kit keys** — admins bulk upload or generate one-time keys per kit (`/admin/keys`);
+  customers redeem them at `/register-kit`.
+- **Certificates** — Mastery Kit holders claim the Mastery Certificate at 100% completion; unique ID (`PGS-XXXX-XXXX`), the
   Certificato di Mastery design with the holder's name, print/save-PDF layout, and a QR code linking to a **public verification page**
   (`/verify/[id]`) that confirms who the certificate is assigned to.
 - **Auth** — sign-up / sign-in with scrypt-hashed passwords, HMAC-signed session cookie ([lib/auth.ts](lib/auth.ts)) + middleware redirects.
@@ -70,6 +71,22 @@ product the customer already owns is refused (the last without spending the key)
   per-course progress, issued certificates, relationship panel and session-only notes
   ([lib/crm.ts](lib/crm.ts) seeds the demo records — frontend only by design); and a
   certificate registry linking every ID to its public verification page.
+
+## Kits and access
+
+Customers register a **kit** with its one-time key ([lib/kits.ts](lib/kits.ts)):
+
+| Kit | Opens | Access | Certificate |
+|---|---|---|---|
+| Essential Kit | lessons marked *Essential* (modules 1–4) | 12 months from registration | — |
+| Mastery Kit | every lesson (includes Essential) | unlimited | Mastery Certificate on completing all modules |
+
+Essential holders see Mastery lessons locked, with an optional preview clip per lesson and an
+upgrade prompt. A second Essential key adds 12 months; a Mastery key upgrades; keys are refused
+(not spent) for customers who already have Mastery. Dashboard and kit cards show the Essential
+end date and days left, and the expired state. Admins can grant kits, add 12 months, set an
+exact end date, or remove a kit from the customer page. Kits are stored in `user_kits`;
+lesson tiers (`essential` / `mastery`) are set per lesson in Admin → Courses.
 
 ## Admin console
 
@@ -87,7 +104,7 @@ product the customer already owns is refused (the last without spending the key)
 - **Courses** — courses live in the `courses` table (seeded from [lib/catalog.ts](lib/catalog.ts)).
   Create, reorder and edit courses, lessons, videos (media library uploads, streamed only to
   owners) and written guides; delete courses nobody owns.
-- **Product keys** — batch labels, filters, void / restore unused keys, CSV export for printing.
+- **Kit keys** — one per kit (Essential / Mastery); batch labels, filters, void / restore unused keys, CSV export for printing.
 - **Certificates** — registry with filters and CSV; revoked certificates show as invalid, with the
   reason, on the public verification page, and customers can't re-claim them themselves.
 - **Accounts** — customers edit their profile at `/account`; everyone can change their password at

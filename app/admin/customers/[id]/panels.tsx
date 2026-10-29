@@ -9,7 +9,7 @@ import {
   setCustomerSuspended,
   signCustomerOutEverywhere,
   deleteCustomer,
-  setCustomerProduct,
+  setCustomerKit,
   overrideProgress,
   issueCertificateFor,
   revokeCertificateAction,
@@ -138,8 +138,8 @@ interface CourseInfo {
   slug: string;
   name: string;
   image: string;
-  lessons: { id: string; title: string; type: string }[];
-  owned: boolean;
+  lessons: { id: string; title: string; type: string; tier: string; open: boolean }[];
+  owned: boolean; // any kit
   completed: string[];
   lastActivity: string | null;
   certificate: { id: string; issuedAt: string } | null;
@@ -163,7 +163,7 @@ export function CourseCard({ customerId, course }: { customerId: string; course:
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <p className="font-medium">{course.name}</p>
-            {!course.owned && <Badge variant="outline">Not owned</Badge>}
+            {!course.owned && <Badge variant="outline">No kit</Badge>}
             {course.certificate && (
               <Badge variant="success" className="gap-1"><Award className="size-3" /> Certified</Badge>
             )}
@@ -175,19 +175,7 @@ export function CourseCard({ customerId, course }: { customerId: string; course:
             </p>
           )}
         </div>
-        <Button
-          size="sm"
-          variant={course.owned ? 'ghost' : 'outline'}
-          className={course.owned ? 'text-destructive' : ''}
-          disabled={pending}
-          onClick={() =>
-            course.owned
-              ? confirm(`Remove ${course.name} from this customer? Their progress is kept.`) && run(() => setCustomerProduct(customerId, course.slug, false))
-              : run(() => setCustomerProduct(customerId, course.slug, true))
-          }
-        >
-          {course.owned ? 'Remove access' : 'Grant access'}
-        </Button>
+
       </div>
 
       {(course.owned || count > 0) && (
@@ -227,7 +215,13 @@ export function CourseCard({ customerId, course }: { customerId: string; course:
                     title="Click to toggle"
                   >
                     {done.has(l.id) ? <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-primary" /> : <Circle className="mt-0.5 size-4 shrink-0 text-muted-foreground/40" />}
-                    <span><span className="mono-tag mr-1 text-[9px] text-muted-foreground">{String(i + 1).padStart(2, '0')}</span>{l.title}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="mono-tag mr-1 text-[9px] text-muted-foreground">{String(i + 1).padStart(2, '0')}</span>
+                      {l.title}
+                    </span>
+                    <span className={`shrink-0 text-[10px] ${l.open ? 'text-muted-foreground' : 'text-destructive'}`} title={l.open ? 'Their kit opens this' : 'Locked for their kit'}>
+                      {l.tier === 'essential' ? 'Essential' : 'Mastery'}{!l.open && ' · locked'}
+                    </span>
                   </button>
                 </li>
               ))}
@@ -331,5 +325,78 @@ export function NotesPanel({ customerId, notes }: { customerId: string; notes: {
         </ul>
       </CardContent>
     </Card>
+  );
+}
+
+// ── Kits ────────────────────────────────────────────────────────────────────
+
+interface KitRow {
+  kit: 'essential' | 'mastery';
+  name: string;
+  registeredAt: string | null;
+  expiresAt: string | null;
+  active: boolean;
+  months: number | null;
+}
+
+export function KitsCard({ customerId, kits }: { customerId: string; kits: KitRow[] }) {
+  return (
+    <Card className="gap-0 py-0">
+      <CardHeader className="border-b !py-5">
+        <CardTitle>Kits</CardTitle>
+        <CardDescription>Essential opens the Essential modules for 12 months; Mastery opens everything, never expires, and earns the certificate.</CardDescription>
+      </CardHeader>
+      <CardContent className="divide-y p-0">
+        {kits.map((k) => <KitLine key={k.kit} customerId={customerId} k={k} />)}
+      </CardContent>
+    </Card>
+  );
+}
+
+function KitLine({ customerId, k }: { customerId: string; k: KitRow }) {
+  const { pending, result, run } = useAction();
+  const [date, setDate] = useState(k.expiresAt ? k.expiresAt.slice(0, 10) : '');
+  const has = !!k.registeredAt;
+  const left = k.expiresAt ? Math.ceil((new Date(k.expiresAt).getTime() - Date.now()) / 86_400_000) : null;
+  return (
+    <div className="space-y-2 px-6 py-4">
+      <div className="flex flex-wrap items-center gap-2">
+        <p className="font-medium">{k.name}</p>
+        {!has ? (
+          <Badge variant="outline">Not registered</Badge>
+        ) : k.active ? (
+          <Badge variant="success">Active</Badge>
+        ) : (
+          <Badge variant="destructive">Expired</Badge>
+        )}
+      </div>
+      {has && (
+        <p className="text-xs text-muted-foreground">
+          Registered {fmt(k.registeredAt)} ·{' '}
+          {k.expiresAt ? (left !== null && left > 0 ? `access until ${fmt(k.expiresAt)} (${left} days left)` : `expired ${fmt(k.expiresAt)}`) : 'unlimited access'}
+        </p>
+      )}
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" variant="outline" disabled={pending}
+          onClick={() => confirm(has && k.months ? `Add 12 months to ${k.name}?` : `Grant the ${k.name}?`) && run(() => setCustomerKit(customerId, k.kit, 'grant'))}>
+          {has && k.months ? '+12 months' : has ? 'Re-grant' : `Grant ${k.name}`}
+        </Button>
+        {has && k.months !== null && (
+          <span className="flex items-center gap-1">
+            <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="h-8 w-40" aria-label={`${k.name} end date`} />
+            <Button size="sm" variant="ghost" disabled={pending} onClick={() => run(() => setCustomerKit(customerId, k.kit, 'expiry', date))}>
+              Set end date
+            </Button>
+          </span>
+        )}
+        {has && (
+          <Button size="sm" variant="ghost" className="text-destructive" disabled={pending}
+            onClick={() => confirm(`Remove the ${k.name}? Their progress is kept.`) && run(() => setCustomerKit(customerId, k.kit, 'revoke'))}>
+            Remove
+          </Button>
+        )}
+      </div>
+      <ActionMessage result={result} />
+    </div>
   );
 }

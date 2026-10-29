@@ -23,6 +23,16 @@ export const courseFields: Field[] = [
           { value: 'guide', label: 'Written guide' },
         ],
       },
+      {
+        name: 'tier',
+        label: 'Included in',
+        type: 'select',
+        options: [
+          { value: 'essential', label: 'Essential Kit (and Mastery Kit)' },
+          { value: 'mastery', label: 'Mastery Kit only' },
+        ],
+        help: 'Essential Kit holders see Mastery-only lessons locked, with the preview below if there is one.',
+      },
       { name: 'duration', label: 'Duration', type: 'text', help: 'e.g. "8 min" or "4 min read"' },
       { name: 'summary', label: 'Summary', type: 'textarea' },
       {
@@ -30,6 +40,12 @@ export const courseFields: Field[] = [
         label: 'Video (video lessons)',
         type: 'video',
         help: 'Upload an MP4 (up to 4 MB) or pick one from the library. Only customers who own this course can stream it.',
+      },
+      {
+        name: 'previewFile',
+        label: 'Preview clip (Mastery-only lessons)',
+        type: 'video',
+        help: 'Optional short teaser that Essential Kit holders can watch to see what the Mastery Kit unlocks.',
       },
       {
         name: 'guide',

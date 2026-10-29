@@ -7,15 +7,15 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
-export function UploadForm({ products }: { products: { slug: string; name: string }[] }) {
+export function UploadForm({ kits }: { kits: { slug: string; name: string }[] }) {
   const [result, action, pending] = useActionState(uploadProductKeys, undefined);
 
   return (
     <form action={action} className="space-y-4">
       <div className="space-y-1.5">
-        <Label htmlFor="product">Product</Label>
+        <Label htmlFor="product">Kit</Label>
         <select id="product" name="product" required className="h-9 w-full rounded-md border bg-background px-3 text-sm">
-          {products.map((p) => (
+          {kits.map((p) => (
             <option key={p.slug} value={p.slug}>{p.name}</option>
           ))}
         </select>
@@ -43,7 +43,7 @@ export function UploadForm({ products }: { products: { slug: string; name: strin
       </Button>
 
       <div className="space-y-1.5 border-t pt-4">
-        <Label htmlFor="count">…or generate random keys for this product</Label>
+        <Label htmlFor="count">…or generate random keys for this kit</Label>
         <div className="flex gap-2">
           <Input id="count" name="count" type="number" min={1} max={1000} defaultValue={10} className="w-24" />
           <Button type="submit" name="intent" value="generate" variant="outline" disabled={pending}>
