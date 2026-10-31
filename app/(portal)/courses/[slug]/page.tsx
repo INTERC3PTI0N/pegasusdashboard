@@ -35,15 +35,28 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
       </Link>
 
       <Card className="overflow-hidden py-0 gap-0">
-        <div className="relative h-52 md:h-64">
-          <Image src={product.image} alt={product.name} fill className="object-cover" priority />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/25 to-transparent" />
-          <div className="absolute bottom-6 left-6 right-6 text-white">
-            <p className="mono-tag text-[10px] text-white/75 mb-2">{product.line}</p>
-            <h1 className="editorial-text text-3xl md:text-4xl">{product.name}</h1>
+        {product.banner ? (
+          // A designed 4:1 banner is shown whole, with the title below it rather than over the artwork.
+          <div className="relative aspect-[4/1] border-b">
+            <Image src={product.banner} alt={product.name} fill className="object-cover" priority />
           </div>
-        </div>
+        ) : (
+          <div className="relative h-52 md:h-64">
+            <Image src={product.image} alt={product.name} fill className="object-cover" priority />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/25 to-transparent" />
+            <div className="absolute bottom-6 left-6 right-6 text-white">
+              <p className="mono-tag text-[10px] text-white/75 mb-2">{product.line}</p>
+              <h1 className="editorial-text text-3xl md:text-4xl">{product.name}</h1>
+            </div>
+          </div>
+        )}
         <CardContent className="p-6 space-y-4">
+          {product.banner && (
+            <div>
+              <p className="mono-tag text-[10px] text-primary mb-2">{product.line}</p>
+              <h1 className="editorial-text text-3xl md:text-4xl">{product.name}</h1>
+            </div>
+          )}
           <p className="text-sm text-muted-foreground max-w-2xl">{product.description}</p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
             <span className="text-sm text-muted-foreground">

@@ -25,7 +25,10 @@ export interface Product {
   name: string;
   tagline: string;
   line: string;
+  /** Card, thumbnail and video cover (16:9, 1920×1080). */
   image: string;
+  /** Optional course-page header (4:1, 2400×600), shown whole; falls back to `image`. */
+  banner?: string;
   description: string;
   lessons: Lesson[];
 }
@@ -71,7 +74,8 @@ export const seedProducts: Product[] = [
     name: 'Essential Course',
     tagline: 'Lessons 1–4 · Essential Kit',
     line: LINE,
-    image: '/images/pegasus_hard_rubber.jpg',
+    image: '/images/course-card.jpg',
+    banner: '/images/course-banner.webp',
     description: DESCRIPTION,
     lessons: [0, 1, 2, 3].map(lesson),
   },
@@ -80,7 +84,8 @@ export const seedProducts: Product[] = [
     name: 'Masterclass',
     tagline: 'Lessons 5–10 · Mastery Kit',
     line: LINE,
-    image: '/images/pegasus_hard_rubber.jpg',
+    image: '/images/course-card.jpg',
+    banner: '/images/course-banner.webp',
     description: DESCRIPTION,
     lessons: [4, 5, 6, 7, 8, 9].map(lesson),
   },

@@ -30,8 +30,8 @@ export default function LoginPage() {
       {/* Right — brand visual */}
       <div className="relative hidden lg:block">
         <Image
-          src="/images/pegasus_luxury_salon.jpg"
-          alt="Pegasus salon"
+          src="/images/andrea-salon.webp"
+          alt="Andrea Bozzano cutting hair with Pegasus tools"
           fill
           className="object-cover"
           priority

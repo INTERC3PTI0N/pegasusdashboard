@@ -6,7 +6,8 @@ export const courseFields: Field[] = [
   { name: 'line', label: 'Series / product line', type: 'text', help: 'e.g. "Flexinite Series"' },
   { name: 'tagline', label: 'Tagline', type: 'text' },
   { name: 'description', label: 'Description', type: 'textarea' },
-  { name: 'image', label: 'Cover image', type: 'image' },
+  { name: 'image', label: 'Cover image', type: 'image', help: 'Cards, thumbnail and video cover. 16:9, e.g. 1920×1080.' },
+  { name: 'banner', label: 'Banner image', type: 'image', help: 'Optional header on the course page, shown whole. 4:1, e.g. 2400×600.' },
   {
     name: 'lessons',
     label: 'Lessons (in order)',
