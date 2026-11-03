@@ -8,12 +8,11 @@ import { verifyPassword } from '@/lib/password';
 import { setSession, clearSession, getCurrentUser } from '@/lib/auth';
 import { accessFor, requireAdmin, requireCustomer } from '@/lib/access';
 import { canOpenLesson, isKitId } from '@/lib/kits';
-import { getProduct, getProducts } from '@/lib/courses';
-import { awardsCertificate, programmeProgress } from '@/lib/course-view';
+import { getProduct } from '@/lib/courses';
 import { audit } from '@/lib/site/store';
 import {
   setLessonComplete,
-  getAllProgress,
+  getCompletedLessons,
   issueCertificate,
   findCertificateFor,
   hasRevokedCertificate,
@@ -81,12 +80,12 @@ export async function generateCertificate(productSlug: string) {
   const user = await getCurrentUser();
   // The Mastery Certificate comes with the Mastery Kit only.
   if (!user || !accessFor(user).mastery) return;
-  const products = await getProducts();
-  const product = products.find((p) => p.slug === productSlug);
-  if (!product || !awardsCertificate(product)) return;
+  const product = await getProduct(productSlug);
+  if (!product) return;
 
-  // Only issue when every lesson of every course (Essential Course + Masterclass) is complete
-  if (!programmeProgress(products, await getAllProgress(user.id)).complete) return;
+  // Only issue when every lesson is complete
+  const done = new Set(await getCompletedLessons(user.id, productSlug));
+  if (!product.lessons.every((l) => done.has(l.id))) return;
   // A revoked certificate is only replaced by an admin reissue, never by self-claiming.
   if (!(await findCertificateFor(user.id, productSlug)) && (await hasRevokedCertificate(user.id, productSlug))) return;
 

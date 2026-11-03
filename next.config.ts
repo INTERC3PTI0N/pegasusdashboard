@@ -11,7 +11,8 @@ const nextConfig: NextConfig = {
     return [
       { source: '/products/:path*', destination: '/courses/:path*', permanent: true },
       { source: '/register-product', destination: '/register-kit', permanent: true },
-      { source: '/courses/precision-cutting/:path*', destination: '/courses/essential', permanent: false },
+      // Earlier course URLs → the one course.
+      { source: '/courses/:old(precision-cutting|essential|masterclass)/:path*', destination: '/courses/andrea-bozzano-technique/:path*', permanent: false },
     ];
   },
   async rewrites() {

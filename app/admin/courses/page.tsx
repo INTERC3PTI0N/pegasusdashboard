@@ -15,7 +15,7 @@ export default async function CoursesPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-8">
       <div>
-        <p className="mono-tag text-[10px] text-primary mb-2">Academy</p>
+        <p className="mono-tag text-[10px] text-primary mb-2">Masterclass</p>
         <h1 className="editorial-text text-4xl">Courses</h1>
         <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
           Courses are unlocked by kits: each lesson is marked <b>Essential</b> (Essential and Mastery Kits) or

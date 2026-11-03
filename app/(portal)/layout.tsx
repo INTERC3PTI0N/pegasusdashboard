@@ -30,7 +30,7 @@ export default async function PortalLayout({ children }: { children: React.React
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-8">
           <MobileNav products={sidebarProducts} />
           <div className="hidden md:block">
-            <p className="mono-tag text-[10px] text-muted-foreground">Pegasus Academy</p>
+            <p className="mono-tag text-[10px] text-muted-foreground">Pegasus Masterclass</p>
           </div>
           <div className="flex items-center gap-1">
             <LanguageSwitcher />

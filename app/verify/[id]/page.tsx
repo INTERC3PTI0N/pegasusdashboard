@@ -46,7 +46,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ id: str
             <Row label="Certificate ID" value={cert.id} mono />
           </div>
           <p className="text-xs text-muted-foreground">
-            Pegasus Academy has withdrawn this certificate. Do not accept it as proof of qualification.
+            Pegasus Masterclass has withdrawn this certificate. Do not accept it as proof of qualification.
           </p>
         </div>
       ) : cert ? (
@@ -76,7 +76,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ id: str
           </div>
 
           <p className="text-xs text-muted-foreground">
-            Issued by Pegasus Academy upon full completion of the programme&apos;s tutorials
+            Issued by Pegasus Masterclass upon full completion of the programme&apos;s tutorials
             and technical guides. If the name above does not match the certificate holder,
             treat the document as invalid.
           </p>
@@ -92,7 +92,7 @@ export default async function VerifyPage({ params }: { params: Promise<{ id: str
           </div>
           <p className="text-sm text-muted-foreground">
             No certificate with ID <span className="font-mono">{id}</span> exists in the
-            Pegasus Academy registry. It may have been mistyped, revoked, or forged.
+            Pegasus Masterclass registry. It may have been mistyped, revoked, or forged.
           </p>
         </div>
       )}

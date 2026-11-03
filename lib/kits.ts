@@ -26,7 +26,7 @@ export const KITS: Record<KitId, KitDef> = {
     short: 'Essential',
     months: 12,
     certificate: false,
-    summary: 'The Essential Course (lessons 1–4), with 12 months of access.',
+    summary: 'Lessons 1–4 of the course, with 12 months of access.',
   },
   mastery: {
     id: 'mastery',
@@ -34,7 +34,7 @@ export const KITS: Record<KitId, KitDef> = {
     short: 'Mastery',
     months: null,
     certificate: true,
-    summary: 'The Essential Course and the Masterclass (all 10 lessons), unlimited access, and the certificate.',
+    summary: 'All 10 lessons, unlimited access, and the certificate.',
   },
 };
 

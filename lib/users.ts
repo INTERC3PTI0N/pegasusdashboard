@@ -86,7 +86,7 @@ export function temporaryPassword(): string {
 export async function createStaff(input: { name: string; email: string; adminRole: AdminRole }, password: string) {
   const [row] = await db()<UserRow[]>`
     insert into users (name, email, salon, role, admin_role, password_hash, must_change_password)
-    values (${input.name}, ${input.email.toLowerCase()}, 'Pegasus Academy HQ', 'admin', ${input.adminRole},
+    values (${input.name}, ${input.email.toLowerCase()}, 'Pegasus Masterclass HQ', 'admin', ${input.adminRole},
             ${hashPassword(password)}, true)
     on conflict (email) do nothing
     returning *, ${kitsColumn()}`;

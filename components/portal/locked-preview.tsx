@@ -38,7 +38,7 @@ export function LockedPreview({ src, poster, watermark }: { src?: string; poster
           <Lock className="mx-auto size-8 text-primary" />
           <p className="editorial-text text-2xl">Buy the Mastery Kit to get complete access</p>
           <p className="text-sm text-muted-foreground">
-            The Mastery Kit unlocks every Masterclass lesson with unlimited access and the PEGASUS® Academy certificate.
+            The Mastery Kit unlocks all lessons of the course with unlimited access and the PEGASUS® Masterclass certificate.
           </p>
           <Button asChild className="w-full">
             <Link href="/register-kit"><KeyRound /> Already have one? Register it</Link>

@@ -35,7 +35,6 @@ export interface Product {
 
 const DEMO_VIDEO = '/media/pega.mp4'; // placeholder video bundled in /media (not public)
 
-const LINE = 'The Andrea Bozzano Technique';
 const DESCRIPTION =
   'Follow complete haircuts step by step, with Andrea Bozzano and the PEGASUS® combs he uses throughout the lessons.';
 
@@ -63,30 +62,20 @@ const lesson = (i: number): Lesson => ({
 });
 
 /**
- * Andrea Bozzano's technique as two courses: the Essential Course (lessons 1–4, Essential + Mastery Kits)
- * and the Masterclass (lessons 5–10, Mastery Kit only; Essential holders see previews). The certificate is
- * claimed on the Masterclass once every lesson of both is complete. Seeds the `courses` table on first
- * use; after that courses are edited in Admin → Courses and read via lib/courses.ts.
+ * One course, two kits: the Essential Kit opens lessons 1–4 (12 months); the Mastery Kit opens all 10
+ * (unlimited) and the certificate once every lesson is complete. Essential holders see lessons 5–10
+ * as previews. Seeds the `courses` table on first use; after that the course is edited in
+ * Admin → Courses and read via lib/courses.ts.
  */
 export const seedProducts: Product[] = [
   {
-    slug: 'essential',
-    name: 'Essential Course',
-    tagline: 'Lessons 1–4 · Essential Kit',
-    line: LINE,
+    slug: 'andrea-bozzano-technique',
+    name: 'THE ANDREA BOZZANO TECHNIQUE',
+    tagline: '10 lessons · Essential Kit: lessons 1–4 · Mastery Kit: all 10',
+    line: 'PEGASUS Masterclass',
     image: '/images/course-card.jpg',
     banner: '/images/course-banner.webp',
     description: DESCRIPTION,
-    lessons: [0, 1, 2, 3].map(lesson),
-  },
-  {
-    slug: 'masterclass',
-    name: 'Masterclass',
-    tagline: 'Lessons 5–10 · Mastery Kit',
-    line: LINE,
-    image: '/images/course-card.jpg',
-    banner: '/images/course-banner.webp',
-    description: DESCRIPTION,
-    lessons: [4, 5, 6, 7, 8, 9].map(lesson),
+    lessons: LESSONS.map((_, i) => lesson(i)),
   },
 ];

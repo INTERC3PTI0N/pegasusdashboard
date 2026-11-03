@@ -13,7 +13,7 @@ type NavItem = { href: string; label: string; icon: typeof Users; exact?: boolea
 
 const sections: { heading: string; items: NavItem[] }[] = [
   {
-    heading: 'Academy',
+    heading: 'Masterclass',
     items: [
       { href: '/admin', label: 'Overview', icon: LayoutDashboard, exact: true },
       { href: '/admin/customers', label: 'Customers', icon: Users, permission: 'customers' },
@@ -142,9 +142,6 @@ export function AdminSidebar({ role }: { role: AdminRole | null }) {
           <LifeBuoy className="size-4" />
           Internal support
         </a>
-        <p className="mono-tag mt-3 px-2.5 text-[9px] text-muted-foreground/60">
-          Engineering since 1961
-        </p>
       </div>
     </aside>
   );

@@ -23,12 +23,3 @@ export function courseView(product: Product, access: Access, completed: string[]
   };
 }
 
-/** The course the certificate is claimed on: the one with Mastery lessons (the Masterclass). */
-export const awardsCertificate = (product: Product) => product.lessons.some((l) => (l.tier ?? 'mastery') === 'mastery');
-
-/** The certificate condition: every lesson of every course (Essential Course + Masterclass) complete. */
-export function programmeProgress(products: Product[], progress: Record<string, string[]>) {
-  const total = products.reduce((s, p) => s + p.lessons.length, 0);
-  const done = products.reduce((s, p) => s + p.lessons.filter((l) => progress[p.slug]?.includes(l.id)).length, 0);
-  return { total, done, percent: total ? Math.round((done / total) * 100) : 0, complete: total > 0 && done === total };
-}

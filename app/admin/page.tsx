@@ -78,7 +78,7 @@ export default async function AdminOverviewPage({
         <div>
           <p className="mono-tag text-[10px] text-primary mb-2">Admin Console</p>
           <h1 className="editorial-text text-4xl md:text-5xl">Overview</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Academy growth, engagement and certification</p>
+          <p className="mt-2 text-sm text-muted-foreground">Masterclass growth, engagement and certification</p>
         </div>
         <div className="flex gap-1 rounded-md border p-1 text-sm" role="group" aria-label="Period">
           {PERIODS.map((p) => (

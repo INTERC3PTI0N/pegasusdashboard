@@ -47,8 +47,8 @@ export default async function DashboardPage({
         <div className="flex items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm" role="status">
           <PartyPopper className="size-4 shrink-0 text-primary" />
           {registered === 'mastery'
-            ? 'Mastery Kit registered — the Essential Course and the Masterclass are unlocked, with unlimited access and the certificate on completion.'
-            : `Essential Kit registered — the Essential Course is unlocked${
+            ? 'Mastery Kit registered — every lesson is unlocked, with unlimited access and the certificate on completion.'
+            : `Essential Kit registered — lessons 1–${essentialTotal} are unlocked${
                 access.essentialKit?.expiresAt ? ` until ${fmtDate(access.essentialKit.expiresAt)}` : ''
               }.`}
         </div>
@@ -58,7 +58,7 @@ export default async function DashboardPage({
       )}
 
       <div>
-        <p className="mono-tag text-[10px] text-primary mb-2">My Academy</p>
+        <p className="mono-tag text-[10px] text-primary mb-2">My Masterclass</p>
         <h1 className="editorial-text text-4xl md:text-5xl">Welcome back, {firstName}</h1>
         {user.salon && <p className="mt-2 text-sm text-muted-foreground">{user.salon}</p>}
       </div>
@@ -69,8 +69,8 @@ export default async function DashboardPage({
             <KeyRound className="mx-auto size-8 text-primary" />
             <p className="editorial-text text-2xl">Register your Kit</p>
             <p className="text-sm text-muted-foreground">
-              Enter the code from your PEGASUS® kit. The {KITS.essential.name} opens the Essential Course ({essentialTotal} lessons)
-              for 12 months; the {KITS.mastery.name} adds the Masterclass — all {lessonsTotal} lessons, unlimited access and the certificate.
+              Enter the code from your PEGASUS® kit. The {KITS.essential.name} opens the first {essentialTotal} lessons for 12
+              months; the {KITS.mastery.name} opens all {lessonsTotal}, with unlimited access and the certificate.
             </p>
             <Button asChild className="mt-2">
               <Link href="/register-kit">Register your Kit</Link>
@@ -146,7 +146,7 @@ export default async function DashboardPage({
           )}
 
           <section>
-            <h2 className="editorial-text mb-4 text-2xl">My courses</h2>
+            <h2 className="editorial-text mb-4 text-2xl">My course</h2>
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {courses.map((c) => (
                 <Link key={c.product.slug} href={`/courses/${c.product.slug}`} className="group">
@@ -172,7 +172,7 @@ export default async function DashboardPage({
                         <Progress value={c.percent} className="h-1.5" />
                         {c.locked > 0 && (
                           <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Lock className="size-3" /> Preview only · Mastery Kit
+                            <Lock className="size-3" /> {c.locked} more with the Mastery Kit
                           </p>
                         )}
                       </div>

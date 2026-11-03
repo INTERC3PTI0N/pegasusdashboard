@@ -1,10 +1,10 @@
+import { Fragment } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PlayCircle, FileText, CheckCircle2, Circle, Award, ArrowLeft, Lock, Eye } from 'lucide-react';
 import { requireCourse } from '@/lib/access';
-import { getAllProgress, findCertificateFor, hasRevokedCertificate } from '@/lib/store';
-import { getProducts } from '@/lib/courses';
-import { courseView, awardsCertificate, programmeProgress } from '@/lib/course-view';
+import { getCompletedLessons, findCertificateFor, hasRevokedCertificate } from '@/lib/store';
+import { courseView } from '@/lib/course-view';
 import { KITS } from '@/lib/kits';
 import { generateCertificate } from '@/app/actions';
 import { UpgradeBanner } from '@/components/portal/kit-status';
@@ -20,11 +20,9 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
   // Server-side kit gate: customers without a kit are redirected before any content renders.
   const { user, product, access } = await requireCourse(slug);
 
-  const [products, progress] = await Promise.all([getProducts(), getAllProgress(user.id)]);
-  const c = courseView(product, access, progress[product.slug]);
-  // One certificate, claimed on the Masterclass once every lesson of both courses is complete.
-  const certCourse = awardsCertificate(product);
-  const programme = programmeProgress(products, progress);
+  const completed = await getCompletedLessons(user.id, product.slug);
+  const c = courseView(product, access, completed);
+  const doneAll = product.lessons.filter((l) => completed.includes(l.id)).length;
   const certificate = await findCertificateFor(user.id, product.slug);
   const revoked = !certificate && (await hasRevokedCertificate(user.id, product.slug));
 
@@ -67,7 +65,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
               <Progress value={c.percent} className="h-2" />
               <span className="text-sm tabular-nums text-muted-foreground">{c.percent}%</span>
             </div>
-            {certCourse && access.mastery && programme.complete && (
+            {access.mastery && c.complete && (
               certificate ? (
                 <Button asChild variant="ink" size="sm">
                   <Link href={`/certificates/${certificate.id}`}><Award /> View certificate</Link>
@@ -81,10 +79,10 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
               )
             )}
           </div>
-          {certCourse && !programme.complete && (
+          {!c.complete && (
             <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-              <Award className="size-3.5" /> Complete all {programme.total} lessons of the Essential Course and the Masterclass to earn
-              your PEGASUS® Academy certificate{access.mastery ? ` (${programme.done}/${programme.total} done)` : ` — included with the ${KITS.mastery.name}`}.
+              <Award className="size-3.5" /> Complete all {c.total} lessons to earn your PEGASUS® Masterclass certificate
+              {access.mastery ? ` (${doneAll}/${c.total} done)` : ` — included with the ${KITS.mastery.name}`}.
             </p>
           )}
         </CardContent>
@@ -100,11 +98,20 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
       <div>
         <h2 className="editorial-text text-2xl mb-4">Lessons</h2>
         <div className="space-y-2.5">
-          {product.lessons.map((lesson) => {
+          {product.lessons.map((lesson, i) => {
             const open = c.canOpen(lesson.tier);
             const isDone = c.isDone(lesson.id);
+            // A heading wherever the kit that opens the lessons changes (Essential Kit, then Mastery Kit).
+            const tier = lesson.tier ?? 'mastery';
+            const newSection = i === 0 || (product.lessons[i - 1].tier ?? 'mastery') !== tier;
             return (
-              <Link key={lesson.id} href={`/courses/${product.slug}/lessons/${lesson.id}`} className="group block">
+              <Fragment key={lesson.id}>
+              {newSection && (
+                <p className={`mono-tag text-[10px] text-muted-foreground ${i ? 'pt-4' : ''}`}>
+                  {tier === 'essential' ? 'Essential Kit & Mastery Kit' : 'Mastery Kit'}
+                </p>
+              )}
+              <Link href={`/courses/${product.slug}/lessons/${lesson.id}`} className="group block">
                 <Card className={`py-0 transition-all group-hover:border-primary/40 group-hover:shadow-md ${open ? '' : 'bg-muted/30'}`}>
                   <CardContent className="flex items-center gap-4 p-4">
                     {!open ? (
@@ -133,6 +140,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                   </CardContent>
                 </Card>
               </Link>
+              </Fragment>
             );
           })}
         </div>

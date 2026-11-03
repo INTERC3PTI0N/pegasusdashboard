@@ -31,7 +31,7 @@ export function KitStatus({ access, essentialLessons, totalLessons }: { access: 
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            Essential Course · {essentialLessons} lessons · 12 months of access
+            Lessons 1–{essentialLessons} of {totalLessons} · 12 months of access
           </p>
           {!access.mastery && ek?.expiresAt && !access.essentialExpired && (
             <div className="space-y-1.5">
@@ -47,7 +47,7 @@ export function KitStatus({ access, essentialLessons, totalLessons }: { access: 
               or another Essential Kit for 12 more months.
             </p>
           )}
-          {access.mastery && <p className="text-sm text-muted-foreground">The Essential Course is included in your Mastery Kit.</p>}
+          {access.mastery && <p className="text-sm text-muted-foreground">Your Mastery Kit includes every Essential Kit lesson.</p>}
         </CardContent>
       </Card>
 
@@ -58,7 +58,7 @@ export function KitStatus({ access, essentialLessons, totalLessons }: { access: 
             <p className="font-semibold" translate="no">{KITS.mastery.name}</p>
             {access.mastery ? <Badge variant="success">Active</Badge> : <Badge variant="outline">Not registered</Badge>}
           </div>
-          <p className="text-sm text-muted-foreground">Essential Course + Masterclass · all {totalLessons} lessons · unlimited access · certificate</p>
+          <p className="text-sm text-muted-foreground">All {totalLessons} lessons · unlimited access · certificate</p>
           {access.mastery ? (
             <div className="space-y-1.5 text-sm">
               <p className="flex items-center gap-1.5"><InfinityIcon className="size-4 text-primary" /> Unlimited access — no expiry</p>
@@ -68,7 +68,7 @@ export function KitStatus({ access, essentialLessons, totalLessons }: { access: 
             <div className="space-y-3">
               <p className="flex items-start gap-1.5 text-sm">
                 <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" />
-                Unlock the Masterclass ({totalLessons - essentialLessons} more lessons), keep access for life and earn the certificate.
+                Unlock the remaining {totalLessons - essentialLessons} lessons, keep access for life and earn the certificate.
               </p>
               <Button asChild size="sm">
                 <Link href="/register-kit"><KeyRound /> Register a Mastery Kit</Link>
@@ -87,8 +87,8 @@ export function UpgradeBanner({ lockedCount, className }: { lockedCount: number;
     <div className={cn('flex flex-wrap items-center gap-3 rounded-lg border border-primary/30 bg-primary/5 px-4 py-3 text-sm', className)}>
       <Lock className="size-4 shrink-0 text-primary" />
       <p className="min-w-0 flex-1">
-        <span className="font-medium">The Masterclass is part of the Mastery Kit.</span>{' '}
-        Watch the preview of each of its {lockedCount} lessons below. Buy the Mastery Kit to get complete access.
+        <span className="font-medium">{lockedCount} {lockedCount === 1 ? 'lesson is' : 'lessons are'} part of the Mastery Kit.</span>{' '}
+        Watch their previews below. Buy the Mastery Kit to get complete access.
       </p>
       <Button asChild size="sm" variant="outline">
         <Link href="/register-kit">Register Mastery Kit</Link>

@@ -15,7 +15,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 backdrop-blur-md px-4 md:px-8">
           <div className="flex items-center gap-3">
             <AdminMobileNav role={admin.adminRole} />
-            <p className="mono-tag hidden text-[10px] text-muted-foreground sm:block">Pegasus Academy</p>
+            <p className="mono-tag hidden text-[10px] text-muted-foreground sm:block">Pegasus Masterclass</p>
             <Badge variant="outline" className="mono-tag text-[9px] border-primary/40 text-primary">
               Admin Console
             </Badge>

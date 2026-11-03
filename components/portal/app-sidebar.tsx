@@ -35,7 +35,7 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
             className="h-10 w-auto"
             priority
           />
-          <span className="mono-tag text-[9px] text-primary mt-1">Academy</span>
+          <span className="mono-tag text-[9px] text-primary mt-1">Masterclass</span>
         </Link>
       </div>
 
@@ -117,9 +117,6 @@ export function AppSidebar({ products }: { products: SidebarProduct[] }) {
           <LifeBuoy className="size-4" />
           Support
         </a>
-        <p className="mono-tag mt-3 px-2.5 text-[9px] text-muted-foreground/60">
-          Engineering since 1961
-        </p>
       </div>
     </aside>
   );

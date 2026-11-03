@@ -17,7 +17,7 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: 'Pegasus Academy — Customer Portal',
+  title: 'Pegasus Masterclass — Customer Portal',
   description:
     'The Pegasus Hair Tools customer academy. Exclusive tutorials, guides and certification for owners of Pegasus professional styling tools.',
 };
