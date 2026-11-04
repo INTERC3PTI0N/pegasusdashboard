@@ -46,7 +46,8 @@ export function SignupForm() {
         Already have an account?{' '}
         <Link href="/login" className="font-medium text-primary hover:underline">
           Sign in
-        </Link>
+        </Link>{' '}
+        — your kit code will be added to it.
       </p>
     </div>
   );

@@ -1,11 +1,16 @@
+import { AlertCircle } from 'lucide-react';
 import { requireCustomer } from '@/lib/access';
+import { REDEEM_ERRORS } from '@/lib/registration';
 import { Card, CardContent } from '@/components/ui/card';
 import { RedeemForm } from './redeem-form';
 
 export const dynamic = 'force-dynamic';
 
-export default async function RegisterKitPage() {
+export default async function RegisterKitPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   await requireCustomer();
+  // A code entered on /start that couldn't be redeemed once the account existed.
+  const { error } = await searchParams;
+  const message = error && error in REDEEM_ERRORS ? REDEEM_ERRORS[error as keyof typeof REDEEM_ERRORS] : null;
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
@@ -17,6 +22,12 @@ export default async function RegisterKitPage() {
           tutorials and course access. Each code can be used only once.
         </p>
       </div>
+
+      {message && (
+        <p className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive" role="alert">
+          <AlertCircle className="size-4 shrink-0" /> {message}
+        </p>
+      )}
 
       <Card>
         <CardContent>

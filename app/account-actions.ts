@@ -15,10 +15,12 @@ export async function changePassword(_prev: State, form: FormData): Promise<Stat
   const next = String(form.get('password') ?? '');
   const confirm = String(form.get('confirm') ?? '');
 
-  // A forced change (after a temporary password) doesn't ask for the temporary one again.
+  // A forced change (after a temporary password) doesn't ask for the temporary one again, and a
+  // Google / Facebook account without a password can set one.
   if (!user.mustChangePassword) {
     const found = await findUserForLogin(user.email);
-    if (!found || !verifyPassword(current, found.passwordHash)) return { message: 'Your current password is incorrect.' };
+    if (!found) return { message: 'Your current password is incorrect.' };
+    if (found.passwordHash && !verifyPassword(current, found.passwordHash)) return { message: 'Your current password is incorrect.' };
   }
   if (next.length < 8 || next.length > 200) return { message: 'Choose a password of at least 8 characters.' };
   if (next !== confirm) return { message: 'The two new passwords don’t match.' };

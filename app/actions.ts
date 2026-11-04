@@ -18,7 +18,16 @@ import {
   hasRevokedCertificate,
   addProductKeys,
   redeemKitKey,
+  peekKitKey,
 } from '@/lib/store';
+import {
+  KEY_RE,
+  REDEEM_ERRORS,
+  finishRegistration,
+  normalizeKey,
+  registerWithPendingCode,
+  setPendingCode,
+} from '@/lib/registration';
 
 type FormState = { error?: string } | undefined;
 
@@ -36,7 +45,8 @@ export async function login(_prev: FormState, formData: FormData): Promise<FormS
   // Straight to the password page after a temporary password (a second redirect hop from the
   // destination page can leave the client on a blank screen).
   if (found.user.mustChangePassword) redirect('/change-password');
-  redirect(found.user.role === 'admin' ? '/admin' : '/dashboard');
+  // A customer who entered a kit code before signing in gets it redeemed now.
+  redirect(await finishRegistration(found.user));
 }
 
 type SignupState = { error: string; values: { name: string; salon: string; email: string } } | undefined;
@@ -53,10 +63,41 @@ export async function signup(_prev: SignupState, formData: FormData): Promise<Si
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 200) return fail('Enter a valid email address.');
   if (password.length < 8 || password.length > 200) return fail('Password must be at least 8 characters.');
 
-  const user = await createCustomer({ name, salon, email, password });
-  if (!user) return fail('An account with this email already exists. Sign in instead.');
-  await setSession(user);
-  redirect('/register-kit');
+  // No account without a kit code: created and redeemed together (see /start).
+  const reg = await registerWithPendingCode(() => createCustomer({ name, salon, email, password }));
+  if (!reg.ok) {
+    if (reg.error === 'no_code') redirect('/start');
+    return fail(
+      reg.error === 'taken'
+        ? 'An account with this email already exists. Sign in instead — your kit code will be added to it.'
+        : REDEEM_ERRORS[reg.error]
+    );
+  }
+  await setSession(reg.user);
+  revalidatePath('/', 'layout');
+  redirect(`/dashboard?registered=${reg.kit}`);
+}
+
+/**
+ * The "Enter code" step (/start). Signed-in customers redeem straight away; everyone else has the code
+ * checked (not spent) and kept for the "Create account" step.
+ */
+export async function startWithCode(_prev: FormState, formData: FormData): Promise<FormState> {
+  const code = normalizeKey(String(formData.get('key') ?? '').trim());
+  if (!KEY_RE.test(code)) return { error: 'Kit codes look like XXXX-XXXX-XXXX.' };
+
+  const user = await getCurrentUser();
+  if (user?.role === 'customer') {
+    const result = await redeemKitKey(user, code);
+    if (!result.ok) return { error: REDEEM_ERRORS[result.error] };
+    revalidatePath('/', 'layout');
+    redirect(`/dashboard?registered=${result.kit}`);
+  }
+
+  const check = await peekKitKey(code);
+  if (!check.ok) return { error: REDEEM_ERRORS[check.error] };
+  await setPendingCode(code);
+  redirect(`/signup?kit=${check.kit}`);
 }
 
 export async function logout() {
@@ -105,29 +146,15 @@ export async function generateCertificate(productSlug: string) {
 
 // ── Kit keys ────────────────────────────────────────────────────────────────
 
-const CODE_RE = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
-
-/** Accepts "abcd efgh ijkl", "ABCDEFGHIJKL" etc. and returns "ABCD-EFGH-IJKL" (or the raw input if not 12 chars). */
-function normalizeKey(raw: string): string {
-  const chars = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  return chars.length === 12 ? `${chars.slice(0, 4)}-${chars.slice(4, 8)}-${chars.slice(8)}` : raw.toUpperCase();
-}
+const CODE_RE = KEY_RE;
 
 export async function redeemKey(_prev: FormState, formData: FormData): Promise<FormState> {
   const user = await requireCustomer();
   const code = normalizeKey(String(formData.get('key') ?? '').trim());
-  if (!CODE_RE.test(code)) return { error: 'Kit keys look like XXXX-XXXX-XXXX.' };
+  if (!CODE_RE.test(code)) return { error: 'Kit codes look like XXXX-XXXX-XXXX.' };
 
   const result = await redeemKitKey(user, code);
-  if (!result.ok) {
-    return {
-      error: {
-        invalid: 'That kit key is not valid. Check it against the card in your kit.',
-        used: 'That kit key has already been used.',
-        owned: 'You already have the Mastery Kit, which includes everything — the key was not used.',
-      }[result.error],
-    };
-  }
+  if (!result.ok) return { error: REDEEM_ERRORS[result.error] };
   revalidatePath('/', 'layout');
   redirect(`/dashboard?registered=${result.kit}`);
 }

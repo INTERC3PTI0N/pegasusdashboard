@@ -6,7 +6,8 @@ export function hashPassword(password: string): string {
   return `scrypt$${salt.toString('hex')}$${scryptSync(password, salt, 64).toString('hex')}`;
 }
 
-export function verifyPassword(password: string, stored: string): boolean {
+export function verifyPassword(password: string, stored: string | null): boolean {
+  if (!stored) return false; // Google / Facebook-only account
   const [scheme, salt, hash] = stored.split('$');
   if (scheme !== 'scrypt' || !salt || !hash) return false;
   const expected = Buffer.from(hash, 'hex');

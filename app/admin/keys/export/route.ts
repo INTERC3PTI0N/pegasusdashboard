@@ -7,13 +7,15 @@ import { toCsv, csvResponse } from '@/lib/csv';
 /** Keys matching the current filters — e.g. one batch of available keys for printing on cards. */
 export async function GET(request: Request) {
   const admin = await requireAdmin('keys');
-  const p = new URL(request.url).searchParams;
+  const { origin, searchParams: p } = new URL(request.url);
   const filter = { status: p.get('status') ?? '', product: p.get('product') ?? '', batch: p.get('batch') ?? '', q: p.get('q') ?? '' };
   const { keys } = await keyRows(filter);
   const csv = toCsv([
-    ['Key', 'Kit', 'Kit ID', 'Batch', 'Status', 'Redeemed by', 'Redeemed at', 'Added'],
+    // "Start link" is what the QR code on each scratch card should open (code pre-filled).
+    ['Key', 'Start link', 'Kit', 'Kit ID', 'Batch', 'Status', 'Redeemed by', 'Redeemed at', 'Added'],
     ...keys.map((k) => [
       k.code,
+      `${origin}/start?code=${k.code}`,
       isKitId(k.productSlug) ? KITS[k.productSlug].name : `${k.productSlug} (retired)`,
       k.productSlug,
       k.batch,

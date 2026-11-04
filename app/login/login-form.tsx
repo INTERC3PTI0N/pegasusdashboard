@@ -48,8 +48,8 @@ export function LoginForm() {
 
       <p className="text-sm text-muted-foreground">
         New to Pegasus Masterclass?{' '}
-        <Link href="/signup" className="font-medium text-primary hover:underline">
-          Create an account
+        <Link href="/start" className="font-medium text-primary hover:underline">
+          Start with your kit code
         </Link>
       </p>
     </div>

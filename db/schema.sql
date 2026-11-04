@@ -158,6 +158,11 @@ create table if not exists user_kits (
 update product_keys set voided_at = now()
 where product_slug not in ('essential', 'mastery') and used_by is null and voided_at is null;
 
+-- Sign in with Google / Facebook: those accounts may have no password.
+alter table users alter column password_hash drop not null;
+alter table users add column if not exists google_id text unique;
+alter table users add column if not exists facebook_id text unique;
+
 -- Supabase exposes the public schema over its REST API. The app connects directly as the
 -- database owner (which bypasses RLS), so enabling RLS with no policies locks the API out.
 alter table users        enable row level security;

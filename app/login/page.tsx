@@ -1,8 +1,19 @@
 import Image from 'next/image';
+import { AlertCircle } from 'lucide-react';
 import { LoginForm } from './login-form';
+import { OAuthButtons } from '@/components/oauth-buttons';
 import { LanguageSwitcher } from '@/components/language-switcher';
 
-export default function LoginPage() {
+const ERRORS: Record<string, string> = {
+  oauth: 'That sign-in didn’t complete. Please try again.',
+  oauth_email: 'Facebook didn’t share an email address. Please use Google or your email and password.',
+  oauth_staff: 'Staff accounts sign in with email and password.',
+  oauth_setup: 'Google and Meta sign-in are being set up. Please use your email and password for now.',
+  suspended: 'This account has been suspended. Please contact Pegasus support.',
+};
+
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
+  const error = ERRORS[(await searchParams).error ?? ''];
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       {/* Left — form */}
@@ -23,6 +34,14 @@ export default function LoginPage() {
             Sign in to access the tutorials, guides and certification for your Pegasus tools.
             Content is exclusive to verified purchasers.
           </p>
+          {error && (
+            <p className="mb-6 flex items-center gap-2 text-sm text-destructive" role="alert">
+              <AlertCircle className="size-4 shrink-0" /> {error}
+            </p>
+          )}
+          <div className="mb-6">
+            <OAuthButtons from="/login" />
+          </div>
           <LoginForm />
         </div>
       </div>

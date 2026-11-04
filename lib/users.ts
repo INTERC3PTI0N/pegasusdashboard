@@ -27,7 +27,13 @@ export interface User {
 }
 
 type KitJson = { kit: KitId; registeredAt: string; expiresAt: string | null };
-type UserRow = Omit<User, 'kits'> & { passwordHash: string; entitlements?: string[]; kits: KitJson[] | null };
+type UserRow = Omit<User, 'kits'> & {
+  passwordHash: string | null;
+  googleId?: string | null;
+  facebookId?: string | null;
+  entitlements?: string[];
+  kits: KitJson[] | null;
+};
 
 // The user's kits, as a JSON column alongside the user row (one round trip).
 const kitsColumn = () => db()`(
@@ -36,7 +42,7 @@ const kitsColumn = () => db()`(
 ) as kits`;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const toUser = ({ passwordHash, entitlements, kits, ...user }: UserRow): User => ({
+const toUser = ({ passwordHash, googleId, facebookId, entitlements, kits, ...user }: UserRow): User => ({
   ...user,
   kits: (kits ?? []).map((k) => ({
     kit: k.kit,
@@ -71,6 +77,40 @@ export async function createCustomer(input: { name: string; email: string; salon
   const [row] = await db()<UserRow[]>`
     insert into users (name, email, salon, password_hash)
     values (${input.name}, ${input.email.toLowerCase()}, ${input.salon}, ${hashPassword(input.password)})
+    on conflict (email) do nothing
+    returning *, ${kitsColumn()}`;
+  return row ? toUser(row) : null;
+}
+
+export type OAuthProvider = 'google' | 'facebook';
+export interface OAuthProfile {
+  id: string;
+  email: string;
+  name: string;
+}
+const providerColumn = { google: 'google_id', facebook: 'facebook_id' } as const;
+
+/**
+ * The account for a Google / Facebook sign-in: the one already linked to this provider account, else
+ * the one with the same (provider-verified) email, which then gets linked. Null if there is none.
+ */
+export async function findOAuthUser(provider: OAuthProvider, profile: OAuthProfile): Promise<User | null> {
+  const col = db()(providerColumn[provider]);
+  const rows = await db()<UserRow[]>`
+    select *, ${kitsColumn()} from users where ${col} = ${profile.id} or email = ${profile.email.toLowerCase()}`;
+  const linked = rows.find((r) => (provider === 'google' ? r.googleId : r.facebookId) === profile.id);
+  if (linked) return toUser(linked);
+  const byEmail = rows.find((r) => !(provider === 'google' ? r.googleId : r.facebookId));
+  if (!byEmail) return null;
+  await db()`update users set ${col} = ${profile.id} where id = ${byEmail.id}`;
+  return toUser(byEmail);
+}
+
+/** A new customer from a Google / Facebook sign-in (no password). Null if the email is taken. */
+export async function createOAuthCustomer(provider: OAuthProvider, profile: OAuthProfile): Promise<User | null> {
+  const [row] = await db()<UserRow[]>`
+    insert into users (name, email, salon, ${db()(providerColumn[provider])})
+    values (${profile.name.slice(0, 100)}, ${profile.email.toLowerCase()}, '', ${profile.id})
     on conflict (email) do nothing
     returning *, ${kitsColumn()}`;
   return row ? toUser(row) : null;

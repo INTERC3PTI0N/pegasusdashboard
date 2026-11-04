@@ -169,6 +169,15 @@ export type RedeemResult =
   | { ok: true; kit: KitId; expiresAt: Date | null }
   | { ok: false; error: 'invalid' | 'used' | 'owned' };
 
+/** Checks a kit key without spending it (the "Enter code" step, before an account exists). */
+export async function peekKitKey(code: string): Promise<{ ok: true; kit: KitId } | { ok: false; error: 'invalid' | 'used' }> {
+  const [key] = await db()<{ productSlug: string; usedBy: string | null; voidedAt: Date | null }[]>`
+    select product_slug, used_by, voided_at from product_keys where code = ${code}`;
+  if (!key || key.voidedAt || !isKitId(key.productSlug)) return { ok: false, error: 'invalid' };
+  if (key.usedBy) return { ok: false, error: 'used' };
+  return { ok: true, kit: key.productSlug };
+}
+
 /**
  * One-time redemption of a kit key. The key row is locked for the transaction, so two accounts
  * redeeming the same key at once are serialized and only the first succeeds; spending the key
