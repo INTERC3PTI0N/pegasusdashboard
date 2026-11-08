@@ -19,7 +19,7 @@ export default async function SiteContentPage() {
   const states = await getAllDocStates();
   const site = siteUrl();
   const draftCount = states.filter((s) => s.hasDraft).length;
-  const groups = ['Site-wide', 'Home page', 'Collections'] as const;
+  const groups = ['Site-wide', 'Home page', 'Pages', 'Products'] as const;
 
   return (
     <div className="mx-auto max-w-6xl space-y-8">

@@ -1,91 +1,89 @@
 {
   "global.seo": {
-    "siteTitle": "PEGASUS Hair Tools — INFINITE STYLING",
-    "siteDescription": "The official premium digital platform for Pegasus Hair Tools, engineering professional styling tools since 1961. Experience the craftsmanship of Flexinite technology."
+    "siteTitle": "PEGASUS® — Hard Rubber (Ebonite) Combs · Mastery in Your Hands",
+    "siteDescription": "PEGASUS® makes precision hair tools for professional stylists. Built on Presto Industries' tradition of handmade combs since 1977, each hard rubber comb pairs seamless saw-cut teeth with Intelligent Flexinite® technology."
   },
   "global.header": {
     "logo": "/images/pegasus-logo.png",
     "logoOnDark": "/images/pegasus-logo-light.png",
     "navLinks": [
       {
+        "label": "Home",
+        "href": "/"
+      },
+      {
+        "label": "About Us",
+        "href": "/about"
+      },
+      {
+        "label": "Flexinite® Technology",
+        "href": "/flexinite"
+      },
+      {
         "label": "Products",
-        "href": "/#products"
-      },
-      {
-        "label": "Technology",
-        "href": "/#technology"
-      },
-      {
-        "label": "About",
-        "href": "/#about"
-      },
-      {
-        "label": "Journal",
-        "href": "/#journal"
+        "href": "/products"
       },
       {
         "label": "Contact",
-        "href": "/#contact"
-      }
-    ],
-    "collectionLinks": [
-      {
-        "label": "Hard Rubber · Flexinite",
-        "href": "/collections/hard-rubber"
+        "href": "/contact"
       },
       {
-        "label": "Cellulose Acetate",
-        "href": "/collections/cellulose"
-      },
-      {
-        "label": "Ecowood · StaticBlock",
-        "href": "/collections/ecowood"
+        "label": "Masterclass",
+        "href": "/masterclass"
       }
     ],
-    "shopLabel": "Online Shop",
-    "shopUrl": "https://www.pegasushairtools.com"
+    "shopLabel": "Enquire",
+    "shopUrl": "/contact"
   },
   "global.footer": {
-    "tagline": "Professional hair styling tools, handcrafted by Presto Industries since 1961.",
-    "instagramUrl": "https://www.pegasushairtools.com",
-    "facebookUrl": "https://www.pegasushairtools.com",
-    "youtubeUrl": "https://www.pegasushairtools.com",
+    "tagline": "PEGASUS® makes precision hair tools for professional stylists. Mastery in Your Hands.",
+    "instagramUrl": "https://www.instagram.com/pegasuscombs",
+    "facebookUrl": "",
+    "youtubeUrl": "",
     "columns": [
       {
         "heading": "Products",
         "links": [
           {
-            "label": "Hard Rubber · Flexinite",
-            "href": "/collections/hard-rubber"
+            "label": "Detangle & Prep",
+            "href": "/products?function=detangle"
           },
           {
-            "label": "Cellulose Acetate",
-            "href": "/collections/cellulose"
+            "label": "Cut & Section",
+            "href": "/products?function=cut"
           },
           {
-            "label": "Ecowood · StaticBlock",
-            "href": "/collections/ecowood"
+            "label": "Colour & Foil",
+            "href": "/products?function=colour"
+          },
+          {
+            "label": "Barbering & Fade",
+            "href": "/products?function=barber"
+          },
+          {
+            "label": "Finish & Style",
+            "href": "/products?function=finish"
+          },
+          {
+            "label": "Carry & Care",
+            "href": "/products?function=carry"
           }
         ]
       },
       {
-        "heading": "About",
+        "heading": "PEGASUS®",
         "links": [
           {
-            "label": "Heritage",
-            "href": "/#about"
+            "label": "About Us",
+            "href": "/about"
           },
           {
-            "label": "Technology",
-            "href": "/#technology"
+            "label": "Flexinite® Technology",
+            "href": "/flexinite"
           },
           {
-            "label": "Sustainability",
-            "href": "/#sustainability"
-          },
-          {
-            "label": "Journal",
-            "href": "/#journal"
+            "label": "Masterclass",
+            "href": "/masterclass"
           }
         ]
       },
@@ -93,373 +91,869 @@
         "heading": "Contact",
         "links": [
           {
-            "label": "Dealer Enquiries",
-            "href": "/#contact"
+            "label": "Send an enquiry",
+            "href": "/contact"
           },
           {
-            "label": "Request Brochure",
-            "href": "/#brochure"
-          },
-          {
-            "label": "Who We Serve",
-            "href": "/#who-we-serve"
+            "label": "info@pegasushairtools.com",
+            "href": "mailto:info@pegasushairtools.com"
           }
         ]
       }
     ],
-    "copyright": "PEGASUS HAIR TOOLS · A PRESTO INDUSTRIES BRAND",
-    "privacyUrl": "#",
-    "termsUrl": "#"
-  },
-  "home.preloader": {
-    "kicker": "PRESTO INDUSTRIES — EST. 1961",
-    "text": "Professional hair styling tools, handcrafted through material innovation and six decades of precision.",
-    "image": "/images/comb.png"
+    "copyright": "PEGASUS® · A PRESTO INDUSTRIES BRAND",
+    "privacyUrl": "",
+    "termsUrl": ""
   },
   "home.hero": {
-    "kicker": "PROFESSIONAL HAIR TOOLS · SINCE 1961",
-    "titleLine1": "Infinite Styling,",
-    "titleLine2": "Handcrafted.",
-    "subtitle": "Seamless, hand-polished combs engineered by Presto Industries — where precision, craft and material science meet the professional’s chair.",
-    "video": "/videos/hair-banner.mp4",
-    "poster": "/images/pegasus_luxury_salon.jpg",
-    "primaryCtaLabel": "Explore Products",
-    "primaryCtaHref": "/#products",
-    "secondaryCtaLabel": "The Technology",
-    "secondaryCtaHref": "/#technology"
+    "kicker": "PEGASUS® · Hard Rubber (Ebonite) Combs",
+    "titleLine1": "Precision when you need control.",
+    "titleLine2": "Ease when you need flow.",
+    "subtitle": "Handmade hard rubber combs with seamless saw-cut teeth and Intelligent Flexinite® technology — for stylists, barbers and educators.",
+    "video": "/videos/pegasus-hero.mp4",
+    "poster": "/images/hero-poster.webp",
+    "primaryCtaLabel": "Find your comb",
+    "primaryCtaHref": "/products",
+    "secondaryCtaLabel": "Flexinite® Technology",
+    "secondaryCtaHref": "/flexinite"
   },
-  "home.about": {
-    "kicker": "Heritage",
-    "sub": "SINCE 1961",
-    "title": "Six decades of handcrafted precision.",
-    "body": "Founded by Lookman Qadir in 1961, Presto Industries began saw-cutting and hand-polishing combs in 1977. After years researching hair textures and climates across the world, Pegasus launched in 2012 — the culmination of a craft passed from one generation of toolmakers to the next.",
-    "image": "/images/pegasus_luxury_salon.jpg",
-    "ctaLabel": "Read Our Story",
-    "ctaHref": "/#journal"
-  },
-  "home.products": {
-    "kicker": "Products",
-    "title": "The Collections",
-    "sub": "Three material philosophies, each engineered for a specific styling and chemical discipline.",
-    "cardCta": "View Collection",
-    "items": [
-      {
-        "n": "01",
-        "title": "Hard Rubber",
-        "sub": "Flexinite Technology",
-        "blurb": "Precision cutting and styling for professionals. 100% Ebonite, high-heat and chemical resistant.",
-        "image": "/images/pegasus_hard_rubber.jpg",
-        "href": "/collections/hard-rubber"
-      },
-      {
-        "n": "02",
-        "title": "Cellulose Acetate",
-        "sub": "GlamLock Technology",
-        "blurb": "Seamless, hand-polished teeth that detangle easily, stimulate the scalp and leave hair smooth and shiny.",
-        "image": "/images/pegasus_cellulose.jpg",
-        "href": "/collections/cellulose"
-      },
-      {
-        "n": "03",
-        "title": "Ecowood",
-        "sub": "StaticBlock Technology",
-        "blurb": "Sustainable, natural and eco-friendly. Prevents fly-aways and reduces frizz with a gentle glide.",
-        "image": "/images/pegasus_ecowood.jpg",
-        "href": "/collections/ecowood"
-      }
+  "home.intro": {
+    "kicker": "PEGASUS®",
+    "statement": "PEGASUS® makes precision hair tools for professional stylists. Built on Presto Industries' tradition of handmade combs since 1977, each hard rubber comb pairs seamless saw-cut teeth with Intelligent Flexinite® technology — engineered to give rigid control when cutting and a controlled flex when styling.",
+    "talkPoints": [
+      "Intelligent Flexinite® comb advantage",
+      "Saw-cut & seamless teeth",
+      "Rounded edges",
+      "100% natural rubber, sourced responsibly, crafted into hard rubber (Ebonite)",
+      "Handmade, since 1977"
     ]
+  },
+  "home.functions": {
+    "kicker": "Products",
+    "title": "Find the right comb",
+    "sub": "Sixty-five PEGASUS® hard rubber combs, organised by the job they do in the chair and tagged by hair type.",
+    "ctaLabel": "View all combs"
   },
   "home.technology": {
-    "kicker": "Technology",
-    "sub": "GLAMLOCK · FLEXINITE · STATICBLOCK",
-    "title": "Three technologies, one seamless glide.",
-    "body": "Ordinary combs have sharp, seamed teeth that roughen the hair. Ours are engineered instead — GlamLock hand-polishes every tooth seamless, Flexinite responds to salon heat while resisting chemicals, and StaticBlock naturally dissipates the fly-aways that friction creates.",
-    "image": "/images/pegasus_cellulose.jpg",
-    "ctaLabel": "Discover the Technology",
-    "ctaHref": "/collections/hard-rubber"
+    "kicker": "Flexinite® Technology",
+    "sub": "ONE COMB, TWO ADVANTAGES",
+    "title": "Rigid when cool. A gentle flex under heat.",
+    "body": "Rigid at room temperature for precise, controlled cutting — then gently flexes under heat, gliding through hair without snagging during blow-dry, straightening, and styling. Most combs force stylists to choose between the two. Flexinite® doesn't.",
+    "image": "/images/hero-poster.webp",
+    "ctaLabel": "How Flexinite® works",
+    "ctaHref": "/flexinite"
   },
-  "home.philosophy": {
-    "kicker": "Philosophy",
-    "statementBefore": "Pegasus precision crafted combs are created for the",
-    "highlight": "best stylists",
-    "statementAfter": "in the world. We combine technology, craftsmanship, innovative colours and design.",
-    "body": "Since 1961, Presto Industries has engineered professional styling tools trusted by hairdressers across the world. This is the craft behind Pegasus — infinite styling, in every strand."
-  },
-  "home.sustainability": {
-    "kicker": "Sustainability",
-    "sub": "KIND TO HAIR, KIND TO EARTH",
-    "title": "Beautiful hair, in balance with nature.",
-    "body": "Our Ecowood range is completely earth and scalp friendly — naturally anti-static and anti-bacterial, handcrafted from sustainable natural wood. Because caring for hair should never mean compromising the world it lives in.",
-    "image": "/images/pegasus_ecowood.jpg",
-    "ctaLabel": "Explore Ecowood",
-    "ctaHref": "/collections/ecowood"
-  },
-  "home.journal": {
-    "kicker": "Journal",
-    "title": "The Pegasus Académie",
-    "sub": "Notes on hair, craft and material science from the Pegasus editorial team.",
-    "articles": [
-      {
-        "title": "No More Frizz!",
-        "category": "trichology",
-        "readTime": "4 min read",
-        "date": "Pegasus Académie",
-        "author": "Pegasus Académie",
-        "authorRole": "Editorial Team, Pegasus Hair Tools",
-        "summary": "Dry, frizzy hair complicates styling and makes every morning harder than it needs to be. Here is how the right comb calms the chaos for better-looking hair daily.",
-        "image": "/images/pegasus_luxury_salon.jpg",
-        "content": "Dry and frizzy hair is the most common styling complaint we hear from hairdressers and their clients. Frizz makes hair difficult to manage, styles refuse to hold, and the finished look loses its polish within hours.\n\nMuch of that frizz is self-inflicted — created by friction from the wrong combing tools. Ordinary injection-moulded combs carry microscopic seams along every tooth that roughen the hair surface with every pass, lifting the cuticle and inviting static.\n\n#### Calm Hair Starts With the Right Comb\nPegasus combs are saw-cut and hand polished so every tooth is seamless and rounded. Combined with StaticBlock Technology in our Ecowood range — naturally anti-static and anti-bacterial — fly-aways are prevented and frizz is visibly reduced. Smooth, polished teeth glide gently through the hair, so you can style without the struggle, every single day."
-      },
-      {
-        "title": "Give Your Hair the Soft Touch of Protection",
-        "category": "trichology",
-        "readTime": "5 min read",
-        "date": "Pegasus Académie",
-        "author": "Pegasus Académie",
-        "authorRole": "Editorial Team, Pegasus Hair Tools",
-        "summary": "Understanding the hair cuticle — and why the wrong comb quietly damages your hair, especially when it is wet or undergoing chemical treatments.",
-        "image": "/images/pegasus_cellulose.jpg",
-        "content": "Every strand of hair is wrapped in a protective layer called the cuticle — overlapping scales that, when healthy, lay flat and reflect light for natural shine. Damage that layer and hair turns dull, coarse and prone to split ends.\n\nThe wrong comb is one of the most common culprits. Sharp, seamed teeth scrape the cuticle with every stroke, and the risk multiplies when hair is at its most vulnerable: wet after a wash, or mid-way through colouring and chemical treatments.\n\n#### Protection by Design\nPegasus GlamLock combs are crafted with seamless, hand-polished teeth that detangle easily without scraping. The smooth rounded tips massage the scalp, stimulate healthy blood circulation and spread the hair's natural oils evenly from roots to tips — protection and shine in a single stroke."
-      },
-      {
-        "title": "Handmade Combs by Pegasus to Show Care Towards Your Mane",
-        "category": "history",
-        "readTime": "5 min read",
-        "date": "Pegasus Académie",
-        "author": "Pegasus Académie",
-        "authorRole": "Editorial Team, Pegasus Hair Tools",
-        "summary": "Why hand-sawn combs with rounded, hand-polished edges stimulate natural oils and distribute them effectively — craftsmanship your hair can feel.",
-        "image": "/images/pegasus_ecowood.jpg",
-        "content": "Since Presto Industries began manufacturing combs in 1977, one principle has never changed: a comb worth using must be made by hand.\n\nEach Pegasus comb is hand sawn — every tooth individually cut, then rounded and hand-polished until no seam or sharp edge remains. It is slow, deliberate work that mass-produced moulded combs simply cannot replicate.\n\n#### Craftsmanship Your Scalp Can Feel\nThose rounded, polished edges do more than feel luxurious. They stimulate the scalp's natural oils and distribute them effectively along the full length of the hair, nourishing every strand from root to tip. The result is hair that looks healthier because it genuinely is — cared for by a tool that was itself made with care."
-      },
-      {
-        "title": "FLEXINITE Technology Infused Hair Combs by Pegasus",
-        "category": "technology",
-        "readTime": "6 min read",
-        "date": "Pegasus Académie",
-        "author": "Pegasus Académie",
-        "authorRole": "Editorial Team, Pegasus Hair Tools",
-        "summary": "100% hard rubber + FLEXINITE technology — developed after extensive research into global hair textures and climate conditions.",
-        "image": "/images/pegasus_hard_rubber.jpg",
-        "content": "Pegasus hard rubber combs are made of 100% hard rubber (Ebonite) infused with our proprietary FLEXINITE technology — the result of extensive research examining hair textures and climate conditions across the world.\n\nFLEXINITE makes the comb respond to temperature changes. Under dryers and irons the material stays high-heat resistant while remaining flexible, strong and durable — a truly versatile experience for cutting, colouring and styling.\n\n#### Built for Professionals\nThat is why professional hairdressers across the world trust the Pegasus hard rubber range for precision cutting and styling. Chemical resistant against daily salon colour work, gentle on every hair type, and built to last years of session use — this is infinite styling, engineered."
-      }
-    ]
+  "home.masterclass": {
+    "kicker": "Masterclass",
+    "sub": "THE ANDREA BOZZANO TECHNIQUE",
+    "title": "Learn the cut, step by step.",
+    "body": "Every PEGASUS® Essential Kit and Mastery Kit carries a scratch-card code. Scan it, create your account and follow complete haircuts with Andrea Bozzano and the PEGASUS® combs he uses. The Essential Kit opens lessons 1–4 for 12 months; the Mastery Kit opens all 10 lessons with unlimited access and the certificate.",
+    "image": "/images/kits/mastery-front.webp",
+    "ctaLabel": "Start your Masterclass",
+    "ctaHref": "/masterclass"
   },
   "home.whoWeServe": {
-    "kicker": "Network",
-    "title": "Who We Serve",
-    "sub": "PEGASUS combs are backed by a strong marketing and communication support team, created to empower distributors and to power the brand ahead in both B2B and B2C markets.",
+    "kicker": "Who We Serve",
+    "title": "Made for people who work with their hands",
+    "sub": "PEGASUS® combs are made for the professional chair — and for the people who teach, stock and supply it.",
     "items": [
+      {
+        "label": "Stylists",
+        "icon": "scissors"
+      },
+      {
+        "label": "Barbers",
+        "icon": "razor"
+      },
+      {
+        "label": "Salon Owners",
+        "icon": "store"
+      },
+      {
+        "label": "Educators",
+        "icon": "graduation"
+      },
       {
         "label": "Distributors",
         "icon": "truck"
       },
       {
-        "label": "Importers",
-        "icon": "ship"
-      },
-      {
-        "label": "Masstige Brand",
-        "icon": "building"
-      },
-      {
-        "label": "Super Markets",
-        "icon": "cart"
-      },
-      {
-        "label": "Retail Outlets",
-        "icon": "store"
-      },
-      {
-        "label": "Hair Salons",
-        "icon": "scissors"
+        "label": "Trade Buyers",
+        "icon": "briefcase"
       }
     ]
   },
-  "home.brochure": {
-    "kicker": "Catalogue",
-    "title": "Request the Brochure",
-    "sub": "Access six decades of engineering excellence in our printed master catalogue.",
-    "cardKicker": "printed publication",
-    "cardTitle": "The Art of Frictionless Control",
-    "cardText": "Printed on matte eco-linen tactile paper. Featuring high-resolution technical diagrams of FLEXINITE, GLAMLOCK and STATICBLOCK combs.",
-    "cardImage": "/images/pegasus_luxury_salon.jpg",
-    "stat1Value": "180 Pages",
-    "stat1Label": "Premium Print",
-    "stat2Value": "80+ Countries",
-    "stat2Label": "Global Distribution"
+  "home.enquiry": {
+    "kicker": "Enquiries",
+    "title": "Connect with us for more information",
+    "text": "Reach out to info@pegasushairtools.com — for product details, trade and distribution, education partnerships or anything else.",
+    "email": "info@pegasushairtools.com",
+    "ctaLabel": "Send an enquiry",
+    "ctaHref": "/contact"
   },
-  "home.contact": {
+  "about.page": {
+    "seoTitle": "About Us — PEGASUS® · Presto Industries",
+    "seoDescription": "PEGASUS® is built on Presto Industries' tradition of handmade combs since 1977. Launched in 2012 as the first hard-rubber ebonite comb with Intelligent Flexinite® technology.",
+    "kicker": "About Us",
+    "title": "Mastery belongs to those who practise it",
+    "image": "/images/hero-poster.webp",
+    "belief": "Mastery belongs to those with hearts full of passion, and those who find joy in perseverance. It's the quiet skilling up, day after day, which comes from the pursuit of perfection. It's a love of hair and the craft, carried through every hour of practice it takes to earn.\n\nThat is the foundation of PEGASUS®. That same passion drives us to create, to innovate, to shape every tool, comb, or brush, by hand, until it becomes a work of art. Every PEGASUS® comb is an expression of mastery, made to rest easy in your hands.",
+    "statementTitle": "Brand statement",
+    "statement": "PEGASUS® makes precision hair tools for professional stylists. Built on Presto Industries' tradition of handmade combs since 1977, each hard rubber comb pairs seamless saw-cut teeth with Intelligent Flexinite® technology — engineered to give rigid control when cutting and a controlled flex when styling. Precision when you need control. Ease when you need flow. Mastery in Your Hands.",
+    "timelineTitle": "Our story",
+    "timeline": [
+      {
+        "year": "1965",
+        "text": "Presto Industries founded by Lookman A Qadir."
+      },
+      {
+        "year": "1977",
+        "text": "Handmade combs from cellulose acetate begin production."
+      },
+      {
+        "year": "1989",
+        "text": "Second generation: Shahzad L Qadir continues the legacy."
+      },
+      {
+        "year": "1992",
+        "text": "Expansion into wooden combs."
+      },
+      {
+        "year": "1995",
+        "text": "Mission to create the finest professional comb — hard rubber chosen as the material of mastery."
+      },
+      {
+        "year": "1995–2012",
+        "text": "Years of research, testing, and refinement."
+      },
+      {
+        "year": "2012",
+        "text": "PEGASUS® launched: first hard-rubber ebonite comb with Intelligent Flexinite® technology."
+      },
+      {
+        "year": "2013",
+        "text": "Global debut at Cosmoprof Hong Kong."
+      },
+      {
+        "year": "Today",
+        "text": "PEGASUS® combs handmade and trusted worldwide, carrying forward a tradition of craftsmanship since 1977."
+      }
+    ]
+  },
+  "flexinite.page": {
+    "seoTitle": "Flexinite® Technology — PEGASUS® Hard Rubber Combs",
+    "seoDescription": "Flexinite® is the intelligent comb technology behind every PEGASUS® hard rubber comb — firm and rigid when cool, a controlled, gentle flex under heat.",
+    "kicker": "Flexinite® Technology",
+    "title": "One comb, two advantages",
+    "intro": "Precision when you need control. Ease when you need flow.",
+    "image": "/images/hero-poster.webp",
+    "qa": [
+      {
+        "q": "What makes PEGASUS® Flexinite® combs different?",
+        "a": "One comb, two advantages. Rigid at room temperature for precise, controlled cutting — then gently flexes under heat, gliding through hair without snagging during blow-dry, straightening, and styling. Most combs force stylists to choose between the two. Flexinite® doesn't."
+      },
+      {
+        "q": "What is Flexinite®?",
+        "a": "Flexinite® is the intelligent comb technology behind every PEGASUS® hard rubber comb — engineered to stay firm and rigid when cool, then respond to heat with a controlled, gentle flex."
+      },
+      {
+        "q": "Why does dual performance matter to a stylist?",
+        "a": "Precision and ease usually come from two separate tools. Flexinite® gives you both in one: sharp control for sectioning and cutting, seamless glide for detangling and finishing."
+      },
+      {
+        "q": "Is it built for professional, daily salon use?",
+        "a": "Yes. Designed for salon-grade durability and comfort, it is a tool that holds up to the pace of professional work while still feeling considered in the hand."
+      },
+      {
+        "q": "How does this support training and teaching?",
+        "a": "The rigidity when cool makes it dependable for teaching accurate sectioning and cutting technique. The flex under heat carries the same comb into finishing and styling lessons — one tool that follows a stylist from their first cut in school to working mastery in the chair."
+      },
+      {
+        "q": "What's the takeaway for stylists?",
+        "a": "A comb that adapts to what the moment calls for — precision when you need control, ease when you need flow. Mastery in Your Hands."
+      }
+    ]
+  },
+  "products.catalogue": {
+    "seoTitle": "PEGASUS® Hard Rubber (Ebonite) Combs — by function and hair type",
+    "seoDescription": "Sixty-five PEGASUS® hard rubber combs in six functions: Detangle & Prep, Cut & Section, Colour & Foil, Barbering & Fade, Finish & Style and Carry & Care — tagged by hair type.",
+    "kicker": "Products",
+    "title": "PEGASUS® Hard Rubber (Ebonite) Combs",
+    "intro": "Sixty-five combs, six functions, five hair-type tags. Choose by the job in hand, then by the hair in the chair.",
+    "advantages": [
+      {
+        "title": "Seamless saw-cut teeth",
+        "text": "Meticulously hand-polished to glide effortlessly without scraping or snagging."
+      },
+      {
+        "title": "Intelligent Flexinite® comb advantage",
+        "text": "Rigid at room temperature for precise cutting. Gains a gentle flex under heat to gently glide through without snagging."
+      },
+      {
+        "title": "Salon-grade",
+        "text": "Chemical-resistant, heat-resistant, and naturally anti-static to eliminate flyaways."
+      }
+    ],
+    "enquiryLabel": "Enquire about this comb",
+    "functions": [
+      {
+        "id": "detangle",
+        "name": "Detangle & Prep",
+        "purpose": "The first pass of every service: opening the hair without pulling it."
+      },
+      {
+        "id": "cut",
+        "name": "Cut & Section",
+        "purpose": "The clean parting and controlled section a cut is built on."
+      },
+      {
+        "id": "colour",
+        "name": "Colour & Foil",
+        "purpose": "Tail combs for partings, weaving and foil placement."
+      },
+      {
+        "id": "barber",
+        "name": "Barbering & Fade",
+        "purpose": "Men's cuts and fades, by zone of the head and hold needed."
+      },
+      {
+        "id": "finish",
+        "name": "Finish & Style",
+        "purpose": "Brush-free blow-drying, root lift and curl definition."
+      },
+      {
+        "id": "carry",
+        "name": "Carry & Care",
+        "purpose": "Pocket combs for everyday carry, and a nit and lice comb."
+      }
+    ],
+    "hairTypes": [
+      {
+        "id": "fine",
+        "name": "Fine",
+        "desc": "Fine and fragile hair, the narrowest tension window, where the comb must add no drag."
+      },
+      {
+        "id": "medium",
+        "name": "Medium",
+        "desc": "Medium and mixed hair."
+      },
+      {
+        "id": "thick",
+        "name": "Thick",
+        "desc": "Thick and coarse hair, where reach and body matter."
+      },
+      {
+        "id": "curly",
+        "name": "Curly",
+        "desc": "Curly and coily hair, to separate the pattern and never comb it straight."
+      },
+      {
+        "id": "all",
+        "name": "All hair types",
+        "desc": "Chosen by the zone of the head or the job, not the hair."
+      }
+    ],
+    "products": [
+      {
+        "model": "101",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/101.webp"
+      },
+      {
+        "model": "102",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/102.webp"
+      },
+      {
+        "model": "103",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/103.webp"
+      },
+      {
+        "model": "104",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/104.webp"
+      },
+      {
+        "model": "105",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/105.webp"
+      },
+      {
+        "model": "121",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/121.webp"
+      },
+      {
+        "model": "122",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/122.webp"
+      },
+      {
+        "model": "123",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/123.webp"
+      },
+      {
+        "model": "124",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/124.webp"
+      },
+      {
+        "model": "125",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/125.webp"
+      },
+      {
+        "model": "126",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/126.webp"
+      },
+      {
+        "model": "131",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/131.webp"
+      },
+      {
+        "model": "132",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/132.webp"
+      },
+      {
+        "model": "133",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/133.webp"
+      },
+      {
+        "model": "134",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/134.webp"
+      },
+      {
+        "model": "135",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/135.webp"
+      },
+      {
+        "model": "141",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/141.webp"
+      },
+      {
+        "model": "142",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/142.webp"
+      },
+      {
+        "model": "143",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/143.webp"
+      },
+      {
+        "model": "150",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/150.webp"
+      },
+      {
+        "model": "201",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/201.webp"
+      },
+      {
+        "model": "202",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/202.webp"
+      },
+      {
+        "model": "203",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/203.webp"
+      },
+      {
+        "model": "204",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/204.webp"
+      },
+      {
+        "model": "205",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/205.webp"
+      },
+      {
+        "model": "210",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/210.webp"
+      },
+      {
+        "model": "211",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/211.webp"
+      },
+      {
+        "model": "212",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/212.webp"
+      },
+      {
+        "model": "215",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/215.webp"
+      },
+      {
+        "model": "301",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/301.webp"
+      },
+      {
+        "model": "302",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/302.webp"
+      },
+      {
+        "model": "303",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/303.webp"
+      },
+      {
+        "model": "401",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/401.webp"
+      },
+      {
+        "model": "402",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/402.webp"
+      },
+      {
+        "model": "404",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/404.webp"
+      },
+      {
+        "model": "406",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/406.webp"
+      },
+      {
+        "model": "501",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/501.webp"
+      },
+      {
+        "model": "502",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/502.webp"
+      },
+      {
+        "model": "503",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/503.webp"
+      },
+      {
+        "model": "504",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/504.webp"
+      },
+      {
+        "model": "505",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/505.webp"
+      },
+      {
+        "model": "506",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/506.webp"
+      },
+      {
+        "model": "508",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/508.webp"
+      },
+      {
+        "model": "510",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/510.webp"
+      },
+      {
+        "model": "514A",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/514A.webp"
+      },
+      {
+        "model": "514B",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/514B.webp"
+      },
+      {
+        "model": "514C",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/514C.webp"
+      },
+      {
+        "model": "516A",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/516A.webp"
+      },
+      {
+        "model": "516B",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/516B.webp"
+      },
+      {
+        "model": "518A",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/518A.webp"
+      },
+      {
+        "model": "518B",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/518B.webp"
+      },
+      {
+        "model": "601",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/601.webp"
+      },
+      {
+        "model": "602",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/602.webp"
+      },
+      {
+        "model": "603",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/603.webp"
+      },
+      {
+        "model": "604",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/604.webp"
+      },
+      {
+        "model": "605",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/605.webp"
+      },
+      {
+        "model": "606",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/606.webp"
+      },
+      {
+        "model": "608",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/608.webp"
+      },
+      {
+        "model": "609",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/609.webp"
+      },
+      {
+        "model": "610",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/610.webp"
+      },
+      {
+        "model": "611",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/611.webp"
+      },
+      {
+        "model": "615",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/615.webp"
+      },
+      {
+        "model": "B1",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/B1.webp"
+      },
+      {
+        "model": "B2",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/B2.webp"
+      },
+      {
+        "model": "B3",
+        "name": "",
+        "function": "",
+        "hairTypes": [],
+        "size": "",
+        "description": "",
+        "image": "/images/products/B3.webp"
+      }
+    ]
+  },
+  "contact.page": {
+    "seoTitle": "Contact — PEGASUS® · Presto Industries, Mumbai",
+    "seoDescription": "Connect with PEGASUS® for product information, trade and distribution enquiries. Presto Industries, Lower Parel, Mumbai.",
     "kicker": "Contact",
-    "title": "Dealer & Corporate Enquiries",
-    "sub": "Connecting professional salons, distributors and retail groups with Presto Industries.",
-    "dealerText": "Register interest to become an authorized salon distributor or retail partner. Receive priority allocations on high-demand FLEXINITE collections.",
-    "businessText": "For custom brand integrations, education partnerships, fashion-week runway sponsorship, or corporate bulk procurement orders.",
-    "defaultLocation": "mumbai",
-    "locations": [
-      {
-        "id": "paris",
-        "name": "Paris",
-        "role": "Creative & Couture Division Office",
-        "address": "24 Rue du Faubourg Saint-Honoré, 75008 Paris, France",
-        "phone": "+33 (0) 1 44 55 66 00",
-        "email": "couture.paris@pegasushairtools.com",
-        "details": "Serving high-fashion runway stylists across France, Italy, and Spain.",
-        "mapX": 48.5,
-        "mapY": 38
-      },
-      {
-        "id": "london",
-        "name": "London",
-        "role": "Creative Salon Academy & Logistics",
-        "address": "18 Savile Row, Mayfair, London W1S 3JR, United Kingdom",
-        "phone": "+44 (0) 20 7946 0958",
-        "email": "academy.uk@pegasushairtools.com",
-        "details": "The educational epicentre of Pegasus professional styling courses.",
-        "mapX": 47,
-        "mapY": 35
-      },
-      {
-        "id": "newyork",
-        "name": "New York",
-        "role": "North American Logistics & Corporate HQ",
-        "address": "Fifth Avenue, Flatiron District, New York, NY 10010, USA",
-        "phone": "+1 (212) 555-0199",
-        "email": "americas@pegasushairtools.com",
-        "details": "Direct distribution network and support for salon conglomerates in the US and Canada.",
-        "mapX": 28,
-        "mapY": 41
-      },
-      {
-        "id": "tokyo",
-        "name": "Tokyo",
-        "role": "Asia Pacific Distribution Center",
-        "address": "5-Chome Minami-Aoyama, Minato City, Tokyo 107-0062, Japan",
-        "phone": "+81 3-5555-0143",
-        "email": "apac.tokyo@pegasushairtools.com",
-        "details": "Connecting elite Japanese hairdressers with German precision engineering.",
-        "mapX": 82,
-        "mapY": 44
-      },
-      {
-        "id": "mumbai",
-        "name": "Mumbai",
-        "role": "Presto Industries Headquarters & Works",
-        "address": "215/216, Vasan Udyog Bhavan, 2nd Floor, Senapati Bapat Marg, opp. Phoenix Mill, Lower Parel, Mumbai, Maharashtra 400013",
-        "phone": "+91 22431 51400",
-        "email": "info@pegasushairtools.com",
-        "details": "Where our six-decade manufacturing legacy and FLEXINITE material research resides.",
-        "mapX": 66,
-        "mapY": 52
-      }
-    ]
-  },
-  "collection.hard-rubber": {
-    "seoTitle": "Hard Rubber Combs — Flexinite Technology | PEGASUS",
-    "seoDescription": "Pegasus Hard Rubber combs powered by Flexinite Technology. Precision cutting and styling for professionals — high-heat and chemical resistant, flexible, strong and durable.",
-    "tag": "HARD RUBBER RANGE — 100% EBONITE",
-    "title": "Hard Rubber Combs Powered by Flexinite Technology",
-    "subtitle": "Precision Cutting & Styling. For Professionals.",
-    "heroImage": "/images/pegasus_hard_rubber.jpg",
-    "intro": "The only professional combs that provide precision, quality and sustainability along with glamour and funk — to groom all hair types.",
-    "benefits": [
-      "Designed specifically for professional hairdressers globally",
-      "High-heat and chemical resistant",
-      "Flexible, strong and durable construction",
-      "Infinite styling possibilities for all hair types"
-    ],
-    "techName": "FLEXINITE",
-    "techTagline": "A Truly Versatile Experience",
-    "techDesc": "Made from 100% hard rubber (Ebonite) with proprietary Flexinite Technology, developed after extensive research examining global hair textures and climate conditions. The material responds to temperature changes, enabling versatile temperature-sensitive performance across cutting, colouring and heat-styling applications.",
-    "features": [
-      {
-        "title": "Thermo-Responsive Body",
-        "desc": "Responds intelligently to temperature changes under dryers and irons, keeping the glide frictionless where ordinary polymers snag."
-      },
-      {
-        "title": "Chemical Tolerance",
-        "desc": "Virtually impervious to bleach, colour and peroxide — built for the daily chemistry of the professional salon backwash."
-      },
-      {
-        "title": "Saw-Cut & Hand Polished",
-        "desc": "Every tooth is individually saw-cut, then hand-bevelled and polished so no raw seam ever touches the hair cuticle."
-      },
-      {
-        "title": "Professional Balance",
-        "desc": "Weighted and profiled for precision sectioning, cutting and styling in high-volume session work."
-      }
-    ]
-  },
-  "collection.cellulose": {
-    "seoTitle": "Cellulose Acetate Combs — GlamLock Technology | PEGASUS",
-    "seoDescription": "Pegasus Cellulose Acetate combs crafted with GlamLock technology. Seamless, hand-polished teeth that detangle easily, stimulate the scalp and make hair smooth and shiny.",
-    "tag": "CELLULOSE ACETATE RANGE",
-    "title": "The Cellulose Acetate Collection",
-    "subtitle": "Seamless. Hand Polished. Scalp Friendly.",
-    "heroImage": "/images/pegasus_cellulose.jpg",
-    "intro": "Each Cellulose Acetate comb is saw-cut, then hand polished and buffed to ensure smooth, rounded teeth that massage your scalp — a class apart from other combs in the market.",
-    "benefits": [
-      "Seamless teeth detangle hair easily without snagging",
-      "Stimulates the scalp for healthy blood circulation",
-      "Spreads natural oils evenly from roots to tips",
-      "Hair and scalp friendly, plant-derived material"
-    ],
-    "techName": "GLAMLOCK",
-    "techTagline": "Smooth. Shiny. Seamless.",
-    "techDesc": "Ordinary combs have sharp teeth which can roughen the hair and cause scalp damage. Pegasus Cellulose Acetate combs are crafted with GlamLock technology, wherein seamless teeth detangle hair easily and stimulate the scalp — making hair smooth and shiny.",
-    "features": [
-      {
-        "title": "Seamless Rounded Teeth",
-        "desc": "Hand-finished tips free of moulding seams glide through wet or dry hair without scraping the cuticle."
-      },
-      {
-        "title": "Natural Oil Distribution",
-        "desc": "Smooth rounded teeth evenly spread the hair’s natural oils from the roots to the tips for natural shine."
-      },
-      {
-        "title": "Scalp Stimulation",
-        "desc": "Massaging tooth profiles encourage healthy blood circulation with every pass."
-      },
-      {
-        "title": "Handcrafted Quality",
-        "desc": "Saw-cut, hand polished and buffed — tactile, body-temperature-adaptive material with an elegant finish."
-      }
-    ]
-  },
-  "collection.ecowood": {
-    "seoTitle": "Ecowood Combs — StaticBlock Technology | PEGASUS",
-    "seoDescription": "Pegasus Ecowood combs backed by StaticBlock Technology. Sustainable, natural and eco-friendly — they prevent fly-aways, reduce frizz and glide gently through your hair.",
-    "tag": "ECO MADE RANGE",
-    "title": "Ecowood Combs Backed by StaticBlock Technology",
-    "subtitle": "Sustainable. Natural. Eco-Friendly.",
-    "heroImage": "/images/pegasus_ecowood.jpg",
-    "intro": "Completely earth and scalp friendly. Inspired by nature, the secret to happy hair and a nourished scalp lies in this ultimate comb — handcrafted for perfection.",
-    "benefits": [
-      "Prevents fly-aways and reduces frizz",
-      "Smooth, polished teeth for a gentle glide",
-      "Naturally anti-static and anti-bacterial",
-      "Perfect for sensitive scalps — no scraping or bruising"
-    ],
-    "techName": "STATICBLOCK",
-    "techTagline": "Calm Hair. Naturally.",
-    "techDesc": "Pegasus Ecowood combs with StaticBlock Technology prevent fly-aways and reduce frizz. Their teeth are smooth and polished, ensuring a gentle glide through your hair, while the natural element of the comb is both anti-static and anti-bacterial.",
-    "features": [
-      {
-        "title": "Static Dissipation",
-        "desc": "The natural wood body neutralises the electrical charge that friction builds during dry combing — no more fly-aways."
-      },
-      {
-        "title": "Gentle Rounded Tips",
-        "desc": "Smooth rounded tips prevent scraping or bruising, making Ecowood perfect for sensitive scalps."
-      },
-      {
-        "title": "Anti-Bacterial by Nature",
-        "desc": "The organic material is naturally anti-bacterial, keeping the tool hygienic between salon services."
-      },
-      {
-        "title": "Earth Friendly",
-        "desc": "Sustainably sourced and handcrafted for perfection — a comb that cares for your hair and the planet."
-      }
-    ]
+    "title": "Connect with us for more information",
+    "sub": "Reach out to info@pegasushairtools.com, or send an enquiry below.",
+    "officeName": "Presto Industries",
+    "officeRole": "Headquarters & Works",
+    "address": "215/216, Vasan Udyog Bhavan, 2nd Floor, Senapati Bapat Marg, opp. Phoenix Mill, Lower Parel, Mumbai, Maharashtra 400013, India",
+    "phone": "+91 22431 51400",
+    "email": "info@pegasushairtools.com",
+    "dealerText": "For stockists, distributors and trade buyers interested in carrying PEGASUS® combs.",
+    "businessText": "For salons, academies and educators — product questions, bulk orders and education partnerships."
   }
 }

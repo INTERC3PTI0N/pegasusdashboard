@@ -16,7 +16,7 @@ export type Field =
 export interface DocDef {
   key: string;
   label: string;
-  group: 'Site-wide' | 'Home page' | 'Collections';
+  group: 'Site-wide' | 'Home page' | 'Pages' | 'Products';
   /** Where the block appears on the public site, for "View on site" / preview. */
   path: string;
   description: string;
@@ -29,7 +29,7 @@ const img = (name: string, label: string): Field => ({ name, label, type: 'image
 const url = (name: string, label: string, help?: string): Field => ({ name, label, type: 'url', help });
 const link = (): Field[] => [t('label', 'Label'), url('href', 'Link')];
 
-// Shared shape of the alternating image/text rows (About, Technology, Sustainability).
+// Shared shape of the alternating image/text rows (Flexinite®, Masterclass).
 const featureRow: Field[] = [
   t('kicker', 'Section label'),
   t('sub', 'Small subheading'),
@@ -39,21 +39,17 @@ const featureRow: Field[] = [
   t('ctaLabel', 'Button text'),
   url('ctaHref', 'Button link'),
 ];
-const sectionHeading: Field[] = [t('kicker', 'Section label'), t('title', 'Heading'), ta('sub', 'Intro text')];
+const seo: Field[] = [t('seoTitle', 'Page title (browser tab / Google)'), ta('seoDescription', 'Meta description (Google snippet)')];
 
-const collection: Field[] = [
-  t('seoTitle', 'Page title (browser tab / Google)'),
-  ta('seoDescription', 'Meta description (Google snippet)'),
-  t('tag', 'Range tag'),
-  t('title', 'Heading'),
-  t('subtitle', 'Subheading'),
-  img('heroImage', 'Hero image'),
-  ta('intro', 'Intro statement'),
-  { name: 'benefits', label: 'Benefits (tick list)', type: 'strings' },
-  t('techName', 'Technology name'),
-  t('techTagline', 'Technology tagline'),
-  ta('techDesc', 'Technology description'),
-  { name: 'features', label: 'Feature cards', type: 'list', itemTitle: 'title', fields: [t('title', 'Title'), ta('desc', 'Description')] },
+// The six comb functions and five hair-type tags (ids are fixed — they drive the product filters).
+const FUNCTIONS = [
+  { value: '', label: '— Not set —' },
+  { value: 'detangle', label: 'Detangle & Prep' },
+  { value: 'cut', label: 'Cut & Section' },
+  { value: 'colour', label: 'Colour & Foil' },
+  { value: 'barber', label: 'Barbering & Fade' },
+  { value: 'finish', label: 'Finish & Style' },
+  { value: 'carry', label: 'Carry & Care' },
 ];
 
 export const docs: DocDef[] = [
@@ -64,14 +60,13 @@ export const docs: DocDef[] = [
   },
   {
     key: 'global.header', label: 'Header & menu', group: 'Site-wide', path: '/',
-    description: 'Logo, main navigation, collections menu and the Online Shop button.',
+    description: 'Logo, main navigation and the header button.',
     fields: [
       img('logo', 'Logo'),
       img('logoOnDark', 'Logo on dark backgrounds (header over the hero video)'),
       { name: 'navLinks', label: 'Main navigation', type: 'list', itemTitle: 'label', fields: link() },
-      { name: 'collectionLinks', label: 'Collections menu (mobile)', type: 'list', itemTitle: 'label', fields: link() },
-      t('shopLabel', 'Shop button text'),
-      url('shopUrl', 'Shop button link'),
+      t('shopLabel', 'Header button text'),
+      url('shopUrl', 'Header button link'),
     ],
   },
   {
@@ -92,11 +87,6 @@ export const docs: DocDef[] = [
     ],
   },
   {
-    key: 'home.preloader', label: 'Loading screen', group: 'Home page', path: '/',
-    description: 'The intro screen shown while the home page loads.',
-    fields: [t('kicker', 'Top label'), ta('text', 'Bottom text'), img('image', 'Centre image')],
-  },
-  {
     key: 'home.hero', label: 'Hero video banner', group: 'Home page', path: '/#hero',
     description: 'Full-screen video banner at the top of the home page.',
     fields: [
@@ -110,55 +100,23 @@ export const docs: DocDef[] = [
       t('secondaryCtaLabel', 'Secondary button text'), url('secondaryCtaHref', 'Secondary button link'),
     ],
   },
-  { key: 'home.about', label: '01 · Heritage', group: 'Home page', path: '/#about', description: 'Image and story row about Presto Industries.', fields: featureRow },
   {
-    key: 'home.products', label: '02 · Collections', group: 'Home page', path: '/#products',
-    description: 'The three collection cards.',
-    fields: [
-      ...sectionHeading,
-      t('cardCta', 'Card link text'),
-      {
-        name: 'items', label: 'Collection cards', type: 'list', itemTitle: 'title',
-        fields: [t('n', 'Number'), t('title', 'Title'), t('sub', 'Technology line'), ta('blurb', 'Description'), img('image', 'Image'), url('href', 'Link')],
-      },
-    ],
-  },
-  { key: 'home.technology', label: '03 · Technology', group: 'Home page', path: '/#technology', description: 'Image and text row about the three technologies.', fields: featureRow },
-  {
-    key: 'home.philosophy', label: '04 · Philosophy', group: 'Home page', path: '/#philosophy',
-    description: 'The large centred statement. The highlighted phrase is shown in the accent colour.',
-    fields: [t('kicker', 'Section label'), ta('statementBefore', 'Statement — before highlight'), t('highlight', 'Highlighted phrase'), ta('statementAfter', 'Statement — after highlight'), ta('body', 'Supporting text')],
-  },
-  { key: 'home.sustainability', label: '05 · Sustainability', group: 'Home page', path: '/#sustainability', description: 'Image and text row about Ecowood.', fields: featureRow },
-  {
-    key: 'home.journal', label: '06 · Journal (blog)', group: 'Home page', path: '/#journal',
-    description: 'Section heading and the journal articles.',
-    fields: [
-      ...sectionHeading,
-      {
-        name: 'articles', label: 'Articles', type: 'list', itemTitle: 'title',
-        fields: [
-          t('title', 'Title'),
-          {
-            name: 'category', label: 'Category', type: 'select',
-            options: [{ value: 'technology', label: 'Technology' }, { value: 'history', label: 'History' }, { value: 'trichology', label: 'Trichology' }],
-          },
-          t('readTime', 'Read time'),
-          t('date', 'Date / byline'),
-          ta('summary', 'Summary'),
-          { name: 'content', label: 'Article text', type: 'longtext', help: 'Blank line = new paragraph. Start a line with #### for a subheading.' },
-          img('image', 'Image'),
-          t('author', 'Author'),
-          t('authorRole', 'Author role'),
-        ],
-      },
-    ],
+    key: 'home.intro', label: '01 · Brand statement', group: 'Home page', path: '/#intro',
+    description: 'The brand statement and talk points under the hero.',
+    fields: [t('kicker', 'Section label'), ta('statement', 'Statement'), { name: 'talkPoints', label: 'Talk points', type: 'strings' }],
   },
   {
-    key: 'home.whoWeServe', label: '07 · Who we serve', group: 'Home page', path: '/#who-we-serve',
+    key: 'home.functions', label: '02 · Find the right comb', group: 'Home page', path: '/#functions',
+    description: 'Heading for the six comb functions (the functions themselves are edited under Products).',
+    fields: [...[t('kicker', 'Section label'), t('title', 'Heading'), ta('sub', 'Intro text')], t('ctaLabel', 'Button text')],
+  },
+  { key: 'home.technology', label: '03 · Flexinite®', group: 'Home page', path: '/#technology', description: 'Image and text row about Flexinite®.', fields: featureRow },
+  { key: 'home.masterclass', label: '04 · Masterclass', group: 'Home page', path: '/#masterclass', description: 'Image and text row about the Masterclass and kits.', fields: featureRow },
+  {
+    key: 'home.whoWeServe', label: '05 · Who we serve', group: 'Home page', path: '/#who-we-serve',
     description: 'Audience icons row.',
     fields: [
-      ...sectionHeading,
+      t('kicker', 'Section label'), t('title', 'Heading'), ta('sub', 'Intro text'),
       {
         name: 'items', label: 'Audiences', type: 'list', itemTitle: 'label',
         fields: [
@@ -166,9 +124,9 @@ export const docs: DocDef[] = [
           {
             name: 'icon', label: 'Icon', type: 'select',
             options: [
-              { value: 'truck', label: 'Truck' }, { value: 'ship', label: 'Ship' }, { value: 'building', label: 'Building' },
-              { value: 'cart', label: 'Shopping cart' }, { value: 'store', label: 'Store' }, { value: 'scissors', label: 'Scissors' },
-              { value: 'users', label: 'People' }, { value: 'globe', label: 'Globe' }, { value: 'sparkles', label: 'Sparkles' },
+              { value: 'scissors', label: 'Scissors' }, { value: 'razor', label: 'Razor' }, { value: 'store', label: 'Store' },
+              { value: 'graduation', label: 'Graduation cap' }, { value: 'truck', label: 'Truck' }, { value: 'briefcase', label: 'Briefcase' },
+              { value: 'users', label: 'People' }, { value: 'globe', label: 'Globe' },
             ],
           },
         ],
@@ -176,36 +134,69 @@ export const docs: DocDef[] = [
     ],
   },
   {
-    key: 'home.brochure', label: '08 · Brochure request', group: 'Home page', path: '/#brochure',
-    description: 'Brochure section heading and the catalogue card. Submissions arrive in Admin → Enquiries.',
+    key: 'home.enquiry', label: '06 · Enquiry call to action', group: 'Home page', path: '/#enquiry',
+    description: 'The "Connect with us" band at the end of the home page.',
+    fields: [t('kicker', 'Section label'), t('title', 'Heading'), ta('text', 'Text'), t('email', 'Email address'), t('ctaLabel', 'Button text'), url('ctaHref', 'Button link')],
+  },
+  {
+    key: 'about.page', label: 'About Us', group: 'Pages', path: '/about',
+    description: 'Brand belief, brand statement and the "Our story" timeline.',
     fields: [
-      ...sectionHeading,
-      t('cardKicker', 'Card label'), t('cardTitle', 'Card title'), ta('cardText', 'Card text'), img('cardImage', 'Card image'),
-      t('stat1Value', 'Stat 1 value'), t('stat1Label', 'Stat 1 label'), t('stat2Value', 'Stat 2 value'), t('stat2Label', 'Stat 2 label'),
+      ...seo, t('kicker', 'Section label'), t('title', 'Heading'), img('image', 'Image'),
+      { name: 'belief', label: 'Brand belief', type: 'longtext', help: 'Blank line = new paragraph.' },
+      t('statementTitle', 'Brand statement heading'), ta('statement', 'Brand statement'),
+      t('timelineTitle', 'Timeline heading'),
+      { name: 'timeline', label: 'Timeline', type: 'list', itemTitle: 'year', fields: [t('year', 'Year'), ta('text', 'Text')] },
     ],
   },
   {
-    key: 'home.contact', label: '09 · Contact & locations', group: 'Home page', path: '/#contact',
-    description: 'Contact heading, enquiry form text and the office locations on the map. Submissions arrive in Admin → Enquiries.',
+    key: 'flexinite.page', label: 'Flexinite® Technology', group: 'Pages', path: '/flexinite',
+    description: 'The Flexinite® Q&A — the house standard explanation (Brand Guidelines, section 6).',
     fields: [
-      ...sectionHeading,
-      ta('dealerText', 'Dealer enquiry intro'),
-      ta('businessText', 'Business enquiry intro'),
-      t('defaultLocation', 'Location selected by default (its ID)'),
+      ...seo, t('kicker', 'Section label'), t('title', 'Heading'), ta('intro', 'Intro line'), img('image', 'Image'),
+      { name: 'qa', label: 'Questions & answers', type: 'list', itemTitle: 'q', fields: [t('q', 'Question'), ta('a', 'Answer')] },
+    ],
+  },
+  {
+    key: 'contact.page', label: 'Contact', group: 'Pages', path: '/contact',
+    description: 'Contact page: office details and the enquiry form text. Submissions arrive in Admin → Enquiries.',
+    fields: [
+      ...seo, t('kicker', 'Section label'), t('title', 'Heading'), ta('sub', 'Intro text'),
+      t('officeName', 'Office name'), t('officeRole', 'Office role'), ta('address', 'Address'), t('phone', 'Phone'), t('email', 'Email'),
+      ta('dealerText', 'Trade enquiry intro'), ta('businessText', 'Salon / education enquiry intro'),
+    ],
+  },
+  {
+    key: 'products.catalogue', label: 'Combs, functions & hair types', group: 'Products', path: '/products',
+    description: 'Every PEGASUS® comb with its function and hair-type tags, plus the function and hair-type descriptions.',
+    fields: [
+      ...seo, t('kicker', 'Section label'), t('title', 'Heading'), ta('intro', 'Intro text'),
+      { name: 'advantages', label: 'Advantage cards', type: 'list', itemTitle: 'title', fields: [t('title', 'Title'), ta('text', 'Text')] },
+      t('enquiryLabel', 'Enquiry button text (product page)'),
       {
-        name: 'locations', label: 'Office locations', type: 'list', itemTitle: 'name',
+        name: 'functions', label: 'Functions', type: 'list', itemTitle: 'name',
+        help: 'Keep the IDs (detangle, cut, colour, barber, finish, carry) — combs refer to them.',
+        fields: [t('id', 'ID'), t('name', 'Name'), ta('purpose', 'Purpose')],
+      },
+      {
+        name: 'hairTypes', label: 'Hair types', type: 'list', itemTitle: 'name',
+        help: 'Keep the IDs (fine, medium, thick, curly, all) — combs refer to them.',
+        fields: [t('id', 'ID'), t('name', 'Name'), ta('desc', 'Description')],
+      },
+      {
+        name: 'products', label: 'Combs', type: 'list', itemTitle: 'model',
         fields: [
-          t('id', 'ID (lowercase, no spaces)'), t('name', 'City'), t('role', 'Office role'), ta('address', 'Address'),
-          t('phone', 'Phone'), t('email', 'Email'), ta('details', 'Details'),
-          { name: 'mapX', label: 'Map position — across (0–100)', type: 'number' },
-          { name: 'mapY', label: 'Map position — down (0–100)', type: 'number' },
+          t('model', 'Model number', 'e.g. 514A — also the page address /products/514A.'),
+          t('name', 'Name'),
+          { name: 'function', label: 'Function', type: 'select', options: FUNCTIONS },
+          { name: 'hairTypes', label: 'Hair types', type: 'strings', help: 'One per line: fine, medium, thick, curly or all.' },
+          t('size', 'Size', 'e.g. 18.5 cm'),
+          ta('description', 'Description'),
+          img('image', 'Image'),
         ],
       },
     ],
   },
-  { key: 'collection.hard-rubber', label: 'Hard Rubber', group: 'Collections', path: '/collections/hard-rubber', description: 'The Hard Rubber · Flexinite collection page.', fields: collection },
-  { key: 'collection.cellulose', label: 'Cellulose Acetate', group: 'Collections', path: '/collections/cellulose', description: 'The Cellulose Acetate collection page.', fields: collection },
-  { key: 'collection.ecowood', label: 'Ecowood', group: 'Collections', path: '/collections/ecowood', description: 'The Ecowood · StaticBlock collection page.', fields: collection },
 ];
 
 export type Content = Record<string, unknown>;
