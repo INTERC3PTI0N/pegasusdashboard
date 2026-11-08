@@ -143,6 +143,14 @@ export async function getMediaFile(id: string) {
   return row ?? null;
 }
 
+/** One byte range of an uploaded file, without pulling the whole file out of the database. */
+export async function getMediaRange(id: string, start: number, length: number) {
+  const [row] = await db()<{ contentType: string; size: number; chunk: Buffer }[]>`
+    select content_type, octet_length(data) as size, substring(data from ${start + 1} for ${length}) as chunk
+    from media where id = ${id}`;
+  return row ?? null;
+}
+
 export async function deleteMedia(id: string): Promise<string | null> {
   const [row] = await db()<{ filename: string }[]>`delete from media where id = ${id} returning filename`;
   return row?.filename ?? null;

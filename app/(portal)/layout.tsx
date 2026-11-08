@@ -11,8 +11,7 @@ import { LanguageSwitcher } from '@/components/language-switcher';
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   const user = await requireCustomer();
-  const products = await getProducts();
-  const progress = await getAllProgress(user.id);
+  const [products, progress] = await Promise.all([getProducts(), getAllProgress(user.id)]);
 
   const access = accessFor(user);
   const sidebarProducts = products.map((p) => ({

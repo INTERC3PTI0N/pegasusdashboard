@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, ArrowRight, PlayCircle, FileText, CheckCircle2, Circle, Lock, KeyRound } from 'lucide-react';
 import { requireCourse } from '@/lib/access';
+import { mediaToken } from '@/lib/auth';
 import { courseView } from '@/lib/course-view';
 import { KITS } from '@/lib/kits';
 import { getLesson } from '@/lib/courses';
@@ -37,6 +38,8 @@ export default async function LessonPage({
 
   const prev = product.lessons[index - 1];
   const next = product.lessons[index + 1];
+  // Signed, short-lived video links: only minted for what this kit may play.
+  const mediaUrl = (file: string) => `/api/media/${product.slug}/${lesson.id}?t=${mediaToken(user.id, file)}`;
 
   return (
     <div className="mx-auto max-w-6xl">
@@ -74,7 +77,7 @@ export default async function LessonPage({
             <Card className="overflow-hidden py-0 gap-0">
               <LockedPreview
                 key={`${lesson.id}-preview`}
-                src={lesson.previewFile ? `/api/media/${product.slug}/${lesson.id}?preview=1` : undefined}
+                src={lesson.previewFile ? mediaUrl(lesson.previewFile) : undefined}
                 poster={product.image}
                 watermark={user.email}
               />
@@ -98,7 +101,7 @@ export default async function LessonPage({
             <Card className="overflow-hidden py-0">
               <ProtectedVideo
                 key={lesson.id}
-                src={`/api/media/${product.slug}/${lesson.id}`}
+                src={mediaUrl(lesson.videoFile)}
                 poster={product.image}
                 watermark={user.email}
               />

@@ -32,6 +32,32 @@ export function verifySessionToken(token: string | undefined): { userId: string;
   return userId && version ? { userId, version: Number(version) } : null;
 }
 
+/**
+ * Short-lived signed link to a lesson video, minted by the lesson page after it has checked the kit.
+ * The media route then serves each range with no database round trip: it only checks this
+ * signature and that the session cookie belongs to the same user.
+ */
+export function mediaToken(userId: string, source: string, ttlSeconds = 6 * 60 * 60): string {
+  const payload = Buffer.from(JSON.stringify({ u: userId, s: source, e: Math.floor(Date.now() / 1000) + ttlSeconds })).toString('base64url');
+  return `${payload}.${sign(`media.${payload}`)}`;
+}
+
+export function verifyMediaToken(token: string | null, sessionCookie: string | undefined): string | null {
+  const session = verifySessionToken(sessionCookie);
+  if (!token || !session) return null;
+  const [payload, sig] = token.split('.');
+  if (!payload || !sig) return null;
+  const a = Buffer.from(sig);
+  const b = Buffer.from(sign(`media.${payload}`));
+  if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+  try {
+    const { u, s, e } = JSON.parse(Buffer.from(payload, 'base64url').toString());
+    return u === session.userId && e > Date.now() / 1000 && typeof s === 'string' ? s : null;
+  } catch {
+    return null;
+  }
+}
+
 /** The signed-in user, once per request (layout + page share it), with last-seen refreshed in the same query. */
 export const getCurrentUser = cache(async (): Promise<User | null> => {
   const jar = await cookies();
