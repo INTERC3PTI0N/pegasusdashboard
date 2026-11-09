@@ -63,13 +63,6 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/20 to-transparent" />
-        <div className="absolute bottom-12 left-12 right-12 text-white">
-          <p className="mono-tag text-[10px] text-white/70 mb-4">Since 1961</p>
-          <p className="editorial-text text-3xl leading-snug">
-            “Every Pegasus tool ships with a lifetime of technique. This is where you collect it.”
-          </p>
-        </div>
       </div>
     </div>
   );

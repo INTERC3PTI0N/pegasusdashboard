@@ -103,7 +103,13 @@ export function ProtectedVideo({
         }}
         className={cn('w-full', full ? 'h-full object-contain' : 'aspect-video')}
       />
-      <Watermark text={watermark} className="text-white/45 [text-shadow:0_1px_2px_rgb(0_0_0/0.6)]" />
+      {/* Fixed in the top-left corner (fullscreen button is top-right, controls are along the bottom). */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute left-3 top-3 z-10 select-none whitespace-nowrap font-mono text-xs text-white/45 [text-shadow:0_1px_2px_rgb(0_0_0/0.6)]"
+      >
+        {watermark}
+      </span>
       <button
         type="button"
         onClick={toggleFullscreen}

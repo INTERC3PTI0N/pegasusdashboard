@@ -27,8 +27,7 @@ export default async function StartPage({ searchParams }: { searchParams: Promis
           <p className="mono-tag text-[10px] text-primary mb-3">PEGASUS Masterclass</p>
           <h1 className="editorial-text text-4xl md:text-5xl">How to start</h1>
           <p className="mt-2 max-w-xl text-sm text-muted-foreground">
-            Scratch the card inside your PEGASUS® kit and scan its QR code, or type the code below. Then create
-            your account and begin your training.
+            Scratch the card inside your PEGASUS® kit and type the code below. Then create your account and begin your training.
           </p>
         </div>
 
