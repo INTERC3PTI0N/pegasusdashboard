@@ -22,8 +22,8 @@ export function StartForm({ initialCode, notice }: { initialCode: string; notice
           defaultValue={initialCode}
           autoComplete="off"
           spellCheck={false}
-          placeholder="XXXX-XXXX-XXXX"
-          maxLength={20}
+          placeholder="AB12CD34EF56GH78"
+          maxLength={24}
           className="font-mono uppercase tracking-widest"
           autoFocus={!initialCode}
         />

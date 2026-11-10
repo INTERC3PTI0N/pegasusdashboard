@@ -35,7 +35,7 @@ export default async function KitKeysPage({
           <p className="mono-tag text-[10px] text-primary mb-2">Kits</p>
           <h1 className="editorial-text text-4xl">Kit keys</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            One-time keys in the format XXXX-XXXX-XXXX, one per kit. An Essential Kit key opens the Essential
+            One-time keys of 16 letters and numbers (e.g. AB12CD34EF56GH78), one per kit. An Essential Kit key opens the Essential
             modules for 12 months; a Mastery Kit key opens everything with no expiry and the certificate. A key
             is spent once redeemed. Void lost or leaked keys so they can never be used. Export a batch as CSV to
             print on the cards inside each kit.

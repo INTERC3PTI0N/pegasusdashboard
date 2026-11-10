@@ -114,6 +114,11 @@ update users set admin_role = 'owner' where role = 'admin' and admin_role is nul
 alter table product_keys add column if not exists batch text not null default '';
 alter table product_keys add column if not exists voided_at timestamptz;
 
+-- Kit card codes are 16 letters/digits (AB12CD34EF56GH78); the original XXXX-XXXX-XXXX keys stay valid.
+alter table product_keys drop constraint if exists product_keys_code_check;
+alter table product_keys add constraint product_keys_code_check
+  check (code ~ '^([A-Z0-9]{16}|[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})$');
+
 alter table progress add column if not exists updated_at timestamptz not null default now();
 
 -- Certificates can be revoked and reissued: only one *active* certificate per user + product.

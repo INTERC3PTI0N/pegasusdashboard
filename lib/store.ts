@@ -18,7 +18,7 @@ export interface Certificate {
 }
 
 export interface ProductKey {
-  code: string; // XXXX-XXXX-XXXX
+  code: string; // AB12CD34EF56GH78 (older keys: XXXX-XXXX-XXXX)
   productSlug: string;
   addedAt: Date;
   usedBy: string | null; // user id

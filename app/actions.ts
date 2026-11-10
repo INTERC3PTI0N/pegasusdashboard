@@ -84,7 +84,7 @@ export async function signup(_prev: SignupState, formData: FormData): Promise<Si
  */
 export async function startWithCode(_prev: FormState, formData: FormData): Promise<FormState> {
   const code = normalizeKey(String(formData.get('key') ?? '').trim());
-  if (!KEY_RE.test(code)) return { error: 'Kit codes look like XXXX-XXXX-XXXX.' };
+  if (!KEY_RE.test(code)) return { error: 'Kit codes are 16 letters and numbers, like AB12CD34EF56GH78.' };
 
   const user = await getCurrentUser();
   if (user?.role === 'customer') {
@@ -151,7 +151,7 @@ const CODE_RE = KEY_RE;
 export async function redeemKey(_prev: FormState, formData: FormData): Promise<FormState> {
   const user = await requireCustomer();
   const code = normalizeKey(String(formData.get('key') ?? '').trim());
-  if (!CODE_RE.test(code)) return { error: 'Kit codes look like XXXX-XXXX-XXXX.' };
+  if (!CODE_RE.test(code)) return { error: 'Kit codes are 16 letters and numbers, like AB12CD34EF56GH78.' };
 
   const result = await redeemKitKey(user, code);
   if (!result.ok) return { error: REDEEM_ERRORS[result.error] };
@@ -167,13 +167,13 @@ export type UploadResult = {
   error?: string;
 };
 
-// No 0/O/1/I so printed keys can't be misread.
-const KEY_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+// Same style as the kit cards (AB12CD34EF56GH78), without I/O/0/1 so printed keys can't be misread.
+const LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+const DIGITS = '23456789';
 
 function generateKeys(count: number): string[] {
   return Array.from({ length: count }, () => {
-    const chars = Array.from(randomBytes(12), (b) => KEY_ALPHABET[b % KEY_ALPHABET.length]).join('');
-    return `${chars.slice(0, 4)}-${chars.slice(4, 8)}-${chars.slice(8)}`;
+    return Array.from(randomBytes(16), (b, i) => (i % 4 < 2 ? LETTERS[b % LETTERS.length] : DIGITS[b % DIGITS.length])).join('');
   });
 }
 
@@ -195,7 +195,7 @@ export async function uploadProductKeys(_prev: UploadResult | undefined, formDat
 
   const file = formData.get('file');
   const text = `${formData.get('codes') ?? ''}\n${file instanceof File ? await file.text() : ''}`;
-  const tokens = text.split(/[\s,;]+/).map((t) => t.trim().toUpperCase()).filter(Boolean);
+  const tokens = text.split(/[\s,;]+/).map((t) => normalizeKey(t.trim())).filter(Boolean);
   const valid = tokens.filter((t) => CODE_RE.test(t));
   const invalid = tokens.filter((t) => !CODE_RE.test(t));
   if (valid.length === 0) return { added: 0, duplicates: 0, invalid, error: 'No valid codes found.' };

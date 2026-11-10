@@ -12,11 +12,13 @@ import type { KitId } from './kits';
  */
 const PENDING_COOKIE = 'pegasus_kit_code';
 
-export const KEY_RE = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+/** Kit card codes: 16 letters/digits (AB12CD34EF56GH78), or the original XXXX-XXXX-XXXX keys. */
+export const KEY_RE = /^([A-Z0-9]{16}|[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4})$/;
 
-/** Accepts "abcd efgh ijkl", "ABCDEFGHIJKL" etc. and returns "ABCD-EFGH-IJKL" (or the raw input if not 12 chars). */
+/** Accepts any case, spaces or dashes: 16 characters → "AB12CD34EF56GH78", 12 → "ABCD-EFGH-IJKL" (otherwise the raw input). */
 export function normalizeKey(raw: string): string {
   const chars = raw.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (chars.length === 16) return chars;
   return chars.length === 12 ? `${chars.slice(0, 4)}-${chars.slice(4, 8)}-${chars.slice(8)}` : raw.toUpperCase();
 }
 

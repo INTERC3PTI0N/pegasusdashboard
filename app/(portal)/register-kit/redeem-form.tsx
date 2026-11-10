@@ -20,8 +20,8 @@ export function RedeemForm() {
           required
           autoComplete="off"
           spellCheck={false}
-          placeholder="XXXX-XXXX-XXXX"
-          maxLength={20}
+          placeholder="AB12CD34EF56GH78"
+          maxLength={24}
           className="font-mono uppercase tracking-widest"
         />
         <Button type="submit" disabled={pending} className="sm:w-44">

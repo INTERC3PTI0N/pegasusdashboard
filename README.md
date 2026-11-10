@@ -36,8 +36,8 @@ node --env-file=.env.local scripts/setup-db.mjs admin@yourcompany.com "a-strong-
 6. Anyone scans the QR / opens `/verify/<id>` to confirm it.
 7. Admin sees the customer, their kits and end dates, progress, certificate and which keys they used.
 
-Kit keys are `XXXX-XXXX-XXXX` (letters and digits). Customers can type them in any case,
-with or without dashes. A key works once: a used or unknown key is refused, and so is any key
+Kit keys are 16 letters and digits, like `AB12CD34EF56GH78` (keys issued earlier as `XXXX-XXXX-XXXX`
+still work). Customers can type them in any case, with or without spaces or dashes. A key works once: a used or unknown key is refused, and so is any key
 for a customer who already has the Mastery Kit (without spending the key).
 
 ## Features

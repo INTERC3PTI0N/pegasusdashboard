@@ -14,7 +14,7 @@ const NOTICES: Record<string, string> = {
 
 export const metadata = { title: 'How to start — Pegasus Masterclass' };
 
-/** Step 3, "Enter Code". The QR code on the scratch card opens /start?code=XXXX-XXXX-XXXX. */
+/** Step 3, "Enter Code". The QR code on the scratch card opens /start?code=AB12CD34EF56GH78. */
 export default async function StartPage({ searchParams }: { searchParams: Promise<{ code?: string; error?: string }> }) {
   const { code = '', error } = await searchParams;
 
